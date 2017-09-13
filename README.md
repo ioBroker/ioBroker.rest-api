@@ -14,5 +14,5 @@ Call in browser ```http://ipaddress:8093/``` and use Swagger UI to request and m
 
 
 ## Changelog
-### 0.1.0 (2015-02-06)
+### 0.1.0 (2017-09-14)
 * (bluefox) initial commit
