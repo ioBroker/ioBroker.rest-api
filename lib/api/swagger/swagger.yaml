@@ -1,0 +1,186 @@
+# Use for editing http://editor.swagger.io/
+swagger: "2.0"
+info:
+  description: "This is a REST server for ioBroker."
+  version: "1.0.0"
+  title: "ioBroker Swagger UI"
+  contact:
+    email: "admin@iobroker.net"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/v1"
+schemes:
+  - http
+  - https
+tags:
+- name: "state"
+  description: "Read, write the states"
+- name: "object"
+  description: "Read the objects"
+paths:
+  /state/{stateId}:
+    x-swagger-router-controller: state
+    get:
+      tags:
+      - "state"
+      summary: "Read value and all attributes of the state "
+      description: ""
+      operationId: "readState"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "stateId"
+        in: "path"
+        description: "ID of the state to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/State"
+        404:
+          description: "State not found"
+        400:
+          description: "Invalid state ID supplied"
+    put:
+      tags:
+      - "state"
+      summary: "Update the value of the state"
+      description: ""
+      operationId: "updateState"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "stateId"
+        description: "ID of the state to write"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "value"
+        description: "ID of the state to write"
+        required: true
+        type: "string"
+      - in: "query"
+        name: "timeout"
+        description: "Wait till the value written in ms"
+        required: false
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Update successfull"
+          schema:
+            $ref: "#/definitions/State"
+        400:
+          description: "Invalid state ID supplied"
+        404:
+          description: "State not found"
+        405:
+          description: "Invalid value"
+  /state/{stateId}/toggle:
+    x-swagger-router-controller: state
+    get:
+      tags:
+      - "state"
+      summary: "Toggle value of the state"
+      operationId: "toggleState"
+      parameters:
+      - name: "stateId"
+        in: "path"
+        description: "ID of the state to toggle"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/State"
+        404:
+          description: "State not found"
+        400:
+          description: "Invalid state ID supplied"
+  /state/{stateId}/plain:
+    x-swagger-router-controller: state
+    get:
+      tags:
+      - "state"
+      summary: "Get only value of the state."
+      operationId: "plainState"
+      parameters:
+      - name: "stateId"
+        in: "path"
+        description: "ID of the state to toggle"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/State"
+        404:
+          description: "State not found"
+        400:
+          description: "Invalid state ID supplied"
+definitions:
+  State:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "ID of the state"
+      val:
+        type: "string"
+        description: "Actual value"
+      q:
+        type: "integer"
+        format: "int32"
+        description: "Quality"
+      ts:
+        type: "integer"
+        format: "int64"
+        description: "Timestamp in ms from epoch of last update"
+      lc:
+        type: "integer"
+        format: "int64"
+        description: "Timestamp in ms from epoch of last value change"
+      ack:
+        type: "boolean"
+        description: "Is acknowledged. true = update, false = command"
+      from:
+        type: "string"
+        description: "Instance, that wrote this value"
+      expire:
+        type: "integer"
+        description: "Expire in seconds"
+      type:
+        type: "string"
+        description: "Always = state"
+      common:
+        type: "object"
+        description: "Common state description"
+      native:
+        type: "object"
+        description: "Native state description"
+  Object:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "ID of the state"
+      type:
+        type: "string"
+        description: "Type of this object"
+      common:
+        type: "object"
+        description: "Common state description"
+      native:
+        type: "object"
+        description: "Native state description"
+externalDocs:
+  description: "Find out more about ioBroker"
+  url: "http://iobroker.net"

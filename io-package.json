@@ -1,0 +1,48 @@
+{
+    "common": {
+        "name":                     "swagger",
+        "version": "1.6.0",
+        "news": {
+            "0.1.0": {
+                "en": 				"initial commit",
+                "de": 				"initial commit",
+                "ru": 				"initial commit"
+            }
+        },
+        "title":                    "Swagger UI Adapter",
+        "desc":                     "This adapter allows to read and write ioBroker objects and state with web RESTful API",
+        "authors": [
+            "bluefox <dogafox@gmail.com>"
+        ],
+        "license":                  "Apache 2.0",
+        "platform":                 "Javascript/Node.js",
+        "mode":                     "daemon",
+        "loglevel":                 "info",
+        "icon":                     "swagger.png",
+        "webExtension":             "lib/simpleapi.js",
+        "readme":                   "https://github.com/ioBroker/ioBroker.swagger/blob/master/README.md",
+        "keywords":                 ["web", "swagger", "RESTful", "communication"],
+		"enabled":                  true,
+        "extIcon":                  "https://raw.githubusercontent.com/ioBroker/ioBroker.swagger/master/admin/swagger.png",
+		"type":                     "communication",
+        "stopBeforeUpdate":         true,
+        "localLink":                "%protocol%://%ip%:%port%/",
+        "dependencies":             [{"js-controller": ">=0.15.0"}]
+    },
+    "native": {
+        "port":                     8093,
+        "auth":                     false,
+        "secure":                   false,
+        "bind":                     "0.0.0.0",
+        "certPublic":               "",
+        "certPrivate":              "",
+        "certChained":              "",
+        "defaultUser":              "admin",
+        "onlyAllowWhenUserIsOwner": false,
+        "webInstance":              "",
+
+        "leEnabled":                false,
+        "leUpdate":                 false,
+        "leCheckPort":              80
+    }
+}
