@@ -1,7 +1,7 @@
 {
     "common": {
         "name":                     "swagger",
-        "version": "1.6.0",
+        "version": "0.1.0",
         "news": {
             "0.1.0": {
                 "en": 				"initial commit",
@@ -19,7 +19,7 @@
         "mode":                     "daemon",
         "loglevel":                 "info",
         "icon":                     "swagger.png",
-        "webExtension":             "lib/simpleapi.js",
+        "webExtensionLater":        "lib/swagger-ui.js",
         "readme":                   "https://github.com/ioBroker/ioBroker.swagger/blob/master/README.md",
         "keywords":                 ["web", "swagger", "RESTful", "communication"],
 		"enabled":                  true,
