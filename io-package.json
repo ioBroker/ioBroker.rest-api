@@ -10,7 +10,11 @@
             }
         },
         "title":                    "Swagger UI Adapter",
-        "desc":                     "This adapter allows to read and write ioBroker objects and state with web RESTful API",
+        "desc":                     {
+            "en": "This adapter allows to read and write ioBroker objects and state with web RESTful API and Swagger UI",
+            "de": "Dieser Adapter erlaubt die ioBroker-Objekte mit Web RESTful API und Swagger UI zu lesen und zu schreiben",
+            "ru": "Этот адаптер позволяет читать и записывать объекты ioBroker и контактировать с RESTful API и Swagger UI"
+        },
         "authors": [
             "bluefox <dogafox@gmail.com>"
         ],
