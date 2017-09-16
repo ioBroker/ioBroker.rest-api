@@ -10,9 +10,9 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 basePath: "/v1"
-schemes:
-  - http
-  - https
+#schemes:
+#  - http
+#  - https
 tags:
 - name: "state"
   description: "Read, write the states"
@@ -51,7 +51,7 @@ paths:
       description: ""
       operationId: "updateState"
       consumes:
-      - "application/json"
+      - "application/octet-stream"
       produces:
       - "application/json"
       parameters:
@@ -126,6 +126,105 @@ paths:
           description: "State not found"
         400:
           description: "Invalid state ID supplied"
+  /states:
+    x-swagger-router-controller: state
+    get:
+      tags:
+      - "state"
+      summary: "Get list of state"
+      operationId: "listStates"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "filter"
+        in: "query"
+        description: "Filter, like modbus.0.*"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/State"
+        400:
+          description: "Invalid filter supplied"
+  /states/subscribe:
+    x-swagger-router-controller: state
+    put:
+      tags:
+      - "state"
+      summary: "Subscribe for state updates"
+      operationId: "subscribe"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "filter"
+        in: "query"
+        description: "Filter, like modbus.0.*"
+        required: true
+        type: "string"
+      - name: "url"
+        in: "query"
+        description: "URL of web hook"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid filter supplied"
+  /states/unsubscribe:
+    x-swagger-router-controller: state
+    put:
+      tags:
+      - "state"
+      summary: "Unsubscribe from state updates."
+      description: "If no filter provided, all subscribes will be cleared for this web hook"
+      operationId: "unsubscribe"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "filter"
+        in: "query"
+        description: "Filter, like modbus.0.*"
+        required: false
+        type: "string"
+      - name: "url"
+        in: "query"
+        description: "URL of web hook"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid filter supplied"
+  /objects:
+    x-swagger-router-controller: object
+    get:
+      tags:
+      - "object"
+      summary: "Get list of objects"
+      operationId: "listObjects"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "filter"
+        in: "query"
+        description: "Filter, like modbus.0.*"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Object"
+        400:
+          description: "Invalid filter supplied"
 definitions:
   State:
     type: "object"

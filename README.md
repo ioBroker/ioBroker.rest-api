@@ -9,6 +9,8 @@ ioBroker swagger adapter
 
 This is RESTFul interface to read the objects and states from ioBroker and to write/control the states over HTTP Get/Post requests.
 
+![Screenshot](img/screen.png)
+
 ## Usage
 Call in browser ```http://ipaddress:8093/``` and use Swagger UI to request and modify the states
 
