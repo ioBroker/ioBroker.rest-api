@@ -8,7 +8,7 @@ var LE        = require(utils.controllerDir + '/lib/letsencrypt.js');
 
 var webServer = null;
 
-var adapter = utils.adapter({
+var adapter = utils.Adapter({
     name: 'swagger',
     stateChange: function (id, state) {
         if (webServer && webServer.api) {
