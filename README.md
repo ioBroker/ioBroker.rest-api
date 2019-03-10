@@ -1,7 +1,7 @@
 ![Logo](admin/swagger.png)
 ioBroker swagger adapter
 =================
-[![NPM version](http://img.shields.io/npm/v/iobroker.swagger.svg)](https://www.npmjs.com/package/iobroker.swagger)
+![Number of Installations](http://iobroker.live/badges/swagger-installed.svg) ![Number of Installations](http://iobroker.live/badges/swagger-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.swagger.svg)](https://www.npmjs.com/package/iobroker.swagger)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.swagger.svg)](https://www.npmjs.com/package/iobroker.swagger)
 [![Tests](https://travis-ci.org/ioBroker/ioBroker.swagger.svg?branch=master)](https://travis-ci.org/ioBroker/ioBroker.swagger)
 
