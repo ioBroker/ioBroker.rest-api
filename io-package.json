@@ -1,19 +1,26 @@
 {
     "common": {
         "name":                     "swagger",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "news": {
-            "0.1.0": {
+            "0.2.0": {
                 "en": 				"initial commit",
                 "de": 				"initial commit",
                 "ru": 				"initial commit"
             }
         },
-        "title":                    "Swagger UI Adapter",
+        "title":                    "Swagger UI",
         "desc":                     {
             "en": "This adapter allows to read and write ioBroker objects and state with web RESTful API and Swagger UI",
             "de": "Dieser Adapter erlaubt die ioBroker-Objekte mit Web RESTful API und Swagger UI zu lesen und zu schreiben",
-            "ru": "Этот адаптер позволяет читать и записывать объекты ioBroker и контактировать с RESTful API и Swagger UI"
+            "ru": "Этот адаптер позволяет читать и записывать объекты ioBroker и контактировать с RESTful API и Swagger UI",
+            "pt": "Esse adaptador permite ler e gravar objetos ioBroker e declarar com a API RESTful da Web e a interface do usuário do Swagger",
+            "nl": "Deze adapter maakt het mogelijk om ioBroker-objecten te lezen en te schrijven met de web RESTful API en Swagger UI",
+            "fr": "Cet adaptateur permet de lire et d'écrire des objets et des états ioBroker avec l'API Web RESTful et l'interface utilisateur Swagger.",
+            "it": "Questo adattatore consente di leggere e scrivere oggetti ioBroker e lo stato con l'API RESTful Web e l'interfaccia utente di Swagger",
+            "es": "Este adaptador permite leer y escribir objetos y estados ioBroker con la API RESTful web y la interfaz de usuario Swagger",
+            "pl": "Ten adapter pozwala na odczyt i zapis obiektów ioBroker oraz ich stan za pomocą web RESTful API i Swagger UI",
+            "zh-cn": "该适配器允许使用Web RESTful API和Swagger UI读写ioBroker对象和状态"
         },
         "authors": [
             "bluefox <dogafox@gmail.com>"
@@ -23,6 +30,8 @@
         "mode":                     "daemon",
         "loglevel":                 "info",
         "icon":                     "swagger.png",
+        "compact":                  true,
+        "materialize":              true,
         "webExtensionLater":        "lib/swagger-ui.js",
         "readme":                   "https://github.com/ioBroker/ioBroker.swagger/blob/master/README.md",
         "keywords":                 ["web", "swagger", "RESTful", "communication"],
@@ -47,6 +56,9 @@
 
         "leEnabled":                false,
         "leUpdate":                 false,
-        "leCheckPort":              80
+        "leCheckPort":              80,
+
+        "dataSource":               "",
+        "allDatapoints":            false
     }
 }

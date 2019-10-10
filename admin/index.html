@@ -15,51 +15,9 @@
     }
 </style>
 
-<script type="text/javascript">
-    systemDictionary = {
-        "simpleAPI adapter settings": {
-            "de": "simpleAPI adapter settings",
-            "ru": "simpleAPI adapter settings"
-        },
-        "Run as:":          {"de": "Laufen unter Anwender:", "ru": "Запустить от пользователя:"},
-        "Allow only when User is Owner:":          {"de": "Nue erlauben wenn Anwender auch Besitzer ist:", "ru": "Allow only when User is Owner:"},
-        "IP:":              {"de": "IP:",                        "ru": "IP:"},
-        "Port:":            {"de": "Port:",                      "ru": "Порт:"},
-        "Secure(HTTPS):":   {"de": "Verschlüsselung(HTTPS):",    "ru": "Шифрование(HTTPS):"},
-        "Authentication:":  {"de": "Authentifikation:",          "ru": "Аутентификация:"},
-        "Public certificate:":    {"en": "Public certificate:",     "de": "Publikzertifikat:",       "ru": "'Public' сертификат:"},
-        "Private certificate:":   {"en": "Private certificate:",    "de": "Privatzertifikat:",       "ru": "'Private' сертификат:"},
-        "Chained certificate:":   {"en": "Chained certificate:",    "de": "Kettenzertifikat:",       "ru": "'Chained' сертификат:"},
-        "Extend WEB adapter:":    {"en": "Extend WEB adapter:",     "de": "Erweitere WEB Adapter:",  "ru": "Подключить к WEB драйверу:"},
-        "all":                    {"en": "all",                     "de": "alle",                    "ru": "все"},
-        "Listen on all IPs":      {"en": "Listen on all IPs",       "de": "Alle IPs zulassen",       "ru": "Открыть для всех IP адресов"},
-        "Let's Encrypt settings": {
-            "en": "Let's Encrypt settings",
-            "de": "Einstellungen Let's Encrypt",
-            "ru": "Настройкт Let's Encrypt"
-        },
-        "Use Lets Encrypt certificates:": {
-            "en": "Use Let's Encrypt certificates:",
-            "de": "Benutzen Let's Encrypt Zertifikate:",
-            "ru": "Использовать сертификаты Let's Encrypt:"
-        },
-        "Use this instance for automatic update:": {
-            "en": "Use this instance for automatic update:",
-            "de": "Benutze diese Instanz für automatische Updates:",
-            "ru": "Обновлять сертификаты в этом драйвере:"
-        },
-        "Port to check the domain:": {
-            "en": "Port to check the domain:",
-            "de": "Port um die Domain zu prüfen:",
-            "ru": "Порт для проверки доменного имени:"
-        },
-        "Set certificates or load it first in the system settings (right top).":    {
-            "en": "Set certificates or load it first in the system settings (right top).",
-            "de": "Setze Zertificate oder lade die erst unter System/Einstellungen (oben rechts).",
-            "ru": "Нужно выбрать сертификаты или сначала загрузить их в системных настройках (вверху справа)."
-        }
-    };
+<script type="text/javascript" src="words.js"></script>
 
+<script type="text/javascript">
     function showHideSettings() {
         if ($('#webInstance').val()) {
             $('.no-if-extend').hide();
@@ -95,6 +53,11 @@
                 $('.defaultUser').show();
             }
         }
+        if ($('#dataSource').val()) {
+            $('.allDatapoints').show();
+        } else {
+            $('.allDatapoints').hide();
+        }
     }
 
     // the function loadSettings has to exist ...
@@ -113,19 +76,17 @@
         $('.value').each(function () {
             var key = $(this).attr('id');
             // example: select elements with id=key and class=value and insert value
-            if ($('#' + key + '.value').attr('type') == 'checkbox') {
-                $('#' + key + '.value').prop('checked', settings[key]).change(function() {
-                    if ($('#auth').prop('checked')) {
-                        $('#secure').prop('checked', true);
-                    }
-                    showHideSettings();
+            if ($('#' + key + '.value').attr('type') === 'checkbox') {
+                $('#' + key + '.value').prop('checked', settings[key]).on('change', function() {
+                    showHideSettings($(this).attr('id'));
                     onChange();
                 });
             } else {
-                $('#' + key + '.value').val(settings[key]).change(function() {
+                $('#' + key + '.value').val(settings[key]).on('change', function() {
                     if (key === 'webInstance') showHideSettings();
+                    if (key === 'dataSource') showHideSettings();
                     onChange();
-                }).keyup(function() {
+                }).on('keyup', function() {
                     onChange();
                 });
             }
@@ -153,17 +114,45 @@
         } else {
             showHideSettings();
         }
+
+        getHistoryInstances(settings);
+
         onChange(false);
+    }
+
+    function getHistoryInstances(settings) {
+        socket.emit('getObjectView', 'system', 'instance', {startkey: 'system.adapter.', endkey: 'system.adapter.\u9999'}, function (err, doc) {
+            if (err) {
+                console.error(err);
+            } else {
+                if (doc.rows.length) {
+                    var result = [];
+                    for (var i = 0; i < doc.rows.length; i++) {
+                        result.push(doc.rows[i].value);
+                    }
+                    result = result.filter(function (adp) {
+                        return adp && adp.common && adp.common.getHistory;
+                    });
+
+                    var text = '';
+                    for (var r = 0; r < result.length; r++) {
+                        var name = result[r]._id.substring('system.adapter.'.length);
+                        text += '<option value="' + name + '" ' + (settings.dataSource === name ? 'selected' : '') + '>' + name + '</option>';
+                    }
+                    $('#dataSource').append(text);
+                    showHideSettings();
+                }
+            }
+        });
     }
 
     // ... and the function save has to exist.
     // you have to make sure the callback is called with the settings object as first param!
     function save(callback) {
-        // example: select elements with class=value and build settings object
         var obj = {};
         $('.value').each(function () {
             var $this = $(this);
-            if ($this.attr('type') == 'checkbox') {
+            if ($this.attr('type') === 'checkbox') {
                 obj[$this.attr('id')] = $this.prop('checked');
             } else {
                 obj[$this.attr('id')] = $this.val();
@@ -212,7 +201,10 @@
         <tr class="no-if-extend le-settings"><td><label for="leEnabled" class="translate">Use Lets Encrypt certificates:</label></td><td><input  class="value" id="leEnabled"   type="checkbox" /></td></tr>
         <tr class="no-if-extend le-settings le-sub-settings"><td><label for="leUpdate" class="translate">Use this instance for automatic update:</label></td><td><input  class="value" id="leUpdate" type="checkbox" /></td></tr>
         <tr class="no-if-extend le-settings le-sub-settings le-sub-settings-update"><td><label for="lePort" class="translate">Port to check the domain:</label></td><td><input class="value number" id="lePort" type="number" size="5" maxlength="5" /></td></tr>
-
+        <tr><td><label for="dataSource" class="translate">Select data source:</label></td><td><select class="value" id="dataSource">
+            <option value=""  class="translate">none</option>
+        </select></td></tr>
+        <tr class="allDataPoints"><td><label for="allDatapoints" class="translate">List all datapoints:</label></td><td><input  class="value" id="allDatapoints" type="checkbox" /></td></tr>
     </table>
 </div>
 </html>
