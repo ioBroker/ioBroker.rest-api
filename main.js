@@ -83,7 +83,13 @@ function initWebServer(settings, callback) {
                 return null;
             }
 
-            server.server = LE.createServer(app, settings, adapter.config.certificates, adapter.config.leConfig, adapter.log);
+            try {
+                server.server = LE.createServer(app, settings, adapter.config.certificates, adapter.config.leConfig, adapter.log);
+            } catch (err) {
+                adapter.log.error(`Cannot create webserver: ${err}`);
+                adapter.terminate ? adapter.terminate(1) : process.exit(1);
+                return;
+            }
             server.server.__server = server;
         } else {
             adapter.log.error('port missing');
