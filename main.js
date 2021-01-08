@@ -84,7 +84,7 @@ function initWebServer(settings, callback) {
             }
 
             try {
-                server.server = LE.createServer(app, settings, adapter.config.certificates, adapter.config.leConfig, adapter.log);
+                server.server = LE.createServerAsnyc(app, settings, adapter.config.certificates, adapter.config.leConfig, adapter.log);
             } catch (err) {
                 adapter.log.error(`Cannot create webserver: ${err}`);
                 adapter.terminate ? adapter.terminate(1) : process.exit(1);
