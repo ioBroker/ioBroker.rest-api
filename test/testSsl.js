@@ -37,7 +37,7 @@ describe('Test RESTful API SSL', function() {
         setup.adapterStarted = false;
 
         var brokerStarted   = false;
-        setup.setupController(function () {
+        setup.setupController(async function () {
             var config = setup.getAdapterConfig();
             // enable adapter
             config.common.enabled = true;
@@ -48,7 +48,7 @@ describe('Test RESTful API SSL', function() {
             config.native.certPublic = 'defaultPublic';
             config.native.certPrivate = 'defaultPrivate';
 
-            setup.setAdapterConfig(config.common, config.native);
+            await setup.setAdapterConfig(config.common, config.native);
 
             setup.startController(function (_objects, _states) {
                 objects = _objects;

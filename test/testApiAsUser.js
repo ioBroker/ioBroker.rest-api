@@ -36,14 +36,14 @@ describe('Test RESTful API as User', function() {
         setup.adapterStarted = false;
 
         var brokerStarted   = false;
-        setup.setupController(function () {
+        setup.setupController(async function () {
             var config = setup.getAdapterConfig();
             // enable adapter
             config.common.enabled = true;
             config.common.loglevel = 'debug';
             config.native.port = 18183;
             config.native.defaultUser = 'myuser';
-            setup.setAdapterConfig(config.common, config.native);
+            await setup.setAdapterConfig(config.common, config.native);
 
             setup.startController(function (_objects, _states) {
                 objects = _objects;
