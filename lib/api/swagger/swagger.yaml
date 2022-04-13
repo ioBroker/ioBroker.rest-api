@@ -14,27 +14,42 @@ basePath: "/v1"
 #  - http
 #  - https
 tags:
-- name: "state"
-  description: "Read, write the states"
-- name: "object"
-  description: "Read the objects"
+  - name: "state"
+    description: "Read, write the states"
+  - name: "object"
+    description: "Read the objects"
 paths:
   /state/{stateId}:
     x-swagger-router-controller: state
     get:
       tags:
-      - "state"
-      summary: "Read value and all attributes of the state "
-      description: ""
+        - "state"
+      summary: "Read value and all attributes of the state"
+      description: "This path could be used for controlling of the state too. If you provide the value in request, so it will be handled as write request. For back compatibility with simple-api"
       operationId: "readState"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "stateId"
-        in: "path"
-        description: "ID of the state to return"
-        required: true
-        type: "string"
+        - name: "stateId"
+          in: "path"
+          description: "ID of the state to return"
+          required: true
+          type: "string"
+        - name: "withInfo"
+          in: "query"
+          description: "If with object information "
+          type: "boolean"
+        - in: "query"
+          name: "timeout"
+          description: "Wait till the value written in ms"
+          required: false
+          type: "integer"
+          format: "int64"
+        - in: "query"
+          name: "value"
+          description: "Value to write into state"
+          type: "string"
+
       responses:
         200:
           description: "successful operation"
@@ -44,33 +59,28 @@ paths:
           description: "State not found"
         400:
           description: "Invalid state ID supplied"
-    put:
+    patch:
       tags:
-      - "state"
+        - "state"
       summary: "Update the value of the state"
       description: ""
       operationId: "updateState"
       consumes:
-      - "application/octet-stream"
+        - "application/octet-stream"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - in: "path"
-        name: "stateId"
-        description: "ID of the state to write"
-        required: true
-        type: "string"
-      - in: "query"
-        name: "value"
-        description: "ID of the state to write"
-        required: true
-        type: "string"
-      - in: "query"
-        name: "timeout"
-        description: "Wait till the value written in ms"
-        required: false
-        type: "integer"
-        format: "int64"
+        - in: "path"
+          name: "stateId"
+          description: "ID of the state to write"
+          required: true
+          type: "string"
+        - in: "query"
+          name: "timeout"
+          description: "Wait till the value written in ms"
+          required: false
+          type: "integer"
+          format: "int64"
       responses:
         200:
           description: "Update successfull"
@@ -86,15 +96,19 @@ paths:
     x-swagger-router-controller: state
     get:
       tags:
-      - "state"
+        - "state"
       summary: "Toggle value of the state"
       operationId: "toggleState"
       parameters:
-      - name: "stateId"
-        in: "path"
-        description: "ID of the state to toggle"
-        required: true
-        type: "string"
+        - name: "stateId"
+          in: "path"
+          description: "ID of the state to toggle"
+          required: true
+          type: "string"
+        - name: "timeout"
+          in: "query"
+          description: "Timeout in ms for the state will be updated again, e.g. for ack=true"
+          type: "number"
       responses:
         200:
           description: "successful operation"
@@ -108,15 +122,19 @@ paths:
     x-swagger-router-controller: state
     get:
       tags:
-      - "state"
+        - "state"
       summary: "Get only value of the state."
       operationId: "plainState"
       parameters:
-      - name: "stateId"
-        in: "path"
-        description: "ID of the state to toggle"
-        required: true
-        type: "string"
+        - name: "stateId"
+          in: "path"
+          description: "ID of the state to toggle"
+          required: true
+          type: "string"
+        - name: "extraPlain"
+          in: "query"
+          description: "If value.toString() should be returned. Without this flag JSON.stringify(value) will be returned"
+          type: "boolean"
       responses:
         200:
           description: "successful operation"
@@ -126,21 +144,83 @@ paths:
           description: "State not found"
         400:
           description: "Invalid state ID supplied"
+  /state/{stateId}/subscribe:
+    x-swagger-router-controller: state
+    post:
+      tags:
+        - "state"
+      summary: "Subscribe on state changes"
+      description: "Subscribe on state changes"
+      operationId: "subscribeState"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "stateId"
+          in: "path"
+          description: "ID of the state to toggle"
+          required: true
+          type: "string"
+        - name: "subscribe"
+          in: "body"
+          description: "Subscribe request"
+          required: false
+          schema:
+            $ref: "#/definitions/UrlHook"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/State"
+        404:
+          description: "State not found"
+        400:
+          description: "Invalid state ID supplied"
+    delete:
+      tags:
+        - "state"
+      summary: "Unsubscribe from state changes"
+      description: "Unsubscribe on state changes"
+      operationId: "unsubscribeState"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "stateId"
+          in: "path"
+          description: "ID of the state to unsubscribe"
+          required: true
+          type: "string"
+        - name: "subscribe"
+          in: "body"
+          description: "Subscribe request"
+          required: false
+          schema:
+            $ref: "#/definitions/UrlHook"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "State not found"
+        400:
+          description: "Invalid state ID supplied"
   /states:
     x-swagger-router-controller: state
     get:
       tags:
-      - "state"
-      summary: "Get list of state"
+        - "state"
+      summary: "Get list of states"
       operationId: "listStates"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "filter"
-        in: "query"
-        description: "Filter, like modbus.0.*"
-        required: true
-        type: "string"
+        - name: "filter"
+          in: "query"
+          description: "Filter, like modbus.0.*"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful operation"
@@ -152,70 +232,211 @@ paths:
           description: "Invalid filter supplied"
   /states/subscribe:
     x-swagger-router-controller: state
-    put:
+    post:
       tags:
-      - "state"
+        - "state"
       summary: "Subscribe for state updates"
-      operationId: "subscribe"
+      operationId: "subscribeStates"
+      consumes:
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "filter"
-        in: "query"
-        description: "Filter, like modbus.0.*"
-        required: true
-        type: "string"
-      - name: "url"
-        in: "query"
-        description: "URL of web hook"
-        required: true
-        type: "string"
+        - name: "Subscribe"
+          in: "body"
+          description: "URL of web hook and the subscribe pattern"
+          required: true
+          schema:
+            $ref: "#/definitions/UrlHookWithPattern"
       responses:
         200:
           description: "successful operation"
         400:
           description: "Invalid filter supplied"
-  /states/unsubscribe:
-    x-swagger-router-controller: state
-    put:
+    delete:
       tags:
-      - "state"
+        - "state"
       summary: "Unsubscribe from state updates."
       description: "If no filter provided, all subscribes will be cleared for this web hook"
-      operationId: "unsubscribe"
+      operationId: "unsubscribeStates"
+      consumes:
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "filter"
-        in: "query"
-        description: "Filter, like modbus.0.*"
-        required: false
-        type: "string"
-      - name: "url"
-        in: "query"
-        description: "URL of web hook"
-        required: true
-        type: "string"
+        - name: "UnSubscribe"
+          in: "body"
+          description: "URL of web hook and the unsubscribe pattern"
+          required: true
+          schema:
+            $ref: "#/definitions/UrlHookWithPattern"
       responses:
         200:
           description: "successful operation"
         400:
           description: "Invalid filter supplied"
+  /object/{objectId}:
+    x-swagger-router-controller: object
+    get:
+      tags:
+        - "object"
+      summary: "Read object"
+      description: ""
+      operationId: "readObject"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "objectId"
+          in: "path"
+          description: "ID of the object to return"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Object"
+        404:
+          description: "Object not found"
+        400:
+          description: "Invalid object ID supplied"
+    put:
+      tags:
+        - "object"
+      summary: "Update the object"
+      description: "To delete the parts of the object, set the value to 'null', like {\"common\": {\"desc\": null} to delete the \"common.desc\""
+      operationId: "updateObject"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "objectId"
+          description: "ID of the object to write"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "value"
+          description: "Object"
+          required: true
+          schema:
+            $ref: "#/definitions/Object"
+      responses:
+        200:
+          description: "Update successful"
+          schema:
+            $ref: "#/definitions/Object"
+        400:
+          description: "Invalid object ID supplied"
+        404:
+          description: "Object not found"
+        405:
+          description: "Invalid object structure"
+    delete:
+      tags:
+        - "object"
+      summary: "Delete object"
+      description: ""
+      operationId: "deletedObject"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "objectId"
+          in: "path"
+          description: "ID of the object to be deleted"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "Object not found"
+        400:
+          description: "Invalid object ID supplied"
+  /object/{objectId}/subscribe:
+    x-swagger-router-controller: object
+    post:
+      tags:
+        - "object"
+      summary: "Subscribe on object changes"
+      description: "Subscribe on object changes"
+      operationId: "subscribeObject"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "objectId"
+          in: "path"
+          description: "ID of the state to subscribe"
+          required: true
+          type: "string"
+        - name: "url"
+          in: "body"
+          description: "URL of web hook"
+          required: true
+          schema:
+            $ref: "#/definitions/UrlHook"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Object"
+        404:
+          description: "Object not found"
+        400:
+          description: "Invalid object ID supplied"
+    delete:
+      tags:
+        - "object"
+      summary: "Unsubscribe from object changes"
+      description: "Unsubscribe on object changes"
+      operationId: "unsubscribeObject"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "objectId"
+          in: "path"
+          description: "ID of the object to unsubscribe"
+          required: true
+          type: "string"
+        - name: "subscribe"
+          in: "body"
+          description: "Subscribe request"
+          required: true
+          schema:
+            $ref: "#/definitions/UrlHook"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "Object not found"
+        400:
+          description: "Invalid object ID supplied"
   /objects:
     x-swagger-router-controller: object
     get:
       tags:
-      - "object"
+        - "object"
       summary: "Get list of objects"
       operationId: "listObjects"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "filter"
-        in: "query"
-        description: "Filter, like modbus.0.*"
-        required: true
-        type: "string"
+        - name: "filter"
+          in: "query"
+          description: "Filter, like modbus.0.*"
+          required: true
+          type: "string"
+        - name: "type"
+          in: "query"
+          description: "Type of objects"
+          required: false
+          type: "string"
+          enum: [state, channel, device, enum, instance, adapter, host, chart, script, folder]
       responses:
         200:
           description: "successful operation"
@@ -225,6 +446,52 @@ paths:
               $ref: "#/definitions/Object"
         400:
           description: "Invalid filter supplied"
+  /objects/subscribe:
+    x-swagger-router-controller: object
+    post:
+      tags:
+        - "object"
+      summary: "Subscribe for objects updates"
+      operationId: "subscribeObjects"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Subscribe"
+          in: "body"
+          description: "URL of web hook and the subscribe pattern"
+          required: true
+          schema:
+            $ref: "#/definitions/UrlHookWithPattern"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid filter supplied"
+    delete:
+      tags:
+        - "object"
+      summary: "Unsubscribe from object updates"
+      description: "If no filter provided, all the object subscribes will be cleared for this web hook"
+      operationId: "unsubscribeObjects"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Unsubscribe"
+          in: "body"
+          description: "URL of web hook and the unsubscribe pattern"
+          required: true
+          schema:
+            $ref: "#/definitions/UrlHookWithPattern"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid filter supplied"
+
 definitions:
   State:
     type: "object"
@@ -265,21 +532,51 @@ definitions:
       native:
         type: "object"
         description: "Native state description"
+  #Type:
+  #  type: "string"
+  #  enum: [state, channel, device, enum, instance, adapter, host, chart, script, folder]
   Object:
     type: "object"
     properties:
-      id:
+      _id:
         type: "string"
         description: "ID of the state"
       type:
         type: "string"
         description: "Type of this object"
+        enum: [state, channel, device, enum, instance, adapter, host, chart, script, folder]
       common:
         type: "object"
         description: "Common state description"
       native:
         type: "object"
         description: "Native state description"
+  UrlHook:
+    type: "object"
+    required: [url]
+    properties:
+      url:
+        type: "string"
+        description: "URL"
+      method:
+        type: "string"
+        description: "HTTP Method"
+        enum: [ POST, GET, PUT, PATCH ]
+  UrlHookWithPattern:
+    type: "object"
+    required: [url, pattern]
+    properties:
+      url:
+        type: "string"
+        description: "URL"
+      pattern:
+        type: "string"
+        description: "Subscribe pattern like: \"system.adapter.admin.0.*\""
+      method:
+        type: "string"
+        description: "HTTP Method"
+        enum: [ POST, GET, PUT, PATCH ]
+
 externalDocs:
   description: "Find out more about ioBroker"
   url: "http://iobroker.net"

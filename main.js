@@ -1,5 +1,6 @@
-/* jshint -W097 */// jshint strict:false
-/*jslint node: true */
+/* jshint -W097 */
+/* jshint strict: false */
+/* jslint node: true */
 'use strict';
 
 const utils       = require('@iobroker/adapter-core'); // Get common adapter utils
@@ -14,18 +15,40 @@ function startAdapter(options) {
     options = options || {};
     Object.assign(options, {
         name: adapterName,
-        stateChange: (id, state) => webServer && webServer.api && webServer.api.stateChange(id, state),
+        stateChange: (id, state) => {
+            webServer && webServer.api && webServer.api.stateChange(id, state);
+        },
+        objectChange: (id, obj) => webServer && webServer.api && webServer.api.objectChange(id, obj),
         unload: callback => {
             try {
-                adapter.log.info('terminating http' + (webServer.settings.secure ? 's' : '') + ' server on port ' + webServer.settings.port);
-                if (webServer) {
-                    webServer.close();
+                adapter.log.info(`terminating http${adapter.config.secure ? 's' : ''} server on port ${adapter.config.port}`);
+                if (webServer.api) {
+                    webServer.api.destroy()
+                        .then(() => {
+                            try {
+                                if (webServer.server) {
+                                    webServer.server.close();
+                                    webServer.server = null;
+                                }
+                            } catch (error) {
+                                // ignore
+                                console.error('Cannot close server: ' + error);
+                            }
+                            webServer = null;
+                            callback();
+                        });
+                } else {
+                    if (webServer.server) {
+                        webServer.server.close();
+                        webServer.server = null;
+                    }
                     webServer = null;
+                    callback();
                 }
-
-            } catch (e) {
+            } catch (error) {
+                console.error('Cannot close server: ' + error);
+                callback();
             }
-            callback();
         },
         ready: main
     });
@@ -39,7 +62,7 @@ function main() {
     if (adapter.config.webInstance) {
         console.log('Adapter runs as a part of web service');
         adapter.log.warn('Adapter runs as a part of web service');
-        adapter.setForeignState('system.adapter.' + adapter.namespace + '.alive', false, true, () =>
+        adapter.setForeignState(`system.adapter.${adapter.namespace}.alive`, false, true, () =>
             setTimeout(() => process.exit(), 1000));
 
         return;
@@ -77,14 +100,14 @@ function initWebServer(settings, callback) {
         settings:  settings
     };
 
-    server.api = new SwaggerUI(server.server, settings, adapter, app => {
+    server.api = new SwaggerUI(server.server, settings, adapter, async app => {
         if (settings.port) {
             if (settings.secure && !adapter.config.certificates) {
                 return null;
             }
 
             try {
-                server.server = LE.createServerAsnyc(app, settings, adapter.config.certificates, adapter.config.leConfig, adapter.log);
+                server.server = await LE.createServerAsync(app, settings, adapter.config.certificates, adapter.config.leConfig, adapter.log);
             } catch (err) {
                 adapter.log.error(`Cannot create webserver: ${err}`);
                 adapter.terminate ? adapter.terminate(1) : process.exit(1);
@@ -110,25 +133,27 @@ function initWebServer(settings, callback) {
                     adapter.log.error(`Cannot start server on ${settings.bind || '0.0.0.0'}:${serverPort}: ${e}`);
                 }
                 if (!serverListening) {
+                    callback && callback(server);
                     adapter.terminate ? adapter.terminate(1) : process.exit(1);
                 }
             });
 
             adapter.getPort(settings.port, port => {
                 if (port !== settings.port && !adapter.config.findNextPort) {
-                    adapter.log.error('port ' + settings.port + ' already in use');
+                    adapter.log.error(`port ${settings.port} already in use`);
                     process.exit(1);
                 }
                 serverPort = port;
 
-                server.server.listen(port, () => {
-                    serverListening = true;
-                });
-                adapter.log.info('http' + (settings.secure ? 's' : '') + ' server listening on port ' + port);
-                callback && callback(server ? server.server : null)
+                server.server.listen(port, () =>
+                    serverListening = true);
+                adapter.log.info(`http${settings.secure ? 's' : ''} server listening on port ${port}`);
+                callback && callback(server);
+                callback = null;
             });
         } else if (callback) {
-            callback(server ? server.server : null)
+            callback(server);
+            callback = null;
         }
     });
 }

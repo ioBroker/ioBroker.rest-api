@@ -14,6 +14,17 @@ This is RESTFul interface to read the objects and states from ioBroker and to wr
 ## Usage
 Call in browser ```http://ipaddress:8093/``` and use Swagger UI to request and modify the states
 
+## Subscribe on state or object changes
+Your application could get notifications by every change of the state or object.
+
+For that your application must provide an HTTP(S) end-point to accept the updates.
+
+Example in node.js see here [demoClient.js](lib/demoClient.js)
+
+## Notice
+- `POST` is always for creating a resource ( does not matter if it was duplicated )
+- `PUT` is for checking if resource exists then update, else create new resource
+- `PATCH` is always for updating a resource
 
 ## Changelog
 ### 0.1.0 (2017-09-14)
@@ -22,4 +33,4 @@ Call in browser ```http://ipaddress:8093/``` and use Swagger UI to request and m
 ## License
 Apache 2.0
 
-Copyright (c) 2017-2019 bluefox <dogafox@gmail.com>
+Copyright (c) 2017-2022 bluefox <dogafox@gmail.com>
