@@ -1,6 +1,6 @@
-var expect  = require('chai').expect;
-var setup   = require(__dirname + '/lib/setup');
-var request = require('request');
+const expect = require('chai').expect;
+const setup = require('./lib/setup');
+const axios = require('axios');
 
 let objects = null;
 let states  = null;

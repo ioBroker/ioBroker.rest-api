@@ -575,7 +575,7 @@ definitions:
       method:
         type: "string"
         description: "HTTP Method"
-        enum: [ POST, GET, PUT, PATCH ]
+        enum: [ POST, GET, PUT, PATCH, POLLING ]
 
 externalDocs:
   description: "Find out more about ioBroker"
