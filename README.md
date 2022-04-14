@@ -19,7 +19,7 @@ Your application could get notifications by every change of the state or object.
 
 For that your application must provide an HTTP(S) end-point to accept the updates.
 
-Example in node.js see here [demoClient.js](lib/demoClient.js)
+Example in node.js see here [demoNodeClient.js](lib/demoNodeClient.js)
 
 ## Notice
 - `POST` is always for creating a resource ( does not matter if it was duplicated )
