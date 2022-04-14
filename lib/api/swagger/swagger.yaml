@@ -83,7 +83,7 @@ paths:
           format: "int64"
       responses:
         200:
-          description: "Update successfull"
+          description: "successful operation"
           schema:
             $ref: "#/definitions/State"
         400:
@@ -324,7 +324,7 @@ paths:
             $ref: "#/definitions/Object"
       responses:
         200:
-          description: "Update successful"
+          description: "successful operation"
           schema:
             $ref: "#/definitions/Object"
         400:

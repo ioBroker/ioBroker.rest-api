@@ -92,13 +92,6 @@ describe('Test Swagger API', function () {
                 expect(obj.ack).to.be.true;
                 expect(obj.ts).to.be.ok;
                 expect(obj.from).to.equal('system.adapter.swagger.0');
-                /*
-                expect(obj.type).to.equal('state');
-                expect(obj._id).to.equal("system.adapter.swagger.0.alive");
-                expect(obj.common).to.be.ok;
-                expect(obj.native).to.be.ok;
-                expect(obj.common.name).to.equal("swagger.0.alive");
-                expect(obj.common.role).to.equal("indicator.state");*/
                 done();
             })
             .catch(error => {
@@ -111,7 +104,7 @@ describe('Test Swagger API', function () {
         axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive?withInfo=true')
             .then(response => {
                 const obj = response.data;
-                console.log('get/system.adapter.swagger.0.alive => ' + JSON.stringify(response.data));
+                console.log('[GET] /v1/state/system.adapter.swagger.0.alive?withInfo=true => ' + JSON.stringify(response.data));
                 //
                 // {
                 //   "val": true,
@@ -159,19 +152,31 @@ describe('Test Swagger API', function () {
     });
 
     it('Test Swagger API: set - must set state', function (done) {
-        axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.cpu?value=50')
-            .then(response => {
+        axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string?value=bla')
+            .then(async response => {
                 const obj = response.data;
-                console.log('get/system.adapter.swagger.0.cpu => ' + JSON.stringify(response.data));
+                console.log('[GET] /v1/state/javascript.0.test-string?value=bla => ' + JSON.stringify(response.data));
                 //
                 // {
-                //   "id": "system.adapter.swagger.0.cpu",
+                //   "id": "javascript.0.test-string",
                 //   "val": 10
                 // }
 
                 expect(obj).to.be.ok;
-                expect(obj.val).to.be.true;
-                expect(obj.id).to.equal('system.adapter.swagger.0.cpu');
+                expect(obj.val).to.equal('50');
+                expect(obj.id).to.equal('javascript.0.test-string');
+                let _response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string/plain');
+                const body = _response.data
+                console.log('[GET] /v1/state/javascript.0.test-string/plain => ' + body);
+                expect(body).equal('"bla"');
+
+                _response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string/plain?extraPlain=true');
+                console.log('[GET] /v1/state/javascript.0.test-string/plain => ' + body);
+                expect(_response.data).equal('bla');
+
+                _response = await axios.get('http://127.0.0.1:18183/get/javascript.0.test-string')
+                console.log('get/javascript.0.test-string => ' + _response.data);
+                expect(_response.data.val).equal('bla');
                 done();
             })
             .catch(error => {
@@ -184,7 +189,7 @@ describe('Test Swagger API', function () {
         axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive/plain')
             .then(response => {
                 const body = response.data
-                console.log('/v1/state/system.adapter.swagger.0.alive/plain => ' + body);
+                console.log(`[GET] /v1/state/system.adapter.swagger.0.alive/plain => ${body} type is "${typeof body}"`);
                 expect(body).equal('true');
                 done();
             })
@@ -195,47 +200,19 @@ describe('Test Swagger API', function () {
     });
 
     it('Test Swagger API: set - must set value', function (done) {
-        axios.patch('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.cpu', {})
+        axios.patch('http://127.0.0.1:18183/v1/state/javascript.0.test-string', {val: '60', ack: true})
             .then(response => {
-                console.log('set/system.adapter.swagger.0.cpu => ' + JSON.stringify(response.data));
+                console.log('[PATCH] /v1/state/javascript.0.test-string => ' + JSON.stringify(response.data));
                 const obj = response.data
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.false;
-                expect(obj.id).to.equal('system.adapter.swagger.0.alive');
-                axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive/plain')
-                    .then(response => {
-                        console.log('getPlainValue/system.adapter.swagger.0.alive => ' + response.data);
-                        expect(response.data).equal('false');
-                        done();
-                    });
-            })
-            .catch(error => {
-                console.error('Error in response: ' + error);
-                expect(error).to.be.not.ok;
-            });
-    });
-
-    it.skip('Test Swagger API: set - must set easy string value', function (done) {
-        axios.get('http://127.0.0.1:18183/set/javascript.0.test-string?val=bla')
-            .then(response => {
-                console.log('set/javascript.0.test-string?val=bla => ' + body);
-                expect(error).to.be.not.ok;
-                const obj = response.data
-                expect(obj).to.be.ok;
-                expect(obj.val).equal('bla');
+                expect(obj.ack).to.be.true;
                 expect(obj.id).to.equal('javascript.0.test-string');
-                axios.get('http://127.0.0.1:18183/getPlainValue/javascript.0.test-string')
+                return axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string/plain')
                     .then(response => {
-                        console.log('getPlainValue/javascript.0.test-string => ' + body);
-                        expect(error).to.be.not.ok;
-                        expect(body).equal('"bla"');
-                        axios.get('http://127.0.0.1:18183/get/javascript.0.test-string')
-                            .then(response => {
-                                console.log('get/javascript.0.test-string => ' + body);
-                                expect(error).to.be.not.ok;
-                                expect(JSON.parse(body).val).equal('bla');
-                                done();
-                            });
+                        console.log('[GET] /v1/state/javascript.0.test-string/plain => ' + response.data);
+                        expect(response.data).equal('60');
+                        done();
                     });
             })
             .catch(error => {
