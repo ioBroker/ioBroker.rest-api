@@ -22,8 +22,8 @@ function startAdapter(options) {
         unload: callback => {
             try {
                 adapter.log.info(`terminating http${adapter.config.secure ? 's' : ''} server on port ${adapter.config.port}`);
-                if (webServer.api) {
-                    webServer.api.destroy()
+                if (webServer && webServer.api) {
+                    webServer.api.unload()
                         .then(() => {
                             try {
                                 if (webServer.server) {
@@ -38,7 +38,7 @@ function startAdapter(options) {
                             callback();
                         });
                 } else {
-                    if (webServer.server) {
+                    if (webServer && webServer.server) {
                         webServer.server.close();
                         webServer.server = null;
                     }
@@ -64,21 +64,19 @@ function main() {
         adapter.log.warn('Adapter runs as a part of web service');
         adapter.setForeignState(`system.adapter.${adapter.namespace}.alive`, false, true, () =>
             setTimeout(() => process.exit(), 1000));
-
-        return;
-    }
-
-    if (adapter.config.secure) {
-        // Load certificates
-        adapter.getCertificates((err, certificates, leConfig) => {
-            adapter.config.certificates = certificates;
-            adapter.config.leConfig     = leConfig;
+    } else {
+        if (adapter.config.secure) {
+            // Load certificates
+            adapter.getCertificates((err, certificates, leConfig) => {
+                adapter.config.certificates = certificates;
+                adapter.config.leConfig     = leConfig;
+                initWebServer(adapter.config, server =>
+                    webServer = server);
+            });
+        } else {
             initWebServer(adapter.config, server =>
                 webServer = server);
-        });
-    } else {
-        initWebServer(adapter.config, server =>
-            webServer = server);
+        }
     }
 }
 
@@ -100,7 +98,7 @@ function initWebServer(settings, callback) {
         settings:  settings
     };
 
-    server.api = new SwaggerUI(server.server, settings, adapter, async app => {
+    server.api = new SwaggerUI(server.server, settings, adapter, null, null, async app => {
         if (settings.port) {
             if (settings.secure && !adapter.config.certificates) {
                 return null;

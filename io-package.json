@@ -9,7 +9,10 @@
         "ru": "initial commit"
       }
     },
-    "title": "Swagger UI",
+    "title": "Swagger UI API",
+    "titleLang": {
+      "en": "Swagger UI API"
+    },
     "desc": {
       "en": "This adapter allows to read and write ioBroker objects and state with web RESTful API and Swagger UI",
       "de": "Dieser Adapter erlaubt die ioBroker-Objekte mit Web RESTful API und Swagger UI zu lesen und zu schreiben",
@@ -25,19 +28,21 @@
     "authors": [
       "bluefox <dogafox@gmail.com>"
     ],
-    "license": "Apache 2.0",
+    "license": "Apache-2.0",
     "platform": "Javascript/Node.js",
     "mode": "daemon",
+    "stoppedWhenWebExtension": true,
     "loglevel": "info",
     "icon": "swagger.png",
     "compact": true,
     "materialize": true,
-    "webExtensionLater": "lib/swagger-ui.js",
+    "webExtension": "lib/swagger-ui.js",
     "readme": "https://github.com/ioBroker/ioBroker.swagger/blob/master/README.md",
     "keywords": [
       "web",
       "swagger",
       "RESTful",
+      "API",
       "communication"
     ],
     "enabled": true,
@@ -45,9 +50,12 @@
     "type": "communication",
     "stopBeforeUpdate": true,
     "localLink": "%protocol%://%ip%:%port%/",
+    "adminUI": {
+      "config": "json"
+    },
     "dependencies": [
       {
-        "js-controller": ">=0.15.0"
+        "js-controller": ">=4.0.0"
       }
     ]
   },

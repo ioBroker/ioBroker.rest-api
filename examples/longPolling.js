@@ -14,7 +14,7 @@ class LongPolling {
         }
         this.options = options || {};
         this.options.reconnectInterval = parseInt(this.options.reconnectInterval, 10) || 5000;
-        this.options.pollingInterval = parseInt(this.options.pollingInterval, 10) || 15000;
+        this.options.pollingInterval = parseInt(this.options.pollingInterval, 10) || 30000;
         this.host = host;
         this.isConnected = false;
         this.terminate = false;
