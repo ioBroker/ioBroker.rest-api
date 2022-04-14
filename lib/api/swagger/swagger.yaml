@@ -128,7 +128,7 @@ paths:
       parameters:
         - name: "stateId"
           in: "path"
-          description: "ID of the state to toggle"
+          description: "ID of the state to read"
           required: true
           type: "string"
         - name: "extraPlain"

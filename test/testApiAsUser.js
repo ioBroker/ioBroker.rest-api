@@ -1,12 +1,9 @@
-/* jshint -W097 */// jshint strict:false
-/*jslint node: true */
-/*jshint expr: true*/
 var expect  = require('chai').expect;
 var setup   = require(__dirname + '/lib/setup');
 var request = require('request');
 
-var objects = null;
-var states  = null;
+let objects = null;
+let states  = null;
 
 process.env.NO_PROXY = '127.0.0.1';
 
@@ -14,30 +11,29 @@ function checkConnectionOfAdapter(cb, counter) {
     counter = counter || 0;
     console.log('Try check #' + counter);
     if (counter > 30) {
-        if (cb) cb('Cannot check connection');
+        cb && cb('Cannot check connection');
         return;
     }
 
-    states.getState('system.adapter.simple-api.0.alive', function (err, state) {
-        if (err) console.error(err);
+    states.getState('system.adapter.swagger.0.alive', (err, state) => {
+        err && console.error(err);
         if (state && state.val) {
-            if (cb) cb();
+            cb && cb();
         } else {
-            setTimeout(function () {
-                checkConnectionOfAdapter(cb, counter + 1);
-            }, 1000);
+            setTimeout(() =>
+                checkConnectionOfAdapter(cb, counter + 1), 1000);
         }
     });
 }
 
-describe('Test RESTful API as User', function() {
+describe.skip('Test RESTful API as User', function() {
     before('Test RESTful API as User: Start js-controller', function (_done) {
         this.timeout(600000); // because of first install from npm
         setup.adapterStarted = false;
 
         var brokerStarted   = false;
         setup.setupController(async function () {
-            var config = setup.getAdapterConfig();
+            const config = await setup.getAdapterConfig();
             // enable adapter
             config.common.enabled = true;
             config.common.loglevel = 'debug';

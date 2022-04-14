@@ -1,12 +1,9 @@
-/* jshint -W097 */// jshint strict:false
-/*jslint node: true */
-/*jshint expr: true*/
-var expect  = require('chai').expect;
-var setup   = require(__dirname + '/lib/setup');
-var request = require('request');
+const expect = require('chai').expect;
+const setup = require('./lib/setup');
+const axios = require('axios');
 
-var objects = null;
-var states  = null;
+let objects = null;
+let states = null;
 
 process.env.NO_PROXY = '127.0.0.1';
 
@@ -14,51 +11,47 @@ function checkConnectionOfAdapter(cb, counter) {
     counter = counter || 0;
     console.log('Try check #' + counter);
     if (counter > 30) {
-        if (cb) cb('Cannot check connection');
+        cb && cb('Cannot check connection');
         return;
     }
 
-    states.getState('system.adapter.simple-api.0.alive', function (err, state) {
-        if (err) console.error(err);
+    states.getState('system.adapter.swagger.0.alive', (err, state) => {
+        err && console.error(err);
         if (state && state.val) {
-            if (cb) cb();
+            cb && cb();
         } else {
-            setTimeout(function () {
-                checkConnectionOfAdapter(cb, counter + 1);
-            }, 1000);
+            setTimeout(() =>
+                checkConnectionOfAdapter(cb, counter + 1), 1000);
         }
     });
 }
 
-describe('Test RESTful API', function() {
-    before('Test RESTful API: Start js-controller', function (_done) {
+describe('Test Swagger API', function () {
+    before('Test Swagger API: Start js-controller', function (_done) {
         this.timeout(600000); // because of first install from npm
-        var brokerStarted   = false;
         setup.adapterStarted = false;
 
-        setup.setupController(async function () {
-            var config = setup.getAdapterConfig();
+        setup.setupController(async () => {
+            const config = await setup.getAdapterConfig();
             // enable adapter
             config.common.enabled = true;
             config.common.loglevel = 'debug';
             config.native.port = 18183;
             await setup.setAdapterConfig(config.common, config.native);
 
-            setup.startController(function (_objects, _states) {
+            setup.startController((_objects, _states) => {
                 objects = _objects;
-                states  = _states;
+                states = _states;
                 // give some time to start server
-                setTimeout(function () {
-                    _done();
-                }, 2000);
+                setTimeout(() => _done(), 2000);
             });
         });
     });
 
-    it('Test adapter: Check if adapter started and create upload datapoint', function (done) {
+    it('Test adapter: Check if adapter started and create test datapoint', function (done) {
         this.timeout(60000);
-        checkConnectionOfAdapter(function (res) {
-            if (res) console.log(res);
+        checkConnectionOfAdapter(res => {
+            res && console.log(res);
             expect(res).not.to.be.equal('Cannot check connection');
             objects.setObject('javascript.0.test-string', {
                 common: {
@@ -67,12 +60,11 @@ describe('Test RESTful API', function() {
                     role: 'value',
                     def: ''
                 },
-                native: {
-                },
+                native: {},
                 type: 'state'
-            }, function (err) {
+            }, (err) => {
                 expect(err).to.be.null;
-                states.setState('javascript.0.test-string','', function(err) {
+                states.setState('javascript.0.test-string', '', err => {
                     expect(err).to.be.null;
                     done();
                 });
@@ -80,345 +72,442 @@ describe('Test RESTful API', function() {
         });
     });
 
-    it('Test RESTful API: get - must return value', function (done) {
-        request('http://127.0.0.1:18183/get/system.adapter.simple-api.0.alive', function (error, response, body) {
-            console.log('get/system.adapter.simple-api.0.alive => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            //{
-            //    "val" : true,
-            //    "ack" : true,
-            //    "ts" : 1455009717,
-            //    "q" : 0,
-            //    "from" : "system.adapter.simple-api.0",
-            //    "lc" : 1455009717,
-            //    "expire" : 30000,
-            //    "_id" : "system.adapter.simple-api.0.alive",
-            //    "type" : "state",
-            //    "common" : {
-            //      "name" : "simple-api.0.alive",
-            //        "type" : "boolean",
-            //        "role" : "indicator.state"
-            //       },
-            //    "native" : {}
-            //
-            //}
+    it('Test Swagger API: get - must return state', function (done) {
+        axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive')
+            .then(response => {
+                const obj = response.data;
+                console.log('get/system.adapter.swagger.0.alive => ' + JSON.stringify(response.data));
+                //
+                // {
+                //   "val": true,
+                //   "ack": true,
+                //   "ts": 1649867694364,
+                //   "q": 0,
+                //   "from": "system.adapter.swagger.0",
+                //   "lc": 1649867136490
+                // }
 
-            expect(obj).to.be.ok;
-            expect(obj.val).to.be.true;
-            expect(obj.ack).to.be.true;
-            expect(obj.ts).to.be.ok;
-            expect(obj.from).to.equal("system.adapter.simple-api.0");
-            expect(obj.type).to.equal("state");
-            expect(obj._id).to.equal("system.adapter.simple-api.0.alive");
-            expect(obj.common).to.be.ok;
-            expect(obj.native).to.be.ok;
-            expect(obj.common.name).to.equal("simple-api.0.alive");
-            expect(obj.common.role).to.equal("indicator.state");
-            done();
-        });
-    });
-
-    it('Test RESTful API: getPlainValue - must return plain value', function (done) {
-        request('http://127.0.0.1:18183/getPlainValue/system.adapter.simple-api.0.alive', function (error, response, body) {
-            console.log('getPlainValue/system.adapter.simple-api.0.alive => ' + body);
-            expect(error).to.be.not.ok;
-            expect(body).equal('true');
-            done();
-        });
-    });
-
-    it('Test RESTful API: set - must set value', function (done) {
-        request('http://127.0.0.1:18183/set/system.adapter.simple-api.0.alive?val=false', function (error, response, body) {
-            console.log('set/system.adapter.simple-api.0.alive?val=false => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            expect(obj).to.be.ok;
-            expect(obj.val).to.be.false;
-            expect(obj.id).to.equal('system.adapter.simple-api.0.alive');
-            request('http://127.0.0.1:18183/getPlainValue/system.adapter.simple-api.0.alive', function (error, response, body) {
-                console.log('getPlainValue/system.adapter.simple-api.0.alive => ' + body);
+                expect(obj).to.be.ok;
+                expect(obj.val).to.be.true;
+                expect(obj.ack).to.be.true;
+                expect(obj.ts).to.be.ok;
+                expect(obj.from).to.equal('system.adapter.swagger.0');
+                /*
+                expect(obj.type).to.equal('state');
+                expect(obj._id).to.equal("system.adapter.swagger.0.alive");
+                expect(obj.common).to.be.ok;
+                expect(obj.native).to.be.ok;
+                expect(obj.common.name).to.equal("swagger.0.alive");
+                expect(obj.common.role).to.equal("indicator.state");*/
+                done();
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
                 expect(error).to.be.not.ok;
-                expect(body).equal('false');
-                request('http://127.0.0.1:18183/get/system.adapter.simple-api.0.alive', function (error, response, body) {
-                    console.log('get/system.adapter.simple-api.0.alive => ' + body);
-                    expect(error).to.be.not.ok;
-                    expect(JSON.parse(body).val).equal(false);
-                    done();
-                });
             });
-        });
     });
 
-    it('Test RESTful API: set - must set easy string value', function (done) {
-        request('http://127.0.0.1:18183/set/javascript.0.test-string?val=bla', function (error, response, body) {
-            console.log('set/javascript.0.test-string?val=bla => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            expect(obj).to.be.ok;
-            expect(obj.val).equal('bla');
-            expect(obj.id).to.equal('javascript.0.test-string');
-            request('http://127.0.0.1:18183/getPlainValue/javascript.0.test-string', function (error, response, body) {
-                console.log('getPlainValue/javascript.0.test-string => ' + body);
+    it('Test Swagger API: get - must return state with info', function (done) {
+        axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive?withInfo=true')
+            .then(response => {
+                const obj = response.data;
+                console.log('get/system.adapter.swagger.0.alive => ' + JSON.stringify(response.data));
+                //
+                // {
+                //   "val": true,
+                //   "ack": true,
+                //   "ts": 1649867136399,
+                //   "q": 0,
+                //   "from": "system.adapter.swagger.0",
+                //   "lc": 1649867136490,
+                //   "id": "system.adapter.swagger.0.alive",
+                //   "type": "state",
+                //   "common": {
+                //     "name": "swagger.0 alive",
+                //     "type": "boolean",
+                //     "read": true,
+                //     "write": true,
+                //     "role": "indicator.state"
+                //   },
+                //   "native": {},
+                //   "acl": {
+                //     "object": 1636,
+                //     "state": 1636,
+                //     "owner": "system.user.admin",
+                //     "ownerGroup": "system.group.administrator"
+                //   },
+                //   "user": "system.user.admin"
+                // }
+
+                expect(obj).to.be.ok;
+                expect(obj.val).to.be.true;
+                expect(obj.ack).to.be.true;
+                expect(obj.ts).to.be.ok;
+                expect(obj.from).to.equal('system.adapter.swagger.0');
+                expect(obj.type).to.equal('state');
+                expect(obj._id).to.equal("system.adapter.swagger.0.alive");
+                expect(obj.common).to.be.ok;
+                expect(obj.native).to.be.ok;
+                expect(obj.common.name).to.equal("swagger.0.alive");
+                expect(obj.common.role).to.equal("indicator.state");
+                done();
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
                 expect(error).to.be.not.ok;
-                expect(body).equal('"bla"');
-                request('http://127.0.0.1:18183/get/javascript.0.test-string', function (error, response, body) {
-                    console.log('get/javascript.0.test-string => ' + body);
-                    expect(error).to.be.not.ok;
-                    expect(JSON.parse(body).val).equal('bla');
-                    done();
-                });
             });
-        });
     });
 
-    it('Test RESTful API: set - must set encoded string value', function (done) {
-        request('http://127.0.0.1:18183/set/javascript.0.test-string?val=bla%26fasel%2efoo%3Dhummer+hey', function (error, response, body) {
-            console.log('set/javascript.0.test-string?val=bla%20fasel%2efoo => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            expect(obj).to.be.ok;
-            expect(obj.val).equal('bla&fasel.foo=hummer hey');
-            expect(obj.id).to.equal('javascript.0.test-string');
-            request('http://127.0.0.1:18183/getPlainValue/javascript.0.test-string', function (error, response, body) {
-                console.log('getPlainValue/javascript.0.test-string => ' + body);
+    it('Test Swagger API: set - must set state', function (done) {
+        axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.cpu?value=50')
+            .then(response => {
+                const obj = response.data;
+                console.log('get/system.adapter.swagger.0.cpu => ' + JSON.stringify(response.data));
+                //
+                // {
+                //   "id": "system.adapter.swagger.0.cpu",
+                //   "val": 10
+                // }
+
+                expect(obj).to.be.ok;
+                expect(obj.val).to.be.true;
+                expect(obj.id).to.equal('system.adapter.swagger.0.cpu');
+                done();
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
                 expect(error).to.be.not.ok;
-                expect(body).equal('"bla&fasel.foo=hummer hey"');
-                request('http://127.0.0.1:18183/get/javascript.0.test-string', function (error, response, body) {
-                    console.log('get/javascript.0.test-string => ' + body);
-                    expect(error).to.be.not.ok;
-                    expect(JSON.parse(body).val).equal('bla&fasel.foo=hummer hey');
-                    done();
-                });
             });
-        });
     });
 
-    it('Test RESTful API: set - must set val', function (done) {
-        request('http://127.0.0.1:18183/set/system.adapter.simple-api.0.alive?val=true', function (error, response, body) {
-            console.log('set/system.adapter.simple-api.0.alive?val=true => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            expect(obj).to.be.ok;
-            expect(obj.val).to.be.true;
-            expect(obj.id).to.equal('system.adapter.simple-api.0.alive');
-            request('http://127.0.0.1:18183/getPlainValue/system.adapter.simple-api.0.alive', function (error, response, body) {
-                console.log('getPlainValue/system.adapter.simple-api.0.alive => ' + body);
-                expect(error).to.be.not.ok;
+    it('Test Swagger API: getPlainValue - must return plain value', function (done) {
+        axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive/plain')
+            .then(response => {
+                const body = response.data
+                console.log('/v1/state/system.adapter.swagger.0.alive/plain => ' + body);
                 expect(body).equal('true');
                 done();
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
+                expect(error).to.be.not.ok;
             });
-        });
     });
 
-    it('Test RESTful API: toggle - must toggle boolean value to false', function (done) {
-        request('http://127.0.0.1:18183/toggle/system.adapter.simple-api.0.alive', function (error, response, body) {
-            console.log('toggle/system.adapter.simple-api.0.alive => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            expect(obj).to.be.ok;
-            expect(obj.val).to.be.false;
-            expect(obj.id).to.equal('system.adapter.simple-api.0.alive');
-
-            request('http://127.0.0.1:18183/getPlainValue/system.adapter.simple-api.0.alive', function (error, response, body) {
-                console.log('getPlainValue/system.adapter.simple-api.0.alive => ' + body);
-                expect(error).to.be.not.ok;
-                expect(body).equal('false');
-                done();
-            });
-        });
-    });
-
-    it('Test RESTful API: toggle - must toggle boolean value to true', function (done) {
-        request('http://127.0.0.1:18183/toggle/system.adapter.simple-api.0.alive', function (error, response, body) {
-            console.log('toggle/system.adapter.simple-api.0.alive => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            expect(obj).to.be.ok;
-            expect(obj.val).to.be.true;
-            expect(obj.id).to.equal('system.adapter.simple-api.0.alive');
-
-            request('http://127.0.0.1:18183/getPlainValue/system.adapter.simple-api.0.alive', function (error, response, body) {
-                console.log('getPlainValue/system.adapter.simple-api.0.alive => ' + body);
-                expect(error).to.be.not.ok;
-                expect(body).equal('true');
-                done();
-            });
-        });
-    });
-
-    it('Test RESTful API: toggle - must toggle number value to 100', function (done) {
-        request('http://127.0.0.1:18183/toggle/system.adapter.simple-api.upload', function (error, response, body) {
-            console.log('toggle/system.adapter.simple-api.upload => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            expect(obj).to.be.ok;
-            expect(obj.val).to.be.equal(100);
-            expect(obj.id).to.equal('system.adapter.simple-api.upload');
-
-            request('http://127.0.0.1:18183/getPlainValue/system.adapter.simple-api.upload', function (error, response, body) {
-                console.log('getPlainValue/system.adapter.simple-api.upload => ' + body);
-                expect(error).to.be.not.ok;
-                expect(body).equal('100');
-                request('http://127.0.0.1:18183/set/system.adapter.simple-api.upload?val=49', function (error, response, body) {
-                    console.log('set/system.adapter.simple-api.upload?val=49 => ' + body);
-                    request('http://127.0.0.1:18183/toggle/system.adapter.simple-api.upload', function (error, response, body) {
-                        console.log('toggle/system.adapter.simple-api.upload => ' + body);
-                        expect(error).to.be.not.ok;
-                        var obj = JSON.parse(body);
-                        expect(obj).to.be.ok;
-                        expect(obj.val).to.be.equal(51);
-                        expect(obj.id).to.equal('system.adapter.simple-api.upload');
-
-                        request('http://127.0.0.1:18183/getPlainValue/system.adapter.simple-api.upload', function (error, response, body) {
-                            console.log('getPlainValue/system.adapter.simple-api.upload => ' + body);
-                            expect(error).to.be.not.ok;
-                            expect(body).equal('51');
-                            done();
-                        });
+    it('Test Swagger API: set - must set value', function (done) {
+        axios.patch('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.cpu', {})
+            .then(response => {
+                console.log('set/system.adapter.swagger.0.cpu => ' + JSON.stringify(response.data));
+                const obj = response.data
+                expect(obj).to.be.ok;
+                expect(obj.val).to.be.false;
+                expect(obj.id).to.equal('system.adapter.swagger.0.alive');
+                axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive/plain')
+                    .then(response => {
+                        console.log('getPlainValue/system.adapter.swagger.0.alive => ' + response.data);
+                        expect(response.data).equal('false');
+                        done();
                     });
-                });
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
+                expect(error).to.be.not.ok;
             });
-        });
     });
 
-    it('Test RESTful API: setBulk - must set values', function (done) {
-        request('http://127.0.0.1:18183/setBulk/?system.adapter.simple-api.upload=50&system.adapter.simple-api.0.alive=false', function (error, response, body) {
-            console.log('setBulk/?system.adapter.simple-api.upload=50&system.adapter.simple-api.0.alive=false => ' + body);
-            expect(error).to.be.not.ok;
-
-            var obj = JSON.parse(body);
-            expect(obj).to.be.ok;
-            expect(obj[0].val).to.be.equal(50);
-            expect(obj[0].id).to.equal('system.adapter.simple-api.upload');
-            expect(obj[1].val).to.be.equal(false);
-            expect(obj[1].id).to.equal('system.adapter.simple-api.0.alive');
-
-            request('http://127.0.0.1:18183/getBulk/system.adapter.simple-api.upload,system.adapter.simple-api.0.alive', function (error, response, body) {
-                console.log('getBulk/system.adapter.simple-api.upload,system.adapter.simple-api.0.alive => ' + body);
+    it.skip('Test Swagger API: set - must set easy string value', function (done) {
+        axios.get('http://127.0.0.1:18183/set/javascript.0.test-string?val=bla')
+            .then(response => {
+                console.log('set/javascript.0.test-string?val=bla => ' + body);
                 expect(error).to.be.not.ok;
-                var obj = JSON.parse(body);
-                expect(obj[0].val).equal(50);
-                expect(obj[1].val).equal(false);
+                const obj = response.data
+                expect(obj).to.be.ok;
+                expect(obj.val).equal('bla');
+                expect(obj.id).to.equal('javascript.0.test-string');
+                axios.get('http://127.0.0.1:18183/getPlainValue/javascript.0.test-string')
+                    .then(response => {
+                        console.log('getPlainValue/javascript.0.test-string => ' + body);
+                        expect(error).to.be.not.ok;
+                        expect(body).equal('"bla"');
+                        axios.get('http://127.0.0.1:18183/get/javascript.0.test-string')
+                            .then(response => {
+                                console.log('get/javascript.0.test-string => ' + body);
+                                expect(error).to.be.not.ok;
+                                expect(JSON.parse(body).val).equal('bla');
+                                done();
+                            });
+                    });
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
+                expect(error).to.be.not.ok;
+            });
+    });
+
+    it.skip('Test Swagger API: set - must set encoded string value', function (done) {
+        axios.get('http://127.0.0.1:18183/set/javascript.0.test-string?val=bla%26fasel%2efoo%3Dhummer+hey')
+            .then(response => {
+                console.log('set/javascript.0.test-string?val=bla%20fasel%2efoo => ' + body);
+                expect(error).to.be.not.ok;
+                const obj = response.data
+                expect(obj).to.be.ok;
+                expect(obj.val).equal('bla&fasel.foo=hummer hey');
+                expect(obj.id).to.equal('javascript.0.test-string');
+                axios.get('http://127.0.0.1:18183/getPlainValue/javascript.0.test-string')
+                    .then(response => {
+                        console.log('getPlainValue/javascript.0.test-string => ' + body);
+                        expect(error).to.be.not.ok;
+                        expect(body).equal('"bla&fasel.foo=hummer hey"');
+                        axios.get('http://127.0.0.1:18183/get/javascript.0.test-string')
+                            .then(response => {
+                                console.log('get/javascript.0.test-string => ' + body);
+                                expect(error).to.be.not.ok;
+                                expect(JSON.parse(body).val).equal('bla&fasel.foo=hummer hey');
+                                done();
+                            });
+                    });
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
+                expect(error).to.be.not.ok;
+            });
+    });
+
+    it.skip('Test Swagger API: set - must set val', function (done) {
+        axios.get('http://127.0.0.1:18183/set/system.adapter.swagger.0.alive?val=true')
+            .then(response => {
+                console.log('set/system.adapter.swagger.0.alive?val=true => ' + body);
+                expect(error).to.be.not.ok;
+                const obj = response.data
+                expect(obj).to.be.ok;
+                expect(obj.val).to.be.true;
+                expect(obj.id).to.equal('system.adapter.swagger.0.alive');
+                axios.get('http://127.0.0.1:18183/getPlainValue/system.adapter.swagger.0.alive')
+                    .then(response => {
+                        console.log('getPlainValue/system.adapter.swagger.0.alive => ' + body);
+                        expect(error).to.be.not.ok;
+                        expect(body).equal('true');
+                        done();
+                    });
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
+                expect(error).to.be.not.ok;
+            });
+    });
+
+    it.skip('Test Swagger API: toggle - must toggle boolean value to false', function (done) {
+        axios.get('http://127.0.0.1:18183/toggle/system.adapter.swagger.0.alive')
+            .then(response => {
+                console.log('toggle/system.adapter.swagger.0.alive => ' + body);
+                expect(error).to.be.not.ok;
+                const obj = response.data
+                expect(obj).to.be.ok;
+                expect(obj.val).to.be.false;
+                expect(obj.id).to.equal('system.adapter.swagger.0.alive');
+
+                axios.get('http://127.0.0.1:18183/getPlainValue/system.adapter.swagger.0.alive')
+                    .then(response => {
+                        console.log('getPlainValue/system.adapter.swagger.0.alive => ' + body);
+                        expect(error).to.be.not.ok;
+                        expect(body).equal('false');
+                        done();
+                    });
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
+                expect(error).to.be.not.ok;
+            });
+    });
+
+    it.skip('Test Swagger API: toggle - must toggle boolean value to true', function (done) {
+        axios.get('http://127.0.0.1:18183/toggle/system.adapter.swagger.0.alive')
+            .then(response => {
+                console.log('toggle/system.adapter.swagger.0.alive => ' + body);
+                expect(error).to.be.not.ok;
+                const obj = response.data
+                expect(obj).to.be.ok;
+                expect(obj.val).to.be.true;
+                expect(obj.id).to.equal('system.adapter.swagger.0.alive');
+
+                axios.get('http://127.0.0.1:18183/getPlainValue/system.adapter.swagger.0.alive')
+                    .then(response => {
+                        console.log('getPlainValue/system.adapter.swagger.0.alive => ' + body);
+                        expect(error).to.be.not.ok;
+                        expect(body).equal('true');
+                        done();
+                    });
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
+                expect(error).to.be.not.ok;
+            });
+    });
+
+    it.skip('Test Swagger API: toggle - must toggle number value to 100', function (done) {
+        axios.get('http://127.0.0.1:18183/toggle/system.adapter.swagger.upload')
+            .then(response => {
+                console.log('toggle/system.adapter.swagger.upload => ' + body);
+                expect(error).to.be.not.ok;
+                const obj = response.data
+                expect(obj).to.be.ok;
+                expect(obj.val).to.be.equal(100);
+                expect(obj.id).to.equal('system.adapter.swagger.upload');
+
+                axios.get('http://127.0.0.1:18183/getPlainValue/system.adapter.swagger.upload')
+                    .then(response => {
+                        console.log('getPlainValue/system.adapter.swagger.upload => ' + body);
+                        expect(error).to.be.not.ok;
+                        expect(body).equal('100');
+                        axios.get('http://127.0.0.1:18183/set/system.adapter.swagger.upload?val=49')
+                            .then(response => {
+                                console.log('set/system.adapter.swagger.upload?val=49 => ' + body);
+                                axios.get('http://127.0.0.1:18183/toggle/system.adapter.swagger.upload')
+                                    .then(response => {
+                                        console.log('toggle/system.adapter.swagger.upload => ' + body);
+                                        expect(error).to.be.not.ok;
+                                        const obj = response.data
+                                        expect(obj).to.be.ok;
+                                        expect(obj.val).to.be.equal(51);
+                                        expect(obj.id).to.equal('system.adapter.swagger.upload');
+
+                                        axios.get('http://127.0.0.1:18183/getPlainValue/system.adapter.swagger.upload')
+                                            .then(response => {
+                                                console.log('getPlainValue/system.adapter.swagger.upload => ' + body);
+                                                expect(error).to.be.not.ok;
+                                                expect(body).equal('51');
+                                                done();
+                                            });
+                                    });
+                            });
+                    });
+            })
+            .catch(error => {
+                console.error('Error in response: ' + error);
+                expect(error).to.be.not.ok;
+            });
+    });
+
+    it.skip('Test Swagger API: objects - must return objects', function (done) {
+        axios.get('http://127.0.0.1:18183/objects?pattern=system.adapter.*')
+            .then(response => {
+                console.log('objects?pattern=system.adapter.* => ' + body);
+                expect(error).to.be.not.ok;
+                const obj = response.data
+                expect(obj['system.adapter.swagger.0.alive']._id).to.be.ok;
                 done();
             });
-        });
     });
 
-    it('Test RESTful API: objects - must return objects', function (done) {
-        request('http://127.0.0.1:18183/objects?pattern=system.adapter.*', function (error, response, body) {
-            console.log('objects?pattern=system.adapter.* => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            expect(obj['system.adapter.simple-api.0.alive']._id).to.be.ok;
-            done();
-        });
+    it.skip('Test Swagger API: objects - must return objects', function (done) {
+        axios.get('http://127.0.0.1:18183/objects?pattern=system.adapter.*&type=instance')
+            .then(response => {
+                console.log('objects?pattern=system.adapter.* => ' + body);
+                expect(error).to.be.not.ok;
+                const obj = response.data
+                expect(obj['system.adapter.swagger.0']._id).to.be.ok;
+                done();
+            });
     });
 
-    it('Test RESTful API: objects - must return objects', function (done) {
-        request('http://127.0.0.1:18183/objects?pattern=system.adapter.*&type=instance', function (error, response, body) {
-            console.log('objects?pattern=system.adapter.* => ' + body);
-            expect(error).to.be.not.ok;
-            var obj = JSON.parse(body);
-            expect(obj['system.adapter.simple-api.0']._id).to.be.ok;
-            done();
-        });
+    it.skip('Test Swagger API: states - must return states', function (done) {
+        axios.get('http://127.0.0.1:18183/states?pattern=system.adapter.*')
+            .then(response => {
+                console.log('states?pattern=system.adapter.* => ' + body);
+                expect(error).to.be.not.ok;
+                const states = response.data
+                expect(states['system.adapter.swagger.0.uptime'].val).to.be.least(0);
+                done();
+            });
     });
 
-    it('Test RESTful API: states - must return states', function (done) {
-        request('http://127.0.0.1:18183/states?pattern=system.adapter.*', function (error, response, body) {
-            console.log('states?pattern=system.adapter.* => ' + body);
-            expect(error).to.be.not.ok;
-            var states = JSON.parse(body);
-            expect(states['system.adapter.simple-api.0.uptime'].val).to.be.least(0);
-            done();
-        });
-    });
+    it.skip('Test Swagger API: setBulk(POST) - must set values', function (done) {
 
-    it('Test RESTful API: setBulk(POST) - must set values', function (done) {
-
-        request({
+        axios.get({
             uri: 'http://127.0.0.1:18183/setBulk',
             method: 'POST',
-            body: 'system.adapter.simple-api.upload=50&system.adapter.simple-api.0.alive=false&javascript.0.test-string=bla%26fasel%2efoo%3Dhummer+hey'
-        }, function(error, response, body) {
-            console.log('setBulk/?system.adapter.simple-api.upload=50&system.adapter.simple-api.0.alive=false&javascript.0.test-string=bla%26fasel%2efoo%3Dhummer+hey => ' + JSON.stringify(body));
+            body: 'system.adapter.swagger.upload=50&system.adapter.swagger.0.alive=false&javascript.0.test-string=bla%26fasel%2efoo%3Dhummer+hey'
+        }, function (error, response, body) {
+            console.log('setBulk/?system.adapter.swagger.upload=50&system.adapter.swagger.0.alive=false&javascript.0.test-string=bla%26fasel%2efoo%3Dhummer+hey => ' + JSON.stringify(body));
             expect(error).to.be.not.ok;
 
-            var obj = JSON.parse(body);
+            const obj = response.data
             expect(obj).to.be.ok;
             expect(obj[0].val).to.be.equal(50);
-            expect(obj[0].id).to.equal('system.adapter.simple-api.upload');
+            expect(obj[0].id).to.equal('system.adapter.swagger.upload');
             expect(obj[1].val).to.be.equal(false);
-            expect(obj[1].id).to.equal('system.adapter.simple-api.0.alive');
+            expect(obj[1].id).to.equal('system.adapter.swagger.0.alive');
             expect(obj[2].val).to.be.equal('bla&fasel.foo=hummer hey');
             expect(obj[2].id).to.equal('javascript.0.test-string');
 
-            request('http://127.0.0.1:18183/getBulk/system.adapter.simple-api.upload,system.adapter.simple-api.0.alive,javascript.0.test-string', function (error, response, body) {
-                console.log('getBulk/system.adapter.simple-api.upload,system.adapter.simple-api.0.alive,javascript.0.test-string => ' + body);
-                expect(error).to.be.not.ok;
-                var obj = JSON.parse(body);
-                expect(obj[0].val).equal(50);
-                expect(obj[1].val).equal(false);
-                expect(obj[2].val).equal('bla&fasel.foo=hummer hey');
-                done();
-            });
+            axios.get('http://127.0.0.1:18183/getBulk/system.adapter.swagger.upload,system.adapter.swagger.0.alive,javascript.0.test-string')
+                .then(response => {
+                    console.log('getBulk/system.adapter.swagger.upload,system.adapter.swagger.0.alive,javascript.0.test-string => ' + body);
+                    expect(error).to.be.not.ok;
+                    const obj = response.data
+                    expect(obj[0].val).equal(50);
+                    expect(obj[1].val).equal(false);
+                    expect(obj[2].val).equal('bla&fasel.foo=hummer hey');
+                    done();
+                });
         });
     });
 
-    it('Test RESTful API: setBulk(POST-GET-Mix) - must set values', function (done) {
+    it.skip('Test Swagger API: setBulk(POST-GET-Mix) - must set values', function (done) {
 
-        request({
-            uri: 'http://127.0.0.1:18183/setBulk?system.adapter.simple-api.upload=51&system.adapter.simple-api.0.alive=false',
+        axios.get({
+            uri: 'http://127.0.0.1:18183/setBulk?system.adapter.swagger.upload=51&system.adapter.swagger.0.alive=false',
             method: 'POST',
             body: ''
-        }, function(error, response, body) {
-            console.log('setBulk/?system.adapter.simple-api.upload=51&system.adapter.simple-api.0.alive=false => ' + JSON.stringify(body));
+        }, function (error, response, body) {
+            console.log('setBulk/?system.adapter.swagger.upload=51&system.adapter.swagger.0.alive=false => ' + JSON.stringify(body));
             expect(error).to.be.not.ok;
 
-            var obj = JSON.parse(body);
+            const obj = response.data
             expect(obj).to.be.ok;
             expect(obj[0].val).to.be.equal(51);
-            expect(obj[0].id).to.equal('system.adapter.simple-api.upload');
+            expect(obj[0].id).to.equal('system.adapter.swagger.upload');
             expect(obj[1].val).to.be.equal(false);
-            expect(obj[1].id).to.equal('system.adapter.simple-api.0.alive');
+            expect(obj[1].id).to.equal('system.adapter.swagger.0.alive');
 
-            request('http://127.0.0.1:18183/getBulk/system.adapter.simple-api.upload,system.adapter.simple-api.0.alive', function (error, response, body) {
-                console.log('getBulk/system.adapter.simple-api.upload,system.adapter.simple-api.0.alive => ' + body);
-                expect(error).to.be.not.ok;
-                var obj = JSON.parse(body);
-                expect(obj[0].val).equal(51);
-                expect(obj[1].val).equal(false);
-                done();
-            });
+            axios.get('http://127.0.0.1:18183/getBulk/system.adapter.swagger.upload,system.adapter.swagger.0.alive')
+                .then(response => {
+                    console.log('getBulk/system.adapter.swagger.upload,system.adapter.swagger.0.alive => ' + body);
+                    expect(error).to.be.not.ok;
+                    const obj = response.data
+                    expect(obj[0].val).equal(51);
+                    expect(obj[1].val).equal(false);
+                    done();
+                });
         });
     });
 
-    it('Test RESTful API: setValueFromBody(POST) - must set one value', function (done) {
-        request({
-            uri: 'http://127.0.0.1:18183/setValueFromBody/system.adapter.simple-api.upload',
+    it.skip('Test Swagger API: setValueFromBody(POST) - must set one value', function (done) {
+        axios.get({
+            uri: 'http://127.0.0.1:18183/setValueFromBody/system.adapter.swagger.upload',
             method: 'POST',
             body: '55'
-        }, function(error, response, body) {
-            console.log('setValueFromBody/?system.adapter.simple-api.upload => ' + JSON.stringify(body));
+        }, function (error, response, body) {
+            console.log('setValueFromBody/?system.adapter.swagger.upload => ' + JSON.stringify(body));
             expect(error).to.be.not.ok;
 
-            var obj = JSON.parse(body);
+            const obj = response.data
             expect(obj).to.be.ok;
             expect(obj[0].val).to.be.equal(55);
-            expect(obj[0].id).to.equal('system.adapter.simple-api.upload');
+            expect(obj[0].id).to.equal('system.adapter.swagger.upload');
 
-            request('http://127.0.0.1:18183/getBulk/system.adapter.simple-api.upload', function (error, response, body) {
-                console.log('getBulk/system.adapter.simple-api.upload => ' + body);
-                expect(error).to.be.not.ok;
-                var obj = JSON.parse(body);
-                expect(obj[0].val).equal(55);
-                done();
-            });
+            axios.get('http://127.0.0.1:18183/getBulk/system.adapter.swagger.upload')
+                .then(response => {
+                    console.log('getBulk/system.adapter.swagger.upload => ' + body);
+                    expect(error).to.be.not.ok;
+                    const obj = response.data
+                    expect(obj[0].val).equal(55);
+                    done();
+                });
         });
     });
 
-    after('Test RESTful API: Stop js-controller', function (done) {
+    after('Test Swagger API: Stop js-controller', function (done) {
         this.timeout(6000);
         setup.stopController(function (normalTerminated) {
             console.log('Adapter normal terminated: ' + normalTerminated);
