@@ -26,6 +26,9 @@ This adapter supports subscribe on data changes via long polling.
 
 Example for browser could be found here: [demoNodeClient.js](examples/demoBrowserClient.html)  
 
+## Web extension
+This adapter can run as web-extension. In this case the path is available under http://iipaddress:8082/swagger
+
 ## Notice
 - `POST` is always for creating a resource ( does not matter if it was duplicated )
 - `PUT` is for checking if resource exists then update, else create new resource
