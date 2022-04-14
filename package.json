@@ -45,6 +45,7 @@
     "admin/",
     "img/",
     "lib/",
+    "examples/",
     "LICENSE",
     "main.js",
     "io-package.json"

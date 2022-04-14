@@ -19,7 +19,12 @@ Your application could get notifications by every change of the state or object.
 
 For that your application must provide an HTTP(S) end-point to accept the updates.
 
-Example in node.js see here [demoNodeClient.js](lib/demoNodeClient.js)
+Example in node.js see here [demoNodeClient.js](examples/demoNodeClient.js)
+
+## Long polling
+This adapter supports subscribe on data changes via long polling. 
+
+Example for browser could be found here: [demoNodeClient.js](examples/demoBrowserClient.html)  
 
 ## Notice
 - `POST` is always for creating a resource ( does not matter if it was duplicated )

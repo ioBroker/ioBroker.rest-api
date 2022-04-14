@@ -1,0 +1,48 @@
+<html>
+<head>
+        <script src="longPolling.js"></script>
+</head>
+<body>
+    <div id="connected"><span style="color: red">No connection</span></div>
+    <div id="output"></div>
+<script>
+    const IOBROKER_SWAGGER = 'http://localhost:8093/';
+
+    // Demo long polling
+    const output = [];
+
+    function addOutput(data) {
+        console.log(data);
+        output.push(data);
+        if (output.length > 40) {
+            output.splice(0, output.length - 40);
+        }
+        document.getElementById('output').innerHTML = output.join('<br/>');
+    }
+
+    function setConnectionStatus(isConnected) {
+        if (isConnected) {
+            document.getElementById('connected').innerHTML = '<span style="color: green">CONNECTED</span>';
+
+            // subscribe on
+            connection.subscribeState('system.adapter.swagger.0.memHeapTotal')
+                .then(data => addOutput('Connected: ' + JSON.stringify(data)));
+        } else {
+            document.getElementById('connected').innerHTML = '<span style="color: red">No connection</span>';
+            addOutput('Disconnected');
+        }
+    }
+
+    const connection = new LongPolling(IOBROKER_SWAGGER, {
+        onConnection: setConnectionStatus,
+        onError: error => {
+            addOutput('ERROR: ' + JSON.stringify(error));
+        },
+        onEvent: event => {
+            addOutput('Event: ' + JSON.stringify(event));
+        },
+        autoConnect: true // else you must call connection.connect()
+    });
+</script>
+</body>
+</html>
