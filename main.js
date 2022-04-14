@@ -4,7 +4,7 @@
 'use strict';
 
 const utils       = require('@iobroker/adapter-core'); // Get common adapter utils
-const SwaggerUI   = require('./lib/swagger-ui.js');
+const RestAPI     = require('./lib/rest-api.js');
 const LE          = require(utils.controllerDir + '/lib/letsencrypt.js');
 const adapterName = require('./package.json').name.split('.').pop();
 
@@ -98,7 +98,7 @@ function initWebServer(settings, callback) {
         settings:  settings
     };
 
-    server.api = new SwaggerUI(server.server, settings, adapter, null, null, async app => {
+    server.api = new RestAPI(server.server, settings, adapter, null, null, async app => {
         if (settings.port) {
             if (settings.secure && !adapter.config.certificates) {
                 return null;

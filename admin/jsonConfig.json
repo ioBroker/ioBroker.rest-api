@@ -130,6 +130,14 @@
           "sm": 12,
           "md": 6,
           "lg": 2
+        },
+        "noUI": {
+          "newLine": true,
+          "type": "checkbox",
+          "label": "No GUI",
+          "sm": 12,
+          "md": 6,
+          "lg": 2
         }
       }
     },

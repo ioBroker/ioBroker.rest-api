@@ -1,6 +1,6 @@
 {
   "common": {
-    "name": "swagger",
+    "name": "rest-api",
     "version": "0.2.0",
     "news": {
       "0.2.0": {
@@ -33,20 +33,20 @@
     "mode": "daemon",
     "stoppedWhenWebExtension": true,
     "loglevel": "info",
-    "icon": "swagger.png",
+    "icon": "rest-api.png",
     "compact": true,
     "materialize": true,
-    "webExtension": "lib/swagger-ui.js",
-    "readme": "https://github.com/ioBroker/ioBroker.swagger/blob/master/README.md",
+    "webExtension": "lib/rest-api.js",
+    "readme": "https://github.com/ioBroker/ioBroker.rest-api/blob/master/README.md",
     "keywords": [
       "web",
-      "swagger",
+      "rest-api",
       "RESTful",
       "API",
       "communication"
     ],
     "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.swagger/master/admin/swagger.png",
+    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.rest-api/master/admin/rest-api.png",
     "type": "communication",
     "stopBeforeUpdate": true,
     "localLink": "%protocol%://%ip%:%port%/",
@@ -75,6 +75,7 @@
     "leCheckPort": 80,
     "checkInterval": 30000,
     "hookTimeout": 3000,
+    "noUI": false,
 
     "dataSource": "",
     "allDatapoints": false

@@ -1,11 +1,11 @@
-![Logo](admin/swagger.png)
-# ioBroker swagger adapter
+![Logo](admin/rest-api.png)
+# REST-API adapter
 
-![Number of Installations](http://iobroker.live/badges/swagger-installed.svg) ![Number of Installations](http://iobroker.live/badges/swagger-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.swagger.svg)](https://www.npmjs.com/package/iobroker.swagger)
-[![Downloads](https://img.shields.io/npm/dm/iobroker.swagger.svg)](https://www.npmjs.com/package/iobroker.swagger)
-[![Tests](https://travis-ci.org/ioBroker/ioBroker.swagger.svg?branch=master)](https://travis-ci.org/ioBroker/ioBroker.swagger)
+![Number of Installations](http://iobroker.live/badges/rest-api-installed.svg) ![Number of Installations](http://iobroker.live/badges/rest-api-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.rest-api.svg)](https://www.npmjs.com/package/iobroker.rest-api)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.rest-api.svg)](https://www.npmjs.com/package/iobroker.rest-api)
+[![Tests](https://travis-ci.org/ioBroker/ioBroker.rest-api.svg?branch=master)](https://travis-ci.org/ioBroker/ioBroker.rest-api)
 
-[![NPM](https://nodei.co/npm/iobroker.swagger.png?downloads=true)](https://nodei.co/npm/iobroker.swagger/)
+[![NPM](https://nodei.co/npm/iobroker.rest-api.png?downloads=true)](https://nodei.co/npm/iobroker.rest-api/)
 
 This is RESTFul interface to read the objects and states from ioBroker and to write/control the states over HTTP Get/Post requests.
 
@@ -27,7 +27,7 @@ This adapter supports subscribe on data changes via long polling.
 Example for browser could be found here: [demoNodeClient.js](examples/demoBrowserClient.html)  
 
 ## Web extension
-This adapter can run as web-extension. In this case the path is available under http://iipaddress:8082/swagger
+This adapter can run as web-extension. In this case the path is available under http://iipaddress:8082/rest
 
 ## Notice
 - `POST` is always for creating a resource ( does not matter if it was duplicated )
