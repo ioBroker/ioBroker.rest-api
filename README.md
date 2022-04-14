@@ -9,6 +9,10 @@
 
 This is RESTFul interface to read the objects and states from ioBroker and to write/control the states over HTTP Get/Post requests.
 
+The purpose of this adapter is similar to simple-api. But this adapter supports long-polling and URL hooks for subscribes.
+
+It has very useful web interface to play with the requests:
+
 ![Screenshot](img/screen.png)
 
 ## Usage
@@ -33,6 +37,9 @@ This adapter can run as web-extension. In this case the path is available under 
 - `POST` is always for creating a resource ( does not matter if it was duplicated )
 - `PUT` is for checking if resource exists then update, else create new resource
 - `PATCH` is always for updating a resource
+
+## Todo 
+getHistory
 
 ## Changelog
 ### 0.1.0 (2017-09-14)

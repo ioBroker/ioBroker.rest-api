@@ -21,8 +21,8 @@
   "dependencies": {
     "express": "^4.17.3",
     "body-parser": "^1.20.0",
-    "rest-api-node-runner-fork": "^0.8.0",
-    "rest-api-ui-express": "^4.3.0",
+    "swagger-node-runner-fork": "^0.8.0",
+    "swagger-ui-express": "^4.3.0",
     "yamljs": "^0.3.0",
     "@iobroker/adapter-core": "^2.6.0",
     "axios": "^0.26.1",
