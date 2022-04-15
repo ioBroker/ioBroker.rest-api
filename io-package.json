@@ -21,9 +21,9 @@
         "ru": "initial commit"
       }
     },
-    "title": "Swagger UI API",
+    "title": "REST API",
     "titleLang": {
-      "en": "Swagger UI API"
+      "en": "REST API"
     },
     "desc": {
       "en": "This adapter allows to read and write ioBroker objects and state with web RESTful API and Swagger UI",
