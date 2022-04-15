@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "news": {
+      "0.3.1": {
+        "en": "First release",
+        "de": "Erste Veröffentlichung",
+        "ru": "Первый выпуск",
+        "pt": "Primeiro lançamento",
+        "nl": "Eerste uitgave",
+        "fr": "Première sortie",
+        "it": "Prima uscita",
+        "es": "Primer lanzamiento",
+        "pl": "Pierwsze wydanie",
+        "zh-cn": "首次发布"
+      },
       "0.2.0": {
         "en": "initial commit",
         "de": "initial commit",
