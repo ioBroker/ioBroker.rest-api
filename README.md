@@ -36,14 +36,19 @@ Example for browser could be found here: [demoNodeClient.js](examples/demoBrowse
 This adapter can run as web-extension. In this case the path is available under http://iipaddress:8082/rest
 
 ## Notice
-- `POST` is always for creating a resource ( does not matter if it was duplicated )
+- `POST` is always for creating a resource (does not matter if it was duplicated)
 - `PUT` is for checking if resource exists then update, else create new resource
 - `PATCH` is always for updating a resource
 
-## Todo 
-getHistory
+<!--
+	Placeholder for the next version (at the beginning of the line):
+	### **WORK IN PROGRESS**
+-->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) First release
+
 ### 0.1.0 (2017-09-14)
 * (bluefox) initial commit
 
