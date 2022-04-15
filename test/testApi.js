@@ -89,7 +89,7 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness);
 
-                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${adapterName}.0.alive`)
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${adapterName}.0.alive`);
                 const obj = response.data;
                 console.log(`get/system.adapter.${adapterName}.0.alive => ${JSON.stringify(response.data)}`);
                 //
@@ -114,7 +114,7 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness);
 
-                const response = await axios.get(`http://127.0.0.1:18183/v1/state/system.adapter.${adapterName}.0.alive?withInfo=true`);
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${adapterName}.0.alive?withInfo=true`);
                 const obj = response.data;
                 console.log(`[GET] /v1/state/system.adapter.${adapterName}.0.alive?withInfo=true => ${JSON.stringify(response.data)}`);
                 //
@@ -162,7 +162,7 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness, null, '');
 
-                let response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string?value=bla');
+                let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string?value=bla`);
                 const obj = response.data;
                 console.log('[GET] /v1/state/javascript.0.test-string?value=bla => ' + JSON.stringify(response.data));
                 //
@@ -174,7 +174,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj).to.be.ok;
                 expect(obj.val).to.equal('bla');
                 expect(obj.id).to.equal('javascript.0.test-string');
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string/plain', {
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string/plain`, {
                     responseType: 'arraybuffer',
                     responseEncoding: 'binary'
                 });
@@ -182,7 +182,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('[GET] /v1/state/javascript.0.test-string/plain => ' + body);
                 expect(body).equal('"bla"');
 
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string/plain?extraPlain=true', {
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string/plain?extraPlain=true`, {
                     responseType: 'arraybuffer',
                     responseEncoding: 'binary'
                 });
@@ -190,7 +190,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('[GET] /v1/state/javascript.0.test-string/plain => ' + body);
                 expect(body).equal('bla');
 
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string');
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string`);
                 console.log('get/javascript.0.test-string => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal('bla');
             })
@@ -200,22 +200,21 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness);
 
-                const response = await axios.get(`http://127.0.0.1:18183/v1/state/system.adapter.${adapterName}.0.alive/plain`, {
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${adapterName}.0.alive/plain`, {
                     responseType: 'arraybuffer',
                     responseEncoding: 'binary'
                 })
                 const body = response.data.toString('utf8');
                 console.log(`[GET] /v1/state/system.adapter.${adapterName}.0.alive/plain => ${body} type is "${typeof body}"`);
                 expect(body).equal('true');
-
             })
                 .timeout(3000);
 
-            it('Test REST API: set - must set string value', async () => {
+            it('Test REST API: set - must set string value with POST', async () => {
                 const harness = getHarness();
                 await setupTests(harness, null, '');
 
-                let response = await axios.patch('http://127.0.0.1:18183/v1/state/javascript.0.test-string', {
+                let response = await axios.patch(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string`, {
                     val: '60',
                     ack: true
                 });
@@ -225,7 +224,8 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.val).to.equal('60');
                 expect(obj.ack).to.be.true;
                 expect(obj.id).to.equal('javascript.0.test-string');
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string');
+
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string`);
                 console.log('[GET] /v1/state/javascript.0.test-string/plain => ' + response.data);
                 expect(response.data.val).equal('60');
             })
@@ -235,16 +235,18 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness, null, '');
 
-                let response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string?value=bla%26fasel%2efoo%3Dhummer+hey');
+                let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string?value=bla%26fasel%2efoo%3Dhummer+hey`);
                 const obj = response.data
                 console.log('[GET] /v1/state/javascript.0.test-string?value=bla%26fasel%2efoo%3Dhummer+hey => ' + JSON.stringify(obj));
                 expect(obj).to.be.ok;
                 expect(obj.val).equal('bla&fasel.foo=hummer hey');
                 expect(obj.id).to.equal('javascript.0.test-string');
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string/plain');
+
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string/plain`);
                 console.log('[GET] /v1/state/javascript.0.test-string/plain => ' + response.data);
                 expect(response.data).equal('bla&fasel.foo=hummer hey');
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string');
+
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string`);
                 console.log('[GET] /v1/state/javascript.0.test-string => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal('bla&fasel.foo=hummer hey');
             })
@@ -254,18 +256,18 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness, false);
 
-                let response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-boolean?value=true');
+                let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean?value=true`);
                 const obj = response.data;
                 console.log('[GET] /v1/state/javascript.0.test-boolean?value=true => ' + JSON.stringify(response.data));
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.true;
                 expect(obj.id).to.equal('javascript.0.test-boolean');
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-boolean/plain', {
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean/plain`, {
                     responseType: 'arraybuffer',
                     responseEncoding: 'binary'
                 });
                 const body = response.data.toString('utf8');
-                console.log('[GET] http://127.0.0.1:18183/javascript.0.test-boolean => ' + body);
+                console.log(`[GET] http://127.0.0.1:${PORT}/javascript.0.test-boolean => ` + body);
                 expect(body).equal('true');
             })
                 .timeout(3000);
@@ -274,14 +276,14 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness, true);
 
-                let response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-boolean/toggle');
+                let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean/toggle`);
                 const obj = response.data;
                 console.log('[GET] /v1/state/javascript.0.test-boolean/toggle] => ' + JSON.stringify(obj));
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.false;
                 expect(obj.id).to.equal('javascript.0.test-boolean');
 
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-boolean');
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean`);
                 console.log('[GET] /v1/state/javascript.0.test-boolean => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal(false);
             })
@@ -291,14 +293,14 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness, false);
 
-                let response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-boolean/toggle');
+                let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean/toggle`);
                 const obj = response.data;
                 console.log('[GET] /v1/state/javascript.0.test-boolean/toggle] => ' + JSON.stringify(obj));
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.true;
                 expect(obj.id).to.equal('javascript.0.test-boolean');
 
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-boolean');
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean`);
                 console.log('[GET] /v1/state/javascript.0.test-boolean => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal(true);
             })
@@ -308,28 +310,28 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness, null, null, 0);
 
-                let response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-number/toggle');
+                let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-number/toggle`);
                 let obj = response.data;
                 console.log('[GET] /v1/state/javascript.0.test-number/toggle] => ' + JSON.stringify(obj));
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.equal(100);
                 expect(obj.id).to.equal('javascript.0.test-number');
 
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-number');
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-number`);
                 console.log('[GET] /v1/state/javascript.0.test-number => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal(100);
 
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-number?value=49');
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-number?value=49`);
                 console.log('[GET] /v1/state/javascript.0.test-number?value=49 => ' + JSON.stringify(response.data));
 
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-number/toggle');
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-number/toggle`);
                 obj = response.data;
                 console.log('[GET] /v1/state/javascript.0.test-number/toggle => ' + JSON.stringify(response.data));
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.equal(51);
                 expect(obj.id).to.equal('javascript.0.test-number');
 
-                response = await axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-number');
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-number`);
                 console.log('[GET] /v1/state/javascript.0.test-number => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal(51);
             })
@@ -339,7 +341,7 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness);
 
-                const response = await axios.get('http://127.0.0.1:18183/v1/objects?filter=system.adapter.*');
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/objects?filter=system.adapter.*`);
                 const obj = response.data
                 console.log('[GET] /v1/objects?filter=system.adapter.* => ' + JSON.stringify(obj));
                 expect(obj[`system.adapter.${adapterName}.0.alive`]._id).to.be.ok;
@@ -350,7 +352,7 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness);
 
-                const response = await axios.get('http://127.0.0.1:18183/v1/objects?filter=system.adapter.*&type=instance');
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/objects?filter=system.adapter.*&type=instance`);
                 const obj = response.data
                 console.log('[GET] /v1/objects?filter=system.adapter.*&type=instance => ' + JSON.stringify(obj));
                 expect(obj[`system.adapter.${adapterName}.0`]._id).to.be.ok;
@@ -362,7 +364,7 @@ tests.integration(path.join(__dirname, '..'), {
                 const harness = getHarness();
                 await setupTests(harness);
 
-                const response = await axios.get('http://127.0.0.1:18183/v1/states?filter=system.adapter.*');
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/states?filter=system.adapter.*`);
                 const states = response.data
                 console.log('[GET] /v1/states?filter=system.adapter.* => ' + JSON.stringify(states));
                 expect(states[`system.adapter.${adapterName}.0`]).to.be.not.ok;

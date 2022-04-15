@@ -1,38 +1,134 @@
-const expect = require('chai').expect;
-//const setup = require('./lib/setup');
+const path = require('path');
+const {tests} = require('@iobroker/testing');
 const axios = require('axios');
+const {expect} = require('chai');
+const adapterName = require('../package.json').name.split('.').pop();
 
-let objects = null;
-let states  = null;
-
+const PORT = 18184;
 process.env.NO_PROXY = '127.0.0.1';
 
-function checkConnectionOfAdapter(cb, counter) {
-    counter = counter || 0;
-    console.log('Try check #' + counter);
-    if (counter > 30) {
-        cb && cb('Cannot check connection');
-        return;
+async function waitForState(harness, id, value) {
+    const started = await harness.states.getState(id);
+    if (!started.val) {
+        await new Promise(resolve => harness.on('stateChange', (id, state) => {
+            if (id.endsWith('info.connection') && state.val === value) {
+                resolve();
+            }
+        }));
     }
-
-    states.getState('system.adapter.swagger.0.alive', (err, state) => {
-        err && console.error(err);
-        if (state && state.val) {
-            cb && cb();
-        } else {
-            setTimeout(() =>
-                checkConnectionOfAdapter(cb, counter + 1), 1000);
-        }
-    });
 }
 
+async function setupTests(harness, setupBoolean, setupString, setupNumber) {
+    await harness.objects.setObjectAsync('system.group.writer', {
+        common: {
+            name: 'Writer',
+            desc: '',
+            members: [
+                'system.user.myuser'
+            ],
+            acl: {
+                object: {
+                    list: false,
+                    read: false,
+                    write: false,
+                    'delete': false
+                },
+                state: {
+                    list: false,
+                    read: true,
+                    write: true,
+                    create: false,
+                    'delete': false
+                },
+                users: {
+                    write: false,
+                    create: false,
+                    'delete': false
+                },
+                other: {
+                    execute: false,
+                    http: false,
+                    sendto: false
+                },
+                file: {
+                    list: false,
+                    read: false,
+                    write: false,
+                    create: false,
+                    'delete': false
+                }
+            }
+        },
+        native: {},
+        acl: {
+            object: 1638,
+            owner: 'system.user.admin',
+            ownerGroup: 'system.group.administrator'
+        },
+        _id: 'system.group.writer',
+        type: 'group'
+    });
 
-describe.skip('Test RESTful API as Owner-User', function() {
+    await harness.objects.setObjectAsync('system.user.myuser', {
+        type: 'user',
+        common: {
+            name: 'myuser',
+            enabled: true,
+            groups: [],
+            password: 'pbkdf2$10000$ab4104d8bb68390ee7e6c9397588e768de6c025f0c732c18806f3d1270c83f83fa86a7bf62583770e5f8d0b405fbb3ad32214ef3584f5f9332478f2506414443a910bf15863b36ebfcaa7cbb19253ae32cd3ca390dab87b29cd31e11be7fa4ea3a01dad625d9de44e412680e1a694227698788d71f1e089e5831dc1bbacfa794b45e1c995214bf71ee4160d98b4305fa4c3e36ee5f8da19b3708f68e7d2e8197375c0f763d90e31143eb04760cc2148c8f54937b9385c95db1742595634ed004fa567655dfe1d9b9fa698074a9fb70c05a252b2d9cf7ca1c9b009f2cd70d6972ccf0ee281d777d66a0346c6c6525436dd7fe3578b28dca2c7adbfde0ecd45148$31c3248ba4dc9600a024b4e0e7c3e585'
+        },
+        _id: 'system.user.myuser',
+        native: {},
+        acl: {
+            object: 1638
+        }
+    });
+    await harness.objects.setObjectAsync('javascript.0.test', {
+        common: {
+            name: 'test',
+            type: 'number',
+            role: 'level',
+            min: -100,
+            max: 100,
+            def: 1
+        },
+        native: {},
+        type: 'state',
+        acl: {
+            object: 1638,
+            owner: 'system.user.myuser',
+            ownerGroup: 'system.group.administrator',
+            state: 1638
+        }
+    });
+    await harness.states.setStateAsync('javascript.0.test', 1);
+
+    // Enable the adapter and set its loglevel to debug
+    await harness.changeAdapterConfig(adapterName, {
+        common: {
+            enabled: true,
+            loglevel: 'debug',
+        },
+        native: {
+            bind: '127.0.0.1',
+            port: PORT,
+            defaultUser: 'myuser',
+            onlyAllowWhenUserIsOwner: true
+        }
+    });
+
+    // Start the adapter and wait until it has started
+    await harness.startAdapterAndWait();
+
+    await waitForState(harness, adapterName + '.0.info.connection', true);
+}
+
+describe.skip('Test RESTful API as Owner-User', function () {
     before('Test RESTful API as Owner-User: Start js-controller', function (_done) {
         this.timeout(600000); // because of first install from npm
         setup.adapterStarted = false;
 
-        var brokerStarted   = false;
+        var brokerStarted = false;
         setup.setupController(async function () {
             const config = await setup.getAdapterConfig();
             // enable adapter
@@ -45,7 +141,7 @@ describe.skip('Test RESTful API as Owner-User', function() {
 
             setup.startController(function (_objects, _states) {
                 objects = _objects;
-                states  = _states;
+                states = _states;
                 // give some time to start server
                 setTimeout(function () {
                     _done();
@@ -60,53 +156,53 @@ describe.skip('Test RESTful API as Owner-User', function() {
             if (res) console.log(res);
             expect(res).not.to.be.equal('Cannot check connection');
             objects.setObject('system.group.writer', {
-              "common": {
-                "name": "Writer",
-                "desc": "",
-                "members": [
-                  "system.user.myuser"
-                ],
+                "common": {
+                    "name": "Writer",
+                    "desc": "",
+                    "members": [
+                        "system.user.myuser"
+                    ],
+                    "acl": {
+                        "object": {
+                            "list": false,
+                            "read": false,
+                            "write": false,
+                            "delete": false
+                        },
+                        "state": {
+                            "list": false,
+                            "read": true,
+                            "write": true,
+                            "create": false,
+                            "delete": false
+                        },
+                        "users": {
+                            "write": false,
+                            "create": false,
+                            "delete": false
+                        },
+                        "other": {
+                            "execute": false,
+                            "http": false,
+                            "sendto": false
+                        },
+                        "file": {
+                            "list": false,
+                            "read": false,
+                            "write": false,
+                            "create": false,
+                            "delete": false
+                        }
+                    }
+                },
+                "native": {},
                 "acl": {
-                  "object": {
-                    "list": false,
-                    "read": false,
-                    "write": false,
-                    "delete": false
-                  },
-                  "state": {
-                    "list": false,
-                    "read": true,
-                    "write": true,
-                    "create": false,
-                    "delete": false
-                  },
-                  "users": {
-                    "write": false,
-                    "create": false,
-                    "delete": false
-                  },
-                  "other": {
-                    "execute": false,
-                    "http": false,
-                    "sendto": false
-                  },
-                  "file": {
-                    "list": false,
-                    "read": false,
-                    "write": false,
-                    "create": false,
-                    "delete": false
-                  }
-                }
-              },
-              "native": {},
-              "acl": {
-                "object": 1638,
-                "owner": "system.user.admin",
-                "ownerGroup": "system.group.administrator"
-              },
-              "_id": "system.group.writer",
-              "type": "group"
+                    "object": 1638,
+                    "owner": "system.user.admin",
+                    "ownerGroup": "system.group.administrator"
+                },
+                "_id": "system.group.writer",
+                "type": "group"
             }, function (err) {
                 expect(err).to.be.null;
 
@@ -134,18 +230,17 @@ describe.skip('Test RESTful API as Owner-User', function() {
                             max: 100,
                             def: 1
                         },
-                        native: {
-                        },
+                        native: {},
                         type: 'state',
                         acl: {
                             object: 1638,
                             owner: "system.user.myuser",
-                            ownerGroup:"system.group.administrator",
+                            ownerGroup: "system.group.administrator",
                             state: 1638
                         }
                     }, function (err) {
                         expect(err).to.be.null;
-                        states.setState('javascript.0.test',1, function(err) {
+                        states.setState('javascript.0.test', 1, function (err) {
                             expect(err).to.be.null;
                             done();
                         });
@@ -244,7 +339,7 @@ describe.skip('Test RESTful API as Owner-User', function() {
             uri: 'http://127.0.0.1:18183/setValueFromBody/system.adapter.simple-api.upload',
             method: 'POST',
             body: '55'
-        }, function(error, response, body) {
+        }, function (error, response, body) {
             console.log('setValueFromBody/?system.adapter.simple-api.upload => ' + JSON.stringify(body));
             expect(body).to.be.equal('error: permissionError');
             done();

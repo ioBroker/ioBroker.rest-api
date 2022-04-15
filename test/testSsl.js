@@ -4,7 +4,7 @@ const axios = require('axios');
 const {expect} = require('chai');
 const adapterName = require('../package.json').name.split('.').pop();
 
-const PORT = 18184;
+const PORT = 18186;
 
 process.env.NO_PROXY = '127.0.0.1';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
