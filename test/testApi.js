@@ -1,6 +1,7 @@
 const expect = require('chai').expect;
 const setup = require('./lib/setup');
 const axios = require('axios');
+const adapterName = require('../package.json').name.split('.').pop();
 
 let objects = null;
 let states = null;
@@ -15,7 +16,7 @@ function checkConnectionOfAdapter(cb, counter) {
         return;
     }
 
-    states.getState('system.adapter.swagger.0.alive', (err, state) => {
+    states.getState(`system.adapter.${adapterName}.0.alive`, (err, state) => {
         err && console.error(err);
         if (state && state.val) {
             cb && cb();
@@ -26,8 +27,8 @@ function checkConnectionOfAdapter(cb, counter) {
     });
 }
 
-describe('Test Swagger API', function () {
-    before('Test Swagger API: Start js-controller', function (_done) {
+describe('Test REST API', function () {
+    before('Test REST API: Start js-controller', function (_done) {
         this.timeout(600000); // because of first install from npm
         setup.adapterStarted = false;
 
@@ -92,20 +93,20 @@ describe('Test Swagger API', function () {
         });
     });
 
-    it('Test Swagger API: get - must return state', function (done) {
+    it('Test REST API: get - must return state', function (done) {
         this.timeout(2000);
 
-        axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive')
+        axios.get(`http://127.0.0.1:18183/v1/state/system.adapter.${adapterName}.0.alive`)
             .then(response => {
                 const obj = response.data;
-                console.log('get/system.adapter.swagger.0.alive => ' + JSON.stringify(response.data));
+                console.log(`get/system.adapter.${adapterName}.0.alive => ${JSON.stringify(response.data)}`);
                 //
                 // {
                 //   "val": true,
                 //   "ack": true,
                 //   "ts": 1649867694364,
                 //   "q": 0,
-                //   "from": "system.adapter.swagger.0",
+                //   "from": "system.adapter.${adapterName}.0",
                 //   "lc": 1649867136490
                 // }
 
@@ -113,7 +114,7 @@ describe('Test Swagger API', function () {
                 expect(obj.val).to.be.true;
                 expect(obj.ack).to.be.true;
                 expect(obj.ts).to.be.ok;
-                expect(obj.from).to.equal('system.adapter.swagger.0');
+                expect(obj.from).to.equal(`system.adapter.${adapterName}.0`);
                 done();
             })
             .catch(error => {
@@ -122,24 +123,24 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: get - must return state with info', function (done) {
+    it('Test REST API: get - must return state with info', function (done) {
         this.timeout(2000);
-        axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive?withInfo=true')
+        axios.get(`http://127.0.0.1:18183/v1/state/system.adapter.${adapterName}.0.alive?withInfo=true`)
             .then(response => {
                 const obj = response.data;
-                console.log('[GET] /v1/state/system.adapter.swagger.0.alive?withInfo=true => ' + JSON.stringify(response.data));
+                console.log(`[GET] /v1/state/system.adapter.${adapterName}.0.alive?withInfo=true => ${JSON.stringify(response.data)}`);
                 //
                 // {
                 //   "val": true,
                 //   "ack": true,
                 //   "ts": 1649867136399,
                 //   "q": 0,
-                //   "from": "system.adapter.swagger.0",
+                //   "from": "system.adapter.${adapterName}.0",
                 //   "lc": 1649867136490,
-                //   "id": "system.adapter.swagger.0.alive",
+                //   "id": "system.adapter.${adapterName}.0.alive",
                 //   "type": "state",
                 //   "common": {
-                //     "name": "swagger.0 alive",
+                //     "name": "${adapterName}.0 alive",
                 //     "type": "boolean",
                 //     "read": true,
                 //     "write": true,
@@ -159,12 +160,12 @@ describe('Test Swagger API', function () {
                 expect(obj.val).to.be.true;
                 expect(obj.ack).to.be.true;
                 expect(obj.ts).to.be.ok;
-                expect(obj.from).to.equal('system.adapter.swagger.0');
+                expect(obj.from).to.equal(`system.adapter.${adapterName}.0`);
                 expect(obj.type).to.equal('state');
-                expect(obj.id).to.equal("system.adapter.swagger.0.alive");
+                expect(obj.id).to.equal(`system.adapter.${adapterName}.0.alive`);
                 expect(obj.common).to.be.ok;
                 expect(obj.native).to.be.ok;
-                expect(obj.common.name).to.equal("swagger.0 alive");
+                expect(obj.common.name).to.equal(`${adapterName}.0 alive`);
                 expect(obj.common.role).to.equal("indicator.state");
                 done();
             })
@@ -174,7 +175,7 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: set - must set state', function (done) {
+    it('Test REST API: set - must set state', function (done) {
         this.timeout(2000);
         axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string?value=bla')
             .then(async response => {
@@ -216,15 +217,15 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: getPlainValue - must return plain value', function (done) {
+    it('Test REST API: getPlainValue - must return plain value', function (done) {
         this.timeout(2000);
-        axios.get('http://127.0.0.1:18183/v1/state/system.adapter.swagger.0.alive/plain', {
+        axios.get(`http://127.0.0.1:18183/v1/state/system.adapter.${adapterName}.0.alive/plain`, {
                 responseType: 'arraybuffer',
                 responseEncoding: 'binary'
             })
             .then(response => {
                 const body = response.data.toString('utf8');
-                console.log(`[GET] /v1/state/system.adapter.swagger.0.alive/plain => ${body} type is "${typeof body}"`);
+                console.log(`[GET] /v1/state/system.adapter.${adapterName}.0.alive/plain => ${body} type is "${typeof body}"`);
                 expect(body).equal('true');
                 done();
             })
@@ -234,7 +235,7 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: set - must set value', function (done) {
+    it('Test REST API: set - must set value', function (done) {
         this.timeout(2000);
         axios.patch('http://127.0.0.1:18183/v1/state/javascript.0.test-string', {val: '60', ack: true})
             .then(response => {
@@ -257,7 +258,7 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: set - must set encoded string value', function (done) {
+    it('Test REST API: set - must set encoded string value', function (done) {
         this.timeout(2000);
         axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-string?value=bla%26fasel%2efoo%3Dhummer+hey')
             .then(async response => {
@@ -280,7 +281,7 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: set - must set value', function (done) {
+    it('Test REST API: set - must set value', function (done) {
         this.timeout(2000);
 
         axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-boolean?value=true')
@@ -305,7 +306,7 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: toggle - must toggle boolean value to false', function (done) {
+    it('Test REST API: toggle - must toggle boolean value to false', function (done) {
         this.timeout(2000);
         axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-boolean/toggle')
             .then(response => {
@@ -328,7 +329,7 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: toggle - must toggle boolean value to true', function (done) {
+    it('Test REST API: toggle - must toggle boolean value to true', function (done) {
         this.timeout(2000);
         axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-boolean/toggle')
             .then(response => {
@@ -351,7 +352,7 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: toggle - must toggle number value to 100', function (done) {
+    it('Test REST API: toggle - must toggle number value to 100', function (done) {
         this.timeout(2000);
         axios.get('http://127.0.0.1:18183/v1/state/javascript.0.test-number/toggle')
             .then(response => {
@@ -392,13 +393,13 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: objects - must return objects', function (done) {
+    it('Test REST API: objects - must return objects', function (done) {
         this.timeout(2000);
         axios.get('http://127.0.0.1:18183/v1/objects?filter=system.adapter.*')
             .then(response => {
                 const obj = response.data
                 console.log('[GET] /v1/objects?filter=system.adapter.* => ' + JSON.stringify(obj));
-                expect(obj['system.adapter.swagger.0.alive']._id).to.be.ok;
+                expect(obj[`system.adapter.${adapterName}.0.alive`]._id).to.be.ok;
                 done();
             })
             .catch(error => {
@@ -407,14 +408,14 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: objects - must return objects', function (done) {
+    it('Test REST API: objects - must return objects', function (done) {
         this.timeout(2000);
         axios.get('http://127.0.0.1:18183/v1/objects?filter=system.adapter.*&type=instance')
             .then(response => {
                 const obj = response.data
                 console.log('[GET] /v1/objects?filter=system.adapter.*&type=instance => ' + JSON.stringify(obj));
-                expect(obj['system.adapter.swagger.0']._id).to.be.ok;
-                expect(obj['system.adapter.swagger.0.alive']).to.be.not.ok;
+                expect(obj[`system.adapter.${adapterName}.0`]._id).to.be.ok;
+                expect(obj[`system.adapter.${adapterName}.0.alive`]).to.be.not.ok;
                 done();
             })
             .catch(error => {
@@ -423,14 +424,14 @@ describe('Test Swagger API', function () {
             });
     });
 
-    it('Test Swagger API: states - must return states', function (done) {
+    it('Test REST API: states - must return states', function (done) {
         this.timeout(2000);
         axios.get('http://127.0.0.1:18183/v1/states?filter=system.adapter.*')
             .then(response => {
                 const states = response.data
                 console.log('[GET] /v1/states?filter=system.adapter.* => ' + JSON.stringify(states));
-                expect(states['system.adapter.swagger.0']).to.be.not.ok;
-                expect(states['system.adapter.swagger.0.uptime'].val).to.be.least(0);
+                expect(states[`system.adapter.${adapterName}.0`]).to.be.not.ok;
+                expect(states[`system.adapter.${adapterName}.0.uptime`].val).to.be.least(0);
                 done();
             })
             .catch(error => {
@@ -439,7 +440,7 @@ describe('Test Swagger API', function () {
             });
     });
 
-    after('Test Swagger API: Stop js-controller', function (done) {
+    after('Test REST API: Stop js-controller', function (done) {
         this.timeout(6000);
         setup.stopController(function (normalTerminated) {
             console.log('Adapter normal terminated: ' + normalTerminated);
