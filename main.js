@@ -91,11 +91,11 @@ function initWebServer(settings, callback) {
     settings.port = parseInt(settings.port, 10);
 
     const server = {
-        app:       null,
-        server:    null,
-        api:       null,
-        io:        null,
-        settings:  settings
+        app:    null,
+        server: null,
+        api:    null,
+        io:     null,
+        settings
     };
 
     server.api = new RestAPI(server.server, settings, adapter, null, null, async app => {

@@ -57,7 +57,12 @@
       {
         "js-controller": ">=4.0.0"
       }
-    ]
+    ],
+    "plugins": {
+      "sentry": {
+        "dsn": "https://250dffd65cee420e837563860d2b403f@sentry.iobroker.net/189"
+      }
+    }
   },
   "native": {
     "port": 8093,
@@ -76,7 +81,6 @@
     "checkInterval": 30000,
     "hookTimeout": 3000,
     "noUI": false,
-
     "dataSource": "",
     "allDatapoints": false
   }

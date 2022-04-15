@@ -1,15 +1,21 @@
 <html>
 <head>
-        <script src="longPolling.js"></script>
+    <script src="longPolling.js"></script>
 </head>
 <body>
-    <div id="connected"><span style="color: red">No connection</span></div>
+<h2>This is client example how to work with long polling and REST-API.</h2>
+
+    <div id="connected"></div>
     <div id="output"></div>
 <script>
     const IOBROKER_SWAGGER = 'http://localhost:8093/';
 
     // Demo long polling
     const output = [];
+    let subscribed = false;
+    let lastID = false;
+    let lastTimeout = 0;
+    let connectionInterval = null;
 
     function addOutput(data) {
         console.log(data);
@@ -22,16 +28,29 @@
 
     function setConnectionStatus(isConnected) {
         if (isConnected) {
-            document.getElementById('connected').innerHTML = '<span style="color: green">CONNECTED</span>';
+            connectionInterval && clearInterval(connectionInterval);
+            connectionInterval = null;
 
-            // subscribe on
-            connection.subscribeState('system.adapter.swagger.0.memHeapTotal')
-                .then(data => addOutput('Connected: ' + JSON.stringify(data)));
+            document.getElementById('connected').innerHTML = '<span style="color: green"><b>CONNECTED</b></span>';
+
+            connection.getState('system.adapter.rest-api.0.alive')
+                .then(data => addOutput('system.adapter.rest-api.0.alive: ' + JSON.stringify(data)))
+
+            // subscribe must be done only one time by first connection
+            if (!subscribed) {
+                subscribed = true;
+                connection.subscribeState('system.adapter.rest-api.0.memHeapTotal')
+                    .then(data => addOutput('<span style="color: green">Connected: </span>' + JSON.stringify(data)));
+            }
         } else {
-            document.getElementById('connected').innerHTML = '<span style="color: red">No connection</span>';
-            addOutput('Disconnected');
+            document.getElementById('connected').innerHTML = '<span style="color: red"><b>No connection with ' + IOBROKER_SWAGGER + '</b></span>';
+            if (isConnected !== undefined) {
+                addOutput('<span style="color: red">Disconnected. Try to connect every 5 seconds</span>');
+            }
         }
     }
+
+    setConnectionStatus();
 
     const connection = new LongPolling(IOBROKER_SWAGGER, {
         onConnection: setConnectionStatus,
@@ -40,6 +59,18 @@
         },
         onEvent: event => {
             addOutput('Event: ' + JSON.stringify(event));
+        },
+        onConnectionAttempt: timeout => {
+            lastID = Date.now();
+            lastTimeout = timeout / 1000;
+            connectionInterval = connectionInterval || setInterval(() => {
+                const el = document.getElementById(lastID);
+                if (el) {
+                    lastTimeout && lastTimeout--;
+                    el.innerText = lastTimeout;
+                }
+            }, 1000);
+            addOutput(`${new Date().toLocaleString()} Try to connect...<span id="${lastID}">${lastTimeout}</span>`);
         },
         autoConnect: true // else you must call connection.connect()
     });

@@ -7,6 +7,8 @@
 
 [![NPM](https://nodei.co/npm/iobroker.rest-api.png?downloads=true)](https://nodei.co/npm/iobroker.rest-api/)
 
+**This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
+
 This is RESTFul interface to read the objects and states from ioBroker and to write/control the states over HTTP Get/Post requests.
 
 The purpose of this adapter is similar to simple-api. But this adapter supports long-polling and URL hooks for subscribes.
@@ -16,7 +18,7 @@ It has very useful web interface to play with the requests:
 ![Screenshot](img/screen.png)
 
 ## Usage
-Call in browser ```http://ipaddress:8093/``` and use Swagger UI to request and modify the states
+Call in browser ```http://ipaddress:8093/``` and use Swagger UI to request and modify the states and objects
 
 ## Subscribe on state or object changes
 Your application could get notifications by every change of the state or object.
