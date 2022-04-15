@@ -18,6 +18,8 @@ tags:
     description: "Read, write the states"
   - name: "object"
     description: "Read the objects"
+  - name: "history"
+    description: "Read the history"
 paths:
   /state/{stateId}:
     x-swagger-router-controller: state
@@ -151,7 +153,7 @@ paths:
         - "state"
       summary: "Subscribe on state changes"
       description: "Subscribe on state changes"
-      operationId: "subscribeState"
+      operationId: "subscribeStateGet"
       produces:
         - "application/json"
       parameters:
@@ -524,7 +526,46 @@ paths:
           description: "successful operation"
         400:
           description: "Invalid filter supplied"
-
+  /getHistory:
+    x-swagger-router-controller: object
+    get:
+      tags:
+        - "history"
+      summary: "Reads history"
+      operationId: "getHistory"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "start"
+          in: "query"
+          description: "Options to for history"
+          type: "number"
+      responses:
+        200:
+          description: "successful operation"
+        422:
+          description: "Invalid options supplied"
+    post:
+      tags:
+        - "history"
+      summary: "Reads history"
+      operationId: "postHistory"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Options"
+          in: "body"
+          description: "Options to for history"
+          required: true
+          schema:
+            $ref: "#/definitions/HistoryRequest"
+      responses:
+        200:
+          description: "successful operation"
+        422:
+          description: "Invalid options supplied"
 definitions:
   State:
     type: "object"
@@ -608,6 +649,70 @@ definitions:
         type: "string"
         description: "HTTP Method"
         enum: [ POST, GET, PUT, PATCH, POLLING ]
+  HistoryOptions:
+    type: "object"
+    #required: [pattern]
+    properties:
+      start:
+        type: "number"
+        description: "Start time in ms"
+      end:
+        type: "number"
+        description: "End time in ms"
+      count:
+        type: "number"
+        description: "number of values if aggregate is 'onchange' or number of intervals if other aggregate method. Count will be ignored if step is set, else default is 500 if not set"
+      from:
+        type: "boolean"
+        description: "if FROM field should be included in answer"
+      ack:
+        type: "boolean"
+        description: "if ACK field should be included in answer"
+      q:
+        type: "boolean"
+        description: "if Q field should be included in answer"
+      addId:
+        type: "boolean"
+        description: "if ID field should be included in answer"
+      limit:
+        type: "number"
+        description: "do not return more entries than limit"
+      ignoreNull:
+        type: "boolean"
+        description: "if null values should be included (false), replaced by last not null value (true) or replaced with 0 (0)"
+      removeBorderValues:
+        type: "boolean"
+        description: "By default additional border values are returned to optimize charting. Set this option to true if this is not wanted (e.g. for script data processing)"
+      returnNewestEntries:
+        type: "boolean"
+        description: "The returned data are always sorted by timestamp ascending. When using aggregate none and also providing count or limit this means that normally the oldest entries are returned (unless no start data is provided). Set this option to true to get the newest entries instead."
+      aggregate:
+        type: "string"
+        description: "Aggregate method"
+        enum: [minmax, max, min, average, total, count, percentile, quantile, integral, none]
+      percentile:
+        type: "number"
+        description: "(optional) when using aggregate method percentile defines the percentile level (0..100)(defaults to 50)"
+      quantile:
+        type: "number"
+        description: "(optional) when using aggregate method quantile defines the quantile level (0..1)(defaults to 0.5)"
+      integralUnit:
+        type: "string"
+        description: "(optional) when using aggregate method integral defines the unit in seconds (defaults to 60s). e.g. to get integral in hours for Wh or such, set to 3600."
+      integralInterpolation:
+        type: "string"
+        description: "(optional) when using aggregate method integral defines the interpolation method (defaults to none)."
+        enum: [linear, none]
+
+  HistoryRequest:
+    type: "object"
+    required: [id, options]
+    properties:
+      id:
+        type: "string"
+        description: "State ID"
+      options:
+        $ref: "#/definitions/HistoryOptions"
 
 externalDocs:
   description: "Find out more about ioBroker"
