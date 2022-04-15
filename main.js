@@ -21,6 +21,7 @@ function startAdapter(options) {
         objectChange: (id, obj) => webServer && webServer.api && webServer.api.objectChange(id, obj),
         unload: callback => {
             try {
+                adapter.setState('info.connection', false, true);
                 adapter.log.info(`terminating http${adapter.config.secure ? 's' : ''} server on port ${adapter.config.port}`);
                 if (webServer && webServer.api) {
                     webServer.api.unload()
@@ -143,9 +144,11 @@ function initWebServer(settings, callback) {
                 }
                 serverPort = port;
 
-                server.server.listen(port, () =>
-                    serverListening = true);
-                adapter.log.info(`http${settings.secure ? 's' : ''} server listening on port ${port}`);
+                server.server.listen(port, async () => {
+                    await adapter.setStateAsync('info.connection', true, true);
+                    adapter.log.info(`http${settings.secure ? 's' : ''} server listening on port ${port}`);
+                    serverListening = true
+                });
                 callback && callback(server);
                 callback = null;
             });
