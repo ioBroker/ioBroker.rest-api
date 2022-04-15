@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const setup = require('./lib/setup');
+//const setup = require('./lib/setup');
 const axios = require('axios');
 
 let objects = null;
