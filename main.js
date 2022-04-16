@@ -64,7 +64,7 @@ function main() {
         console.log('Adapter runs as a part of web service');
         adapter.log.warn('Adapter runs as a part of web service');
         adapter.setForeignState(`system.adapter.${adapter.namespace}.alive`, false, true, () =>
-            setTimeout(() => process.exit(), 1000));
+            setTimeout(() => process.exit(utils.EXIT_CODES.ADAPTER_REQUESTED_TERMINATION), 1000));
     } else {
         if (adapter.config.secure) {
             // Load certificates

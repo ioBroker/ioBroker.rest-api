@@ -44,6 +44,8 @@
     "platform": "Javascript/Node.js",
     "mode": "daemon",
     "stoppedWhenWebExtension": true,
+    "connectionType": "local",
+    "dataSource": "push",
     "loglevel": "info",
     "icon": "rest-api.png",
     "compact": true,
@@ -93,8 +95,7 @@
     "checkInterval": 30000,
     "hookTimeout": 3000,
     "noUI": false,
-    "dataSource": "",
-    "allDatapoints": false
+    "dataSource": ""
   },
   "instanceObjects": [
     {
