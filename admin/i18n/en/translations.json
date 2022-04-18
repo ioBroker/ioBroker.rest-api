@@ -25,5 +25,9 @@
   "Ignore warning": "Ignore warning",
   "place here": "place the files here",
   "Disable authentication": "Disable authentication",
-  "Authentication was deactivated": "Authentication was deactivated"
+  "Authentication was deactivated": "Authentication was deactivated",
+  "Timeout for URL hook": "Timeout for URL hook",
+  "How often the hook URLs will be checked": "How often the hook URLs will be checked",
+  "No GUI": "No GUI",
+  "Let's Encrypt SSL": "Let's Encrypt SSL"
 }

@@ -25,5 +25,9 @@
   "Ignore warning": "Negeer waarschuwing",
   "place here": "plaats de bestanden hier",
   "Disable authentication": "Schakel verificatie uit",
-  "Authentication was deactivated": "Verificatie was gedeactiveerd"
+  "Authentication was deactivated": "Verificatie was gedeactiveerd",
+  "Timeout for URL hook": "Time-out voor URL-hook",
+  "How often the hook URLs will be checked": "Hoe vaak de hook-URL's worden gecontroleerd",
+  "No GUI": "Geen GUI",
+  "Let's Encrypt SSL": "Let's Encrypt SSL"
 }

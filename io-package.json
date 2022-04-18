@@ -43,7 +43,6 @@
     "license": "Apache-2.0",
     "platform": "Javascript/Node.js",
     "mode": "daemon",
-    "stoppedWhenWebExtension": true,
     "connectionType": "local",
     "dataSource": "push",
     "loglevel": "info",
@@ -112,6 +111,19 @@
       "common": {
         "role": "indicator.connected",
         "name": "If server started",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.extension",
+      "type": "state",
+      "common": {
+        "role": "indicator",
+        "name": "If instance is in only extension mode",
         "type": "boolean",
         "read": true,
         "write": false,

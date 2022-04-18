@@ -25,5 +25,9 @@
   "Ignore warning": "Игнорировать предупреждение",
   "place here": "разместите файлы здесь",
   "Disable authentication": "Отключить аутентификацию",
-  "Authentication was deactivated": "Аутентификация была отключена"
+  "Authentication was deactivated": "Аутентификация была отключена",
+  "Timeout for URL hook": "Тайм-аут для перехвата URL",
+  "How often the hook URLs will be checked": "Как часто будут проверяться URL-адреса хуков",
+  "No GUI": "Без графического интерфейса",
+  "Let's Encrypt SSL": "Let's Encrypt SSL"
 }

@@ -12,7 +12,7 @@
           "all": true,
           "sm": 12,
           "md": 6,
-          "lg": 2,
+          "lg": 3,
           "adapter": "web"
         },
         "bind": {
@@ -113,7 +113,7 @@
           "label": "Select data source",
           "sm": 12,
           "md": 6,
-          "lg": 2,
+          "lg": 3,
           "adapter": "_dataSources"
         },
         "checkInterval": {
@@ -121,7 +121,9 @@
           "type": "number",
           "help": "ms",
           "label": "How often the hook URLs will be checked",
-          "sm": 12
+          "sm": 12,
+          "md": 6,
+          "lg": 3
         },
         "hookTimeout": {
           "type": "number",
@@ -129,7 +131,7 @@
           "label": "Timeout for URL hook",
           "sm": 12,
           "md": 6,
-          "lg": 2
+          "lg": 3
         },
         "noUI": {
           "newLine": true,

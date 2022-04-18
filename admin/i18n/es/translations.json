@@ -25,5 +25,9 @@
   "Ignore warning": "Ignorar advertencia",
   "place here": "coloca los archivos aquí",
   "Disable authentication": "Deshabilitar autenticación",
-  "Authentication was deactivated": "La autenticación fue desactivada"
+  "Authentication was deactivated": "La autenticación fue desactivada",
+  "Timeout for URL hook": "Tiempo de espera para enlace de URL",
+  "How often the hook URLs will be checked": "Con qué frecuencia se verificarán las URL de enlace",
+  "No GUI": "Sin GUI",
+  "Let's Encrypt SSL": "Let's Encrypt SSL"
 }

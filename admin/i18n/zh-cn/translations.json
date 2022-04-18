@@ -25,5 +25,9 @@
   "Ignore warning": "忽略警告",
   "place here": "将文件拖拽到这里",
   "Disable authentication": "禁用身份认证机制",
-  "Authentication was deactivated": "身份认证机制已停用"
+  "Authentication was deactivated": "身份认证机制已停用",
+  "Timeout for URL hook": "URL 挂钩超时",
+  "How often the hook URLs will be checked": "多久检查一次挂钩 URL",
+  "No GUI": "没有图形用户界面",
+  "Let's Encrypt SSL": "Let's Encrypt SSL"
 }

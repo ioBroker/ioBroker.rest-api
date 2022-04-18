@@ -1,5 +1,4 @@
 {
-  "simpleAPI adapter settings": "simpleAPI adapter settings",
   "Run as": "Laufen unter Anwender",
   "IP": "IP",
   "Port": "Port",
@@ -12,7 +11,7 @@
   "Chained certificate": "Kettenzertifikat",
   "none": "keins",
   "Unsecure_Auth": "Das Passwort wird über unsichere Verbindung gesendet. Um Ihre Passwörter zu schützen, aktivieren Sie die sichere Verbindung (HTTPS)!",
-  "Extend WEB adapter": "Erweitern Sie den WEB-Adapter",
+  "Extend WEB adapter": "WEB-Adapter erweitern",
   "all": "alle",
   "Select data source": "Datenquelle auswählen",
   "List all datapoints": "Alle Datenpunkte auflisten",
@@ -25,5 +24,9 @@
   "Ignore warning": "Warnung ignorieren",
   "place here": "Dateien hier platzieren",
   "Disable authentication": "Authentifizierung deaktivieren",
-  "Authentication was deactivated": "Die Authentifizierung wurde deaktiviert"
+  "Authentication was deactivated": "Die Authentifizierung wurde deaktiviert",
+  "Timeout for URL hook": "Timeout für URL-Hook",
+  "How often the hook URLs will be checked": "Wie oft die Hook-URLs überprüft werden",
+  "No GUI": "Keine GUI",
+  "Let's Encrypt SSL": "Let's Encrypt SSL"
 }
