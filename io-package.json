@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "news": {
+      "0.3.2": {
+        "en": "Corrected subscription",
+        "de": "Abonnement korrigiert",
+        "ru": "Исправлена подписка",
+        "pt": "Assinatura corrigida",
+        "nl": "Gecorrigeerd abonnement",
+        "fr": "Abonnement corrigé",
+        "it": "Abbonamento corretto",
+        "es": "Suscripción corregida",
+        "pl": "Poprawiona subskrypcja",
+        "zh-cn": "更正订阅"
+      },
       "0.3.1": {
         "en": "First release",
         "de": "Erste Veröffentlichung",
