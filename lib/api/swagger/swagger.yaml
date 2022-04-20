@@ -168,6 +168,14 @@ paths:
           description: "method=polling forces subscribe via long polling"
           enum: [polling]
           type: "string"
+        - name: "onchange"
+          type: "boolean"
+          description: "If the updates must be delivered if the value changed"
+          in: "query"
+        - name: "delta"
+          type: "number"
+          description: "Minimal delta to trigger the event"
+          in: "query"
       responses:
         200:
           description: "successful operation"
@@ -304,7 +312,7 @@ paths:
           description: "URL of web hook and the unsubscribe pattern"
           required: true
           schema:
-            $ref: "#/definitions/UrlHookWithPattern"
+            $ref: "#/definitions/UrlHook"
       responses:
         200:
           description: "successful operation"
@@ -520,7 +528,7 @@ paths:
           description: "URL of web hook and the unsubscribe pattern"
           required: true
           schema:
-            $ref: "#/definitions/UrlHookWithPattern"
+            $ref: "#/definitions/UrlHook"
       responses:
         200:
           description: "successful operation"
@@ -775,7 +783,7 @@ definitions:
       method:
         type: "string"
         description: "HTTP Method"
-        enum: [ POST, GET, PUT, PATCH ]
+        enum: [ POST, GET, PUT, PATCH, polling ]
   UrlHookWithPattern:
     type: "object"
     required: [pattern]
@@ -783,13 +791,16 @@ definitions:
       url:
         type: "string"
         description: "URL"
+      onchange:
+        type: "boolean"
+        description: "If the updates must be delivered if the value changed"
       pattern:
         type: "string"
         description: "Subscribe pattern like: \"system.adapter.admin.0.*\""
       method:
         type: "string"
         description: "HTTP Method"
-        enum: [ POST, GET, PUT, PATCH, POLLING ]
+        enum: [ POST, GET, PUT, PATCH, polling ]
   HistoryOptions:
     type: "object"
     #required: [pattern]
