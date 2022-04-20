@@ -39,7 +39,7 @@
             // subscribe must be done only one time by first connection
             if (!subscribed) {
                 subscribed = true;
-                connection.subscribeState('system.adapter.rest-api.0.memHeapTotal')
+                connection.subscribeStates('system.adapter.rest-api.0.*')
                     .then(data => addOutput('<span style="color: green">Connected: </span>' + JSON.stringify(data)));
             }
         } else {

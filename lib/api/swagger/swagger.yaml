@@ -127,6 +127,8 @@ paths:
         - "state"
       summary: "Get only value of the state."
       operationId: "plainState"
+      produces:
+        - "text/plain;charset=UTF-8"
       parameters:
         - name: "stateId"
           in: "path"

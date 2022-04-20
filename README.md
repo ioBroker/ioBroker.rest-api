@@ -18,7 +18,12 @@ It has very useful web interface to play with the requests:
 ![Screenshot](img/screen.png)
 
 ## Usage
-Call in browser ```http://ipaddress:8093/``` and use Swagger UI to request and modify the states and objects
+Call in browser ```http://ipaddress:8093/``` and use Swagger UI to request and modify the states and objects.
+
+Some request examples:
+- `http://ipaddress:8093/v1/state/system.adapter.rest-api.0.memHeapTotal` - read state as JSON
+- `http://ipaddress:8093/v1/state/system.adapter.rest-api.0.memHeapTotal/plain` - read state as string (only value)
+- `http://ipaddress:8093/v1/state/system.adapter.rest-api.0.memHeapTotal?value=5` - write state with GET (only for back compatibility with simple-api)
 
 ## Subscribe on state or object changes
 Your application could get notifications by every change of the state or object.
@@ -46,7 +51,7 @@ This adapter can run as web-extension. In this case the path is available under 
 -->
 
 ## Changelog
-### 0.3.3 (2022-04-20)
+### **WORK IN PROGRESS**
 * (bluefox) Corrected subscription
 
 ### 0.3.1 (2022-04-15)

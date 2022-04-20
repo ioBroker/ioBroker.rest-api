@@ -189,6 +189,51 @@ class LongPolling {
         }
     }
 
+    subscribeStates(pattern, cb) {
+        if (!this.subscriptions.states[pattern]) {
+            this.subscriptions.states[pattern] = [];
+            this.subscriptions.states[pattern].push(cb);
+            return fetch(`${IOBROKER_SWAGGER}v1/states/subscribe?sid=${this.sid}&method=polling`, {
+                method: 'POST',
+                cache: 'no-cache',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({method: 'polling', pattern})
+            })
+                .then(response => response.json());
+        } else {
+            this.subscriptions.states[pattern].push(cb);
+            return Promise.resolve();
+        }
+    }
+
+    unsubscribeStates(pattern, cb) {
+        if (this.subscriptions.states[pattern]) {
+            if (cb) {
+                const pos = this.subscriptions.states[pattern].indexOf(cb);
+                if (pos !== -1) {
+                    this.subscriptions.states[pattern].splice(pos, 1);
+                }
+            } else {
+                delete this.subscriptions.states[pattern];
+            }
+
+            if (!this.subscriptions.states[pattern] || !this.subscriptions.states[pattern].length) {
+                if (this.subscriptions.states[pattern] && !this.subscriptions.states[pattern].length) {
+                    delete this.subscriptions.states[pattern];
+                }
+                return fetch(`${IOBROKER_SWAGGER}v1/states/unsubscribe?sid=${this.sid}`, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({method: 'polling', pattern})
+                })
+                    .then(response => response.json());
+            }
+        } else {
+            return Promise.resolve();
+        }
+    }
+
     unsubscribeState(id, cb) {
         if (this.subscriptions.states[id]) {
             if (cb) {
