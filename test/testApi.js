@@ -5,6 +5,7 @@ const {expect} = require('chai');
 const adapterName = require('../package.json').name.split('.').pop();
 
 const PORT = 18183;
+const TESTS_TIMEOUT = 10000;
 process.env.NO_PROXY = '127.0.0.1';
 
 async function waitForState(harness, id, value) {
@@ -109,7 +110,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.ts).to.be.ok;
                 expect(obj.from).to.equal(`system.adapter.${adapterName}.0`);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: get - must return state with info', async () => {
                 const harness = getHarness();
@@ -157,7 +158,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.common.name).to.equal(`${adapterName}.0 alive`);
                 expect(obj.common.role).to.equal("indicator.state");
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: set - must set state', async () => {
                 const harness = getHarness();
@@ -195,7 +196,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('get/javascript.0.test-string => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal('bla');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: getPlainValue - must return plain value', async () => {
                 const harness = getHarness();
@@ -209,7 +210,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log(`[GET] /v1/state/system.adapter.${adapterName}.0.alive/plain => ${body} type is "${typeof body}"`);
                 expect(body).equal('true');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: set - must set string value with POST', async () => {
                 const harness = getHarness();
@@ -230,7 +231,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('[GET] /v1/state/javascript.0.test-string/plain => ' + response.data);
                 expect(response.data.val).equal('60');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: set - must set encoded string value', async () => {
                 const harness = getHarness();
@@ -251,7 +252,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('[GET] /v1/state/javascript.0.test-string => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal('bla&fasel.foo=hummer hey');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: set - must set boolean value', async () => {
                 const harness = getHarness();
@@ -271,7 +272,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log(`[GET] http://127.0.0.1:${PORT}/javascript.0.test-boolean => ` + body);
                 expect(body).equal('true');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: toggle - must toggle boolean value to false', async () => {
                 const harness = getHarness();
@@ -288,7 +289,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('[GET] /v1/state/javascript.0.test-boolean => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal(false);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: toggle - must toggle boolean value to true', async () => {
                 const harness = getHarness();
@@ -305,7 +306,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('[GET] /v1/state/javascript.0.test-boolean => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal(true);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: toggle - must toggle number value to 100', async () => {
                 const harness = getHarness();
@@ -336,7 +337,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('[GET] /v1/state/javascript.0.test-number => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal(51);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: objects - must return objects', async () => {
                 const harness = getHarness();
@@ -347,7 +348,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('[GET] /v1/objects?filter=system.adapter.* => ' + JSON.stringify(obj));
                 expect(obj[`system.adapter.${adapterName}.0.alive`]._id).to.be.ok;
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: objects - must return objects', async () => {
                 const harness = getHarness();
@@ -359,7 +360,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj[`system.adapter.${adapterName}.0`]._id).to.be.ok;
                 expect(obj[`system.adapter.${adapterName}.0.alive`]).to.be.not.ok;
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API: states - must return states', async () => {
                 const harness = getHarness();
@@ -371,7 +372,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(states[`system.adapter.${adapterName}.0`]).to.be.not.ok;
                 expect(states[`system.adapter.${adapterName}.0.uptime`].val).to.be.least(0);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
         });
     },
 });

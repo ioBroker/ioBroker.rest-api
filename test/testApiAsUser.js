@@ -5,6 +5,7 @@ const {expect} = require('chai');
 const adapterName = require('../package.json').name.split('.').pop();
 
 const PORT = 18185;
+const TESTS_TIMEOUT = 10000;
 process.env.NO_PROXY = '127.0.0.1';
 
 async function waitForState(harness, id, value) {
@@ -168,7 +169,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.common.name).to.equal(`${adapterName}.0.alive`);
                 expect(obj.common.role).to.equal('indicator.state');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 /*
             it('Test RESTful API as User: getPlainValue - must return plain value', async () => {
                 const harness = getHarness();
@@ -179,7 +180,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(error).to.be.not.ok;
                 expect(body).equal('true');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: getPlainValue 4 Test-Endpoint - must return plain value', async () => {
                 const harness = getHarness();
@@ -189,7 +190,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('getPlainValue/javascript.0.test => ' + JSON.stringify(response.data));
                 expect(response.data).equal('1');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: set 4 Test-Endpoint  - must set value', async () => {
                  const harness = getHarness();
@@ -207,7 +208,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(error).to.be.not.ok;
                 expect(body).equal('2');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: set - must set value', async () => {
                 const harness = getHarness();
@@ -226,7 +227,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(body).equal('false');
                 done();
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: set - must set val', async () => {
                 const harness = getHarness();
@@ -245,7 +246,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(error).to.be.not.ok;
                 expect(body).equal('true');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: toggle - must toggle boolean value to false', async () => {
                 const harness = getHarness();
@@ -264,7 +265,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(error).to.be.not.ok;
                 expect(body).equal('false');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: toggle - must toggle boolean value to true', async () => {
                 const harness = getHarness();
@@ -284,7 +285,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(body).equal('true');
                 done();
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: toggle - must toggle number value to 100', async () => {
                 const harness = getHarness();
@@ -319,7 +320,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(error).to.be.not.ok;
                 expect(body).equal('51');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: objects - must return objects', async () => {
                 const harness = getHarness();
@@ -329,7 +330,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('objects?pattern=system.adapter.* => ' + JSON.stringify(response.data));
                 expect(body).to.be.equal('error: permissionError');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: objects - must return objects', async () => {
                 const harness = getHarness();
@@ -339,14 +340,14 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log('objects?pattern=system.adapter.* => ' + JSON.stringify(response.data));
                 expect(body).to.be.equal('error: permissionError');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: states - must return states', async () => {
                 const response = await axios.get('http://127.0.0.1:${PORT}/states?pattern=system.adapter.*');
                 console.log('states?pattern=system.adapter.* => ' + JSON.stringify(response.data));
                 expect(body).to.be.equal('error: permissionError');
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: setValueFromBody(POST) - must set one value', async () => {
                 const harness = getHarness();
@@ -371,7 +372,7 @@ tests.integration(path.join(__dirname, '..'), {
                 obj = response.data;
                 expect(obj[0].val).equal(55);
             })
-                .timeout(3000);*/
+                .timeout(TESTS_TIMEOUT);*/
         });
     }
 });

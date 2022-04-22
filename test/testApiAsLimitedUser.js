@@ -5,6 +5,7 @@ const {expect} = require('chai');
 const adapterName = require('../package.json').name.split('.').pop();
 
 const PORT = 18184;
+const TESTS_TIMEOUT = 10000;
 process.env.NO_PROXY = '127.0.0.1';
 
 async function waitForState(harness, id, value) {

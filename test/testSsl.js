@@ -5,6 +5,7 @@ const {expect} = require('chai');
 const adapterName = require('../package.json').name.split('.').pop();
 
 const PORT = 18186;
+const TESTS_TIMEOUT = 10000;
 
 process.env.NO_PROXY = '127.0.0.1';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -81,7 +82,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.ts).to.be.ok;
                 expect(obj.from).to.equal(`system.adapter.${adapterName}.0`);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API SSL: get - must return value with auth in header', async () => {
                 const harness = getHarness();
@@ -101,7 +102,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.ts).to.be.ok;
                 expect(obj.from).to.equal(`system.adapter.${adapterName}.0`);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API SSL: get with no credentials', async () => {
                 const harness = getHarness();
@@ -111,7 +112,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log(`[GET] /v1/state/system.adapter.${adapterName}.0.alive => ${JSON.stringify(response.data)}`);
                 expect(response.status).to.be.equal(401);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API SSL: get with wrong credentials', async () => {
                 const harness = getHarness();
@@ -121,7 +122,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log(`[GET] /v1/state/system.adapter.${adapterName}.0.alive?user=admin&pass=io => ${JSON.stringify(response.data)}`);
                 expect(response.status).to.be.equal(401);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
 
             it('Test REST API SSL: get - get with wrong credentials in header', async () => {
                 const harness = getHarness();
@@ -136,7 +137,7 @@ tests.integration(path.join(__dirname, '..'), {
                 console.log(`[GET/Authorization] /v1/state/system.adapter.${adapterName}.0.alive => ${JSON.stringify(response.data)}`);
                 expect(response.status).to.be.equal(401);
             })
-                .timeout(3000);
+                .timeout(TESTS_TIMEOUT);
         });
     },
 });
