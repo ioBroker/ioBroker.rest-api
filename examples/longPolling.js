@@ -7,6 +7,8 @@ class LongPolling {
     //    onConnectionAttempt - called when class tries to connect
     //    reconnectInterval - default 5000 ms. Class will try every 5 seconds to establish connection
     //    pollingInterval - default 30000 ms. Duration of each long polling request. After 30 seconds the request will be terminated by server and client must make a new request.
+    //    user - username  (only if authentication on server is enabled)
+    //    password - user password (only if authentication on server is enabled)
     // }
     constructor(host, options) {
         // host is http://ip:port/
@@ -37,11 +39,15 @@ class LongPolling {
                 // subscribe on all
                 setTimeout(() => {
                     Object.keys(this.subscriptions.objects).forEach(id =>
-                        fetch(`${IOBROKER_SWAGGER}v1/object/${id}/subscribe?sid=${this.sid}&method=polling`)
+                        fetch(`${IOBROKER_SWAGGER}v1/object/${id}/subscribe?sid=${this.sid}&method=polling`, {
+                            headers: this._getAuthorization()
+                        })
                             .then(response => response.json())
                             .catch(error => console.error('Cannot resubscribe: ' + error)));
                     Object.keys(this.subscriptions.states).forEach(id =>
-                        fetch(`${IOBROKER_SWAGGER}v1/state/${id}/subscribe?sid=${this.sid}&method=polling`)
+                        fetch(`${IOBROKER_SWAGGER}v1/state/${id}/subscribe?sid=${this.sid}&method=polling`, {
+                            headers: this._getAuthorization()
+                        })
                             .then(response => response.json())
                             .catch(error => console.error('Cannot resubscribe: ' + error)));
                 }, 0);
@@ -51,17 +57,34 @@ class LongPolling {
         }
     }
 
+    _getAuthorization(contentType) {
+        if (this.options.user) {
+            const headers = {
+                Authorization: 'Basic ' + btoa(this.options.user + ':' + this.options.password)
+            };
+            if (contentType) {
+                headers['Content-Type'] =  'application/json';
+            }
+            return headers;
+        } else if (contentType) {
+            return {'Content-Type': 'application/json'};
+        } else {
+            return undefined;
+        }
+    }
+
     _longPolling(isStart) {
         if (isStart) {
             this.sid = Date.now() + '_' + Math.round(Math.random() * 10000);
-            // in real to the reconnect interval will be added the timeout for fetch which depends on browser.
+            // in real the reconnect interval will be added the timeout for fetch which depends on browser.
             this.options.onConnectionAttempt && this.options.onConnectionAttempt(this.options.reconnectInterval);
         }
         const controller = new AbortController()
         let timeoutId = setTimeout(() => controller.abort(), this.options.pollingInterval + 1000);
 
-        fetch(`${this.host}v1/polling?sid=${this.sid}${isStart ? `&check=true&timeout=${this.options.pollingInterval}` : ''}`, {
-            signal: controller.signal
+        fetch(`${this.host}v1/polling?sid=${this.sid}${isStart ? `&connect&timeout=${this.options.pollingInterval}` : ''}`, {
+            signal: controller.signal,
+            headers: this._getAuthorization(),
         })
             .then(response => {
                 timeoutId && clearTimeout(timeoutId);
@@ -168,12 +191,16 @@ class LongPolling {
     }
 
     getState(id) {
-        return fetch(`${IOBROKER_SWAGGER}v1/state/${id}`)
+        return fetch(`${IOBROKER_SWAGGER}v1/state/${id}`, {
+            headers: this._getAuthorization()
+        })
             .then(response => response.json())
     }
 
     getObject(id) {
-        return fetch(`${IOBROKER_SWAGGER}v1/object/${id}`)
+        return fetch(`${IOBROKER_SWAGGER}v1/object/${id}`, {
+            headers: this._getAuthorization()
+        })
             .then(response => response.json())
     }
 
@@ -181,7 +208,9 @@ class LongPolling {
         if (!this.subscriptions.states[id]) {
             this.subscriptions.states[id] = [];
             this.subscriptions.states[id].push(cb);
-            return fetch(`${IOBROKER_SWAGGER}v1/state/${id}/subscribe?sid=${this.sid}&method=polling`)
+            return fetch(`${IOBROKER_SWAGGER}v1/state/${id}/subscribe?sid=${this.sid}&method=polling`, {
+                headers: this._getAuthorization()
+            })
                 .then(response => response.json());
         } else {
             this.subscriptions.states[id].push(cb);
@@ -196,10 +225,13 @@ class LongPolling {
             return fetch(`${IOBROKER_SWAGGER}v1/states/subscribe?sid=${this.sid}&method=polling`, {
                 method: 'POST',
                 cache: 'no-cache',
-                headers: {'Content-Type': 'application/json'},
+                headers: this._getAuthorization('application/json'),
                 body: JSON.stringify({method: 'polling', pattern})
             })
-                .then(response => response.json());
+                .then(response => response.json())
+                .catch(error => {
+                    console.log('Error: ' + error);
+                })
         } else {
             this.subscriptions.states[pattern].push(cb);
             return Promise.resolve();
@@ -224,7 +256,7 @@ class LongPolling {
                 return fetch(`${IOBROKER_SWAGGER}v1/states/unsubscribe?sid=${this.sid}`, {
                     method: 'POST',
                     cache: 'no-cache',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: this._getAuthorization('application/json'),
                     body: JSON.stringify({method: 'polling', pattern})
                 })
                     .then(response => response.json());
@@ -249,7 +281,9 @@ class LongPolling {
                 if (this.subscriptions.states[id] && !this.subscriptions.states[id].length) {
                     delete this.subscriptions.states[id];
                 }
-                return fetch(`${IOBROKER_SWAGGER}v1/state/${id}/unsubscribe?sid=${this.sid}&method=polling`)
+                return fetch(`${IOBROKER_SWAGGER}v1/state/${id}/unsubscribe?sid=${this.sid}&method=polling`, {
+                    headers: this._getAuthorization()
+                })
                     .then(response => response.json());
             }
         } else {
@@ -261,7 +295,9 @@ class LongPolling {
         if (!this.subscriptions.objects[id]) {
             this.subscriptions.objects[id] = [];
             this.subscriptions.objects[id].push(cb);
-            return fetch(`${IOBROKER_SWAGGER}v1/object/${id}/subscribe?sid=${this.sid}&method=polling`)
+            return fetch(`${IOBROKER_SWAGGER}v1/object/${id}/subscribe?sid=${this.sid}&method=polling`, {
+                headers: this._getAuthorization()
+            })
                 .then(response => response.json());
         } else {
             this.subscriptions.objects[id].push(cb);
@@ -284,7 +320,9 @@ class LongPolling {
                 if (this.subscriptions.objects[id] && !this.subscriptions.objects[id].length) {
                     delete this.subscriptions.objects[id];
                 }
-                return fetch(`${IOBROKER_SWAGGER}v1/object/${id}/unsubscribe?sid=${this.sid}&method=polling`)
+                return fetch(`${IOBROKER_SWAGGER}v1/object/${id}/unsubscribe?sid=${this.sid}&method=polling`, {
+                    headers: this._getAuthorization()
+                })
                     .then(response => response.json());
             }
         } else {

@@ -168,7 +168,7 @@ paths:
           in: "query"
           required: true
           description: "method=polling forces subscribe via long polling"
-          enum: [polling]
+          enum: [ polling, POST, GET, PUT, PATCH ]
           type: "string"
         - name: "onchange"
           type: "boolean"
@@ -277,6 +277,28 @@ paths:
           description: "Invalid filter supplied"
   /states/subscribe:
     x-swagger-router-controller: state
+    get:
+      tags:
+        - "state"
+      summary: "Read current subscribes"
+      operationId: "getStatesSubscribes"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "method"
+          in: "query"
+          required: true
+          description: "method=polling forces subscribe via long polling"
+          enum: [ polling, POST, GET, PUT, PATCH ]
+          type: "string"
+        - name: 'url'
+          in: "query"
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid filter supplied"
     post:
       tags:
         - "state"
@@ -493,6 +515,28 @@ paths:
           description: "Invalid filter supplied"
   /objects/subscribe:
     x-swagger-router-controller: object
+    get:
+      tags:
+        - "state"
+      summary: "Read current subscribes"
+      operationId: "getObjectsSubscribes"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "method"
+          in: "query"
+          required: true
+          description: "method=polling forces subscribe via long polling"
+          enum: [ polling, POST, GET, PUT, PATCH ]
+          type: "string"
+        - name: 'url'
+          in: "query"
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid filter supplied"
     post:
       tags:
         - "object"
@@ -785,7 +829,7 @@ definitions:
       method:
         type: "string"
         description: "HTTP Method"
-        enum: [ POST, GET, PUT, PATCH, polling ]
+        enum: [ polling, POST, GET, PUT, PATCH ]
   UrlHookWithPattern:
     type: "object"
     required: [pattern]
@@ -802,7 +846,7 @@ definitions:
       method:
         type: "string"
         description: "HTTP Method"
-        enum: [ POST, GET, PUT, PATCH, polling ]
+        enum: [ polling, POST, GET, PUT, PATCH ]
   HistoryOptions:
     type: "object"
     #required: [pattern]

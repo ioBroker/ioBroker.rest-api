@@ -72,7 +72,9 @@
             }, 1000);
             addOutput(`${new Date().toLocaleString()} Try to connect...<span id="${lastID}">${lastTimeout}</span>`);
         },
-        autoConnect: true // else you must call connection.connect()
+        autoConnect: true, // else you must call connection.connect()
+        user: 'admin',
+        password: 'ioBroker',
     });
 </script>
 </body>
