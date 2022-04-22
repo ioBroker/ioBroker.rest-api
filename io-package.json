@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "0.3.4",
+    "version": "0.3.5",
     "news": {
+      "0.3.5": {
+        "en": "Allowed the reading of current subscriptions",
+        "de": "Erlaubt das Lesen aktueller Abonnements",
+        "ru": "Разрешено чтение текущих подписок",
+        "pt": "Permitiu a leitura de assinaturas atuais",
+        "nl": "Lezen van huidige abonnementen toegestaan",
+        "fr": "Autorisé la lecture des abonnements en cours",
+        "it": "Consentita la lettura degli abbonamenti in corso",
+        "es": "Permitida la lectura de suscripciones vigentes",
+        "pl": "Umożliwił czytanie aktualnych subskrypcji",
+        "zh-cn": "允许阅读当前订阅"
+      },
       "0.3.4": {
         "en": "Corrected subscription",
         "de": "Abonnement korrigiert",
