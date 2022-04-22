@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "news": {
+      "0.3.6": {
+        "en": "Added object creation and enumerations reading",
+        "de": "Objekterstellung und Lesen von Aufzählungen hinzugefügt",
+        "ru": "Добавлено создание объектов и чтение перечислений",
+        "pt": "Adicionado criação de objetos e leitura de enumerações",
+        "nl": "Toegevoegd objectcreatie en opsommingen lezen",
+        "fr": "Ajout de la création d'objets et de la lecture des énumérations",
+        "it": "Aggiunta creazione di oggetti e lettura di enumerazioni",
+        "es": "Añadida creación de objetos y lectura de enumeraciones.",
+        "pl": "Dodano tworzenie obiektów i odczytywanie wyliczeń",
+        "zh-cn": "添加了对象创建和枚举读取"
+      },
       "0.3.5": {
         "en": "Allowed the reading of current subscriptions",
         "de": "Erlaubt das Lesen aktueller Abonnements",
