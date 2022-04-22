@@ -20,6 +20,8 @@ tags:
     description: "Read the objects"
   - name: "history"
     description: "Read the history"
+  - name: "enum"
+    description: "Read the categories"
 securityDefinitions:
   basicAuth:
     type: basic
@@ -379,11 +381,44 @@ paths:
           description: "Object not found"
         400:
           description: "Invalid object ID supplied"
+    post:
+      tags:
+        - "object"
+      summary: "Create the object"
+      description: "Create new object. If object already exists, the error will be returned"
+      operationId: "createObject"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "objectId"
+          description: "ID of the object to write"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "value"
+          description: "Object"
+          required: true
+          schema:
+            $ref: "#/definitions/Object"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Object"
+        400:
+          description: "Invalid object ID supplied"
+        409:
+          description: "Object already exists"
+        405:
+          description: "Invalid object structure"
     put:
       tags:
         - "object"
       summary: "Update the object"
-      description: "To delete the parts of the object, set the value to 'null', like {\"common\": {\"desc\": null} to delete the \"common.desc\""
+      description: "To delete the parts of the object, set the value to 'null', like {\"common\": {\"desc\": null} to delete the \"common.desc\". If object does not exist it will be created"
       operationId: "updateObject"
       consumes:
         - "application/json"
@@ -782,6 +817,40 @@ paths:
             $ref: "#/definitions/HistoryAddResponse"
         422:
           description: "Invalid options supplied"
+  /enum:
+    x-swagger-router-controller: enum
+    get:
+      tags:
+        - "enum"
+      summary: "Reads categories of enums"
+      operationId: "readMainEnums"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+  /enum/{enumId}:
+    x-swagger-router-controller: enum
+    get:
+      tags:
+        - "enum"
+      summary: "Reads enums of specific type"
+      operationId: "readEnums"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "enumId"
+          in: "path"
+          description: "Enum ID in form \"functions\" or \"room\" without \"enum.\""
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/EnumResponse"
+        404:
+          description: "Category not found"
 definitions:
   State:
     type: "object"
@@ -989,6 +1058,37 @@ definitions:
       error:
         type: "string"
         description: "Error description"
+  EnumCommon:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Name can be string or object"
+      icon:
+        type: "string"
+        description: "Icon for category (optional)"
+      desc:
+        type: "string"
+        description: "Description can be string or object"
+      members:
+        type: "array"
+        items:
+          type: "string"
+  EnumEntry:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        description: "Enum ID"
+      common:
+        $ref: "#/definitions/EnumCommon"
+      type:
+        type: "string"
+        description: "Always enum"
+  EnumResponse:
+    type: "array"
+    items:
+      $ref: "#/definitions/EnumEntry"
 externalDocs:
   description: "Find out more about ioBroker"
   url: "https://www.iobroker.net"

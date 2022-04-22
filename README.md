@@ -51,6 +51,9 @@ This adapter can run as web-extension. In this case the path is available under 
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Added object creation and enumerations reading
+
 ### 0.3.5 (2022-04-22)
 * (bluefox) Allowed the reading of current subscriptions
 
