@@ -24,7 +24,8 @@ class LongPolling {
         this.connecTimeout = null;
         this.subscriptions = {
             objects: {},
-            states: {}
+            states: {},
+            patterns: {}
         };
         this.sid = Date.now() + '_' + Math.round(Math.random() * 10000);
         if (this.options.autoConnect) {
@@ -44,16 +45,29 @@ class LongPolling {
                         })
                             .then(response => response.json())
                             .catch(error => console.error('Cannot resubscribe: ' + error)));
+
                     Object.keys(this.subscriptions.states).forEach(id =>
                         fetch(`${IOBROKER_SWAGGER}v1/state/${id}/subscribe?sid=${this.sid}&method=polling`, {
                             headers: this._getAuthorization()
                         })
                             .then(response => response.json())
                             .catch(error => console.error('Cannot resubscribe: ' + error)));
-                }, 0);
-            }
 
-            this.options.onConnection && this.options.onConnection(this.isConnected);
+                    Object.keys(this.subscriptions.patterns).forEach(pattern =>
+                        fetch(`${IOBROKER_SWAGGER}v1/states/subscribe?sid=${this.sid}&method=polling`, {
+                            method: 'POST',
+                            cache: 'no-cache',
+                            headers: this._getAuthorization('application/json'),
+                            body: JSON.stringify({method: 'polling', pattern})
+                        })
+                            .then(response => response.json())
+                            .catch(error => console.log('Error: ' + error)));
+
+                    this.options.onConnection && this.options.onConnection(this.isConnected);
+                }, 0);
+            } else {
+                this.options.onConnection && this.options.onConnection(this.isConnected);
+            }
         }
     }
 
@@ -76,7 +90,7 @@ class LongPolling {
     _longPolling(isStart) {
         if (isStart) {
             this.sid = Date.now() + '_' + Math.round(Math.random() * 10000);
-            // in real the reconnect interval will be added the timeout for fetch which depends on browser.
+            // in real the re-connect interval will be added the timeout for fetch which depends on browser.
             this.options.onConnectionAttempt && this.options.onConnectionAttempt(this.options.reconnectInterval);
         }
         const controller = new AbortController()
@@ -101,6 +115,12 @@ class LongPolling {
                         } catch (error) {
                             console.error('Cannot parse answer: ' + data);
                             this.options.onError && this.options.onError(error);
+                            return;
+                        }
+
+                        if (data.error) {
+                            console.error('Error: ' + data.error);
+                            this.options.onError && this.options.onError(data.error);
                             return;
                         }
 
@@ -219,9 +239,9 @@ class LongPolling {
     }
 
     subscribeStates(pattern, cb) {
-        if (!this.subscriptions.states[pattern]) {
-            this.subscriptions.states[pattern] = [];
-            this.subscriptions.states[pattern].push(cb);
+        if (!this.subscriptions.patterns[pattern]) {
+            this.subscriptions.patterns[pattern] = [];
+            this.subscriptions.patterns[pattern].push(cb);
             return fetch(`${IOBROKER_SWAGGER}v1/states/subscribe?sid=${this.sid}&method=polling`, {
                 method: 'POST',
                 cache: 'no-cache',
@@ -229,29 +249,27 @@ class LongPolling {
                 body: JSON.stringify({method: 'polling', pattern})
             })
                 .then(response => response.json())
-                .catch(error => {
-                    console.log('Error: ' + error);
-                })
+                .catch(error => console.log('Error: ' + error));
         } else {
-            this.subscriptions.states[pattern].push(cb);
+            this.subscriptions.patterns[pattern].push(cb);
             return Promise.resolve();
         }
     }
 
     unsubscribeStates(pattern, cb) {
-        if (this.subscriptions.states[pattern]) {
+        if (this.subscriptions.patterns[pattern]) {
             if (cb) {
-                const pos = this.subscriptions.states[pattern].indexOf(cb);
+                const pos = this.subscriptions.patterns[pattern].indexOf(cb);
                 if (pos !== -1) {
-                    this.subscriptions.states[pattern].splice(pos, 1);
+                    this.subscriptions.patterns[pattern].splice(pos, 1);
                 }
             } else {
-                delete this.subscriptions.states[pattern];
+                delete this.subscriptions.patterns[pattern];
             }
 
-            if (!this.subscriptions.states[pattern] || !this.subscriptions.states[pattern].length) {
-                if (this.subscriptions.states[pattern] && !this.subscriptions.states[pattern].length) {
-                    delete this.subscriptions.states[pattern];
+            if (!this.subscriptions.patterns[pattern] || !this.subscriptions.patterns[pattern].length) {
+                if (this.subscriptions.patterns[pattern] && !this.subscriptions.patterns[pattern].length) {
+                    delete this.subscriptions.patterns[pattern];
                 }
                 return fetch(`${IOBROKER_SWAGGER}v1/states/unsubscribe?sid=${this.sid}`, {
                     method: 'POST',

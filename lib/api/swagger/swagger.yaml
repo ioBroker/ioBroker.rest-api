@@ -20,6 +20,11 @@ tags:
     description: "Read the objects"
   - name: "history"
     description: "Read the history"
+securityDefinitions:
+  basicAuth:
+    type: basic
+security:
+  - basicAuth: []
 paths:
   /state/{stateId}:
     x-swagger-router-controller: state
@@ -288,17 +293,24 @@ paths:
         - name: "method"
           in: "query"
           required: true
-          description: "method=polling forces subscribe via long polling"
+          description: "The same method as by subscription"
           enum: [ polling, POST, GET, PUT, PATCH ]
           type: "string"
-        - name: 'url'
+        - name: "url"
+          description: "The same URL as by subscription. By polling it must be omitted"
           in: "query"
           type: "string"
+        - name: "sid"
+          in: "query"
+          type: "string"
+          description: "Only if method=polling: session ID"
       responses:
         200:
           description: "successful operation"
-        400:
-          description: "Invalid filter supplied"
+        404:
+          description: "URL or session not found"
+        422:
+          description: "Invalid parameters supplied"
     post:
       tags:
         - "state"
@@ -511,8 +523,10 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Object"
-        400:
-          description: "Invalid filter supplied"
+        404:
+          description: "URL or session not found"
+        422:
+          description: "Invalid parameters supplied"
   /objects/subscribe:
     x-swagger-router-controller: object
     get:
@@ -529,14 +543,21 @@ paths:
           description: "method=polling forces subscribe via long polling"
           enum: [ polling, POST, GET, PUT, PATCH ]
           type: "string"
-        - name: 'url'
+        - name: "url"
+          description: "The same URL as by subscription. By polling it must be omitted"
           in: "query"
           type: "string"
+        - name: "sid"
+          in: "query"
+          type: "string"
+          description: "Only if method=polling: session ID"
       responses:
         200:
           description: "successful operation"
-        400:
-          description: "Invalid filter supplied"
+        404:
+          description: "URL or session not found"
+        422:
+          description: "Invalid parameters supplied"
     post:
       tags:
         - "object"

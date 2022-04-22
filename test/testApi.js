@@ -82,6 +82,7 @@ async function setupTests(harness, setupBoolean, setupString, setupNumber) {
 // Run tests
 tests.integration(path.join(__dirname, '..'), {
     allowedExitCodes: [11],
+    loglevel: 'info',
 
     defineAdditionalTests(getHarness) {
         describe('Test REST API', () => {

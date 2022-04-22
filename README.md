@@ -51,6 +51,9 @@ This adapter can run as web-extension. In this case the path is available under 
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Allowed the reading of current subscriptions
+
 ### 0.3.4 (2022-04-20)
 * (bluefox) Corrected subscription
 

@@ -126,6 +126,7 @@ async function setupTests(harness) {
 // Run tests
 tests.integration(path.join(__dirname, '..'), {
     allowedExitCodes: [11],
+    loglevel: 'info',
 
     defineAdditionalTests(getHarness) {
         describe.skip('Test RESTful API as User', () => {

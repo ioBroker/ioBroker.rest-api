@@ -16,6 +16,7 @@
     let lastID = false;
     let lastTimeout = 0;
     let connectionInterval = null;
+    let password = '';
 
     function addOutput(data) {
         console.log(data);
@@ -52,30 +53,44 @@
 
     setConnectionStatus();
 
-    const connection = new LongPolling(IOBROKER_SWAGGER, {
-        onConnection: setConnectionStatus,
-        onError: error => {
-            addOutput('ERROR: ' + JSON.stringify(error));
-        },
-        onEvent: event => {
-            addOutput('Event: ' + JSON.stringify(event));
-        },
-        onConnectionAttempt: timeout => {
-            lastID = Date.now();
-            lastTimeout = timeout / 1000;
-            connectionInterval = connectionInterval || setInterval(() => {
-                const el = document.getElementById(lastID);
-                if (el) {
-                    lastTimeout && lastTimeout--;
-                    el.innerText = lastTimeout;
+    let connection;
+    function createConnection() {
+        connection = new LongPolling(IOBROKER_SWAGGER, {
+            onConnection: setConnectionStatus,
+            onError: error => {
+                addOutput('ERROR: ' + JSON.stringify(error));
+                if (error.toString().includes('Invalid password or user name') || error.toString().includes('User is required')) {
+                    connection.close();
+                    connection = null;
+                    do {
+                        password = window.prompt('Please enter password for "admin":');
+                    } while (!password);
+
+                    createConnection();
                 }
-            }, 1000);
-            addOutput(`${new Date().toLocaleString()} Try to connect...<span id="${lastID}">${lastTimeout}</span>`);
-        },
-        autoConnect: true, // else you must call connection.connect()
-        user: 'admin',
-        password: 'ioBroker',
-    });
+            },
+            onEvent: event => {
+                addOutput('Event: ' + JSON.stringify(event));
+            },
+            onConnectionAttempt: timeout => {
+                lastID = Date.now();
+                lastTimeout = timeout / 1000;
+                connectionInterval = connectionInterval || setInterval(() => {
+                    const el = document.getElementById(lastID);
+                    if (el) {
+                        lastTimeout && lastTimeout--;
+                        el.innerText = lastTimeout;
+                    }
+                }, 1000);
+                addOutput(`${new Date().toLocaleString()} Try to connect...<span id="${lastID}">${lastTimeout}</span>`);
+            },
+            autoConnect: true, // else you must call connection.connect()
+            user: 'admin',
+            password,
+        });
+    }
+
+    createConnection();
 </script>
 </body>
 </html>
