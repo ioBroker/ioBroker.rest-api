@@ -227,6 +227,8 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.ack).to.be.true;
                 expect(obj.id).to.equal('javascript.0.test-string1');
 
+                await new Promise(resolve => setTimeout(() => resolve(), 2000));
+
                 response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string1`);
                 console.log('[GET] /v1/state/javascript.0.test-string1 => ' + JSON.stringify(response.data));
                 expect(response.data.val).equal('60');
