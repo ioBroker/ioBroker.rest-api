@@ -22,6 +22,8 @@ tags:
     description: "Read the history"
   - name: "enum"
     description: "Read the categories"
+  - name: "commands"
+    description: "Socket commands"
 securityDefinitions:
   basicAuth:
     type: basic
@@ -852,6 +854,1187 @@ paths:
         404:
           description: "Category not found"
 # commands start
+  /command/log:
+    get:
+      tags:
+        - "commands"
+      summary: "log"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "text"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "level"
+          in: "query"
+          description: ""
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getHistory:
+    get:
+      tags:
+        - "commands"
+      summary: "getHistory"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "options"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/httpGet:
+    get:
+      tags:
+        - "commands"
+      summary: "httpGet"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "url"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/sendTo:
+    get:
+      tags:
+        - "commands"
+      summary: "sendTo"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapterInstance"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "command"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "message"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/sendToHost:
+    get:
+      tags:
+        - "commands"
+      summary: "sendToHost"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "host"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "command"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "message"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/authEnabled:
+    get:
+      tags:
+        - "commands"
+      summary: "authEnabled"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/listPermissions:
+    get:
+      tags:
+        - "commands"
+      summary: "listPermissions"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getUserPermissions:
+    get:
+      tags:
+        - "commands"
+      summary: "getUserPermissions"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getVersion:
+    get:
+      tags:
+        - "commands"
+      summary: "getVersion"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getAdapterName:
+    get:
+      tags:
+        - "commands"
+      summary: "getAdapterName"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getHostByIp:
+    get:
+      tags:
+        - "commands"
+      summary: "getHostByIp"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "ip"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/requireLog:
+    get:
+      tags:
+        - "commands"
+      summary: "requireLog"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "isEnabled"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/readLogs:
+    get:
+      tags:
+        - "commands"
+      summary: "readLogs"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "host"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/delState:
+    get:
+      tags:
+        - "commands"
+      summary: "delState"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/cmdExec:
+    get:
+      tags:
+        - "commands"
+      summary: "cmdExec"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "host"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "cmd"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getRatings:
+    get:
+      tags:
+        - "commands"
+      summary: "getRatings"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "update"
+          in: "query"
+          description: ""
+          type: "boolean"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getCurrentInstance:
+    get:
+      tags:
+        - "commands"
+      summary: "getCurrentInstance"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/checkFeatureSupported:
+    get:
+      tags:
+        - "commands"
+      summary: "checkFeatureSupported"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "feature"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/decrypt:
+    get:
+      tags:
+        - "commands"
+      summary: "decrypt"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "encryptedText"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/encrypt:
+    get:
+      tags:
+        - "commands"
+      summary: "encrypt"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "plainText"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getIsEasyModeStrict:
+    get:
+      tags:
+        - "commands"
+      summary: "getIsEasyModeStrict"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getEasyMode:
+    get:
+      tags:
+        - "commands"
+      summary: "getEasyMode"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getAdapterInstances:
+    get:
+      tags:
+        - "commands"
+      summary: "getAdapterInstances"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapterName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getAdapters:
+    get:
+      tags:
+        - "commands"
+      summary: "getAdapters"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapterName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/updateLicenses:
+    get:
+      tags:
+        - "commands"
+      summary: "updateLicenses"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "login"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "password"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getCompactInstances:
+    get:
+      tags:
+        - "commands"
+      summary: "getCompactInstances"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getCompactAdapters:
+    get:
+      tags:
+        - "commands"
+      summary: "getCompactAdapters"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getCompactInstalled:
+    get:
+      tags:
+        - "commands"
+      summary: "getCompactInstalled"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "host"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getCompactSystemConfig:
+    get:
+      tags:
+        - "commands"
+      summary: "getCompactSystemConfig"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getCompactRepository:
+    get:
+      tags:
+        - "commands"
+      summary: "getCompactRepository"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "host"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getCompactHosts:
+    get:
+      tags:
+        - "commands"
+      summary: "getCompactHosts"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/addUser:
+    get:
+      tags:
+        - "commands"
+      summary: "addUser"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "user"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "pass"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/delUser:
+    get:
+      tags:
+        - "commands"
+      summary: "delUser"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "user"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/addGroup:
+    get:
+      tags:
+        - "commands"
+      summary: "addGroup"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "group"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "desc"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "acl"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/delGroup:
+    get:
+      tags:
+        - "commands"
+      summary: "delGroup"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "group"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/changePassword:
+    get:
+      tags:
+        - "commands"
+      summary: "changePassword"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "user"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "pass"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getObject:
+    get:
+      tags:
+        - "commands"
+      summary: "getObject"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getObjects:
+    get:
+      tags:
+        - "commands"
+      summary: "getObjects"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getObjectView:
+    get:
+      tags:
+        - "commands"
+      summary: "getObjectView"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "design"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "search"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "params"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/setObject:
+    get:
+      tags:
+        - "commands"
+      summary: "setObject"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "obj"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getAllObjects:
+    get:
+      tags:
+        - "commands"
+      summary: "getAllObjects"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/extendObject:
+    get:
+      tags:
+        - "commands"
+      summary: "extendObject"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "obj"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getForeignObjects:
+    get:
+      tags:
+        - "commands"
+      summary: "getForeignObjects"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "pattern"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "type"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/delObject:
+    get:
+      tags:
+        - "commands"
+      summary: "delObject"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "options"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getStates:
+    get:
+      tags:
+        - "commands"
+      summary: "getStates"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "pattern"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getState:
+    get:
+      tags:
+        - "commands"
+      summary: "getState"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/setState:
+    get:
+      tags:
+        - "commands"
+      summary: "setState"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "state"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getBinaryState:
+    get:
+      tags:
+        - "commands"
+      summary: "getBinaryState"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/setBinaryState:
+    get:
+      tags:
+        - "commands"
+      summary: "setBinaryState"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "base64"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getForeignStates:
+    get:
+      tags:
+        - "commands"
+      summary: "getForeignStates"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "pattern"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/delObjects:
+    get:
+      tags:
+        - "commands"
+      summary: "delObjects"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "options"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/readFile:
+    get:
+      tags:
+        - "commands"
+      summary: "readFile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/readFile64:
+    get:
+      tags:
+        - "commands"
+      summary: "readFile64"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/writeFile64:
+    get:
+      tags:
+        - "commands"
+      summary: "writeFile64"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "data64"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "options"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/writeFile:
+    get:
+      tags:
+        - "commands"
+      summary: "writeFile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "data64"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "options"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/unlink:
+    get:
+      tags:
+        - "commands"
+      summary: "unlink"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "name"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/deleteFile:
+    get:
+      tags:
+        - "commands"
+      summary: "deleteFile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "name"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/deleteFolder:
+    get:
+      tags:
+        - "commands"
+      summary: "deleteFolder"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "name"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/renameFile:
+    get:
+      tags:
+        - "commands"
+      summary: "renameFile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "oldName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "newName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/rename:
+    get:
+      tags:
+        - "commands"
+      summary: "rename"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "oldName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "newName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/mkdir:
+    get:
+      tags:
+        - "commands"
+      summary: "mkdir"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "dirName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
+  /command/readDir:
+    get:
+      tags:
+        - "commands"
+      summary: "readDir"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "dirName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "options"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/chmodFile:
+    get:
+      tags:
+        - "commands"
+      summary: "chmodFile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "options"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/chownFile:
+    get:
+      tags:
+        - "commands"
+      summary: "chownFile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "options"
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
+  /command/fileExists:
+    get:
+      tags:
+        - "commands"
+      summary: "fileExists"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "adapter"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
 # commands stop
 definitions:
   State:

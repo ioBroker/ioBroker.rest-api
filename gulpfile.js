@@ -109,7 +109,7 @@ const description = {
 
 gulp.task('generateList', done => {
     const CommandsAdmin = require('@iobroker/socket-classes').SocketCommandsAdmin;
-    const commands   = new CommandsAdmin({config: {}});
+    const commands = new CommandsAdmin({config: {}});
 
     const ignore = ['authenticate', 'name', 'error', 'logout', 'eventsThreshold'];
 
@@ -120,6 +120,8 @@ gulp.task('generateList', done => {
         admin: [],
         other: []
     };
+
+    const yaml = [];
 
     Object.keys(commands.commands).filter(name => !ignore.includes(name) && !name.includes('subscribe')).forEach(func => {
         let args = common.getParamNames(commands.commands[func]).map(item => item[0] === '_' ? item.substring(1) : item);
@@ -135,7 +137,7 @@ gulp.task('generateList', done => {
         if (common.DEFAULT_VALUES[func]) {
             args = args.map(name => {
                 if (common.DEFAULT_VALUES[func].hasOwnProperty(name)) {
-                    return name + '[' + common.DEFAULT_VALUES[func][name] + ']';
+                    return `${name}[${common.DEFAULT_VALUES[func][name]}]`;
                 } else {
                     return name;
                 }
@@ -153,13 +155,27 @@ gulp.task('generateList', done => {
 
         const parameters = [];
         args.forEach(arg => {
+            let type = 'string';
+            let description = '';
+            let required = true;
+
+            if (arg === 'options' || arg === 'params' || arg === 'obj' || arg === 'message') {
+                type = 'string';
+                description = 'JSON object'
+            }
+            if (arg === 'update') {
+                type = 'boolean';
+            }
+            if (arg === 'options' || arg === 'adapterName' || arg === 'update' || arg.includes('level')) {
+                required = false;
+            }
+
             parameters.push(
-`        - name: "${arg}"
-          in: "path"
-          description: ""
-          type: "string"
-          required: true
-`);
+`        - name: "${arg.replace(/\[\w+]/, '')}"
+          in: "query"
+          description: "${description}"
+          type: "${type}"
+          required: ${required}`);
         });
 
         let prmsText = '';
@@ -169,7 +185,7 @@ gulp.task('generateList', done => {
 ${parameters.join('\n')}`;
         }
 
-        yaml.push(`  /command/${func}
+        yaml.push(`  /command/${func}:
     get:
       tags:
         - "commands"
@@ -178,13 +194,10 @@ ${parameters.join('\n')}`;
         - "application/json"${prmsText}        
       responses:
         200:
-          description: "successful operation"    
-`);
-
+          description: "successful operation"`);
     });
 
     const allTextes = [];
-    const yaml = [];
 
     Object.keys(groups).forEach(group => {
         allTextes.push('### ' + group[0].toUpperCase() + group.substring(1) + 's');
@@ -194,7 +207,7 @@ ${parameters.join('\n')}`;
 
     let file = fs.readFileSync(__dirname + '/README.md').toString('utf8').split('\n');
     // find <!-- START -->
-    const newFile = [];
+    let newFile = [];
     let foundStart = false;
     let foundEnd = false;
     for (let f = 0; f < file.length; f++) {
@@ -213,6 +226,29 @@ ${parameters.join('\n')}`;
     }
 
     fs.writeFileSync(__dirname + '/README.md', newFile.join('\n'));
+
+
+    file = fs.readFileSync(__dirname + '/lib/api/swagger/swagger.yaml').toString('utf8').split('\n');
+    // find <!-- START -->
+    newFile = [];
+    foundStart = false;
+    foundEnd = false;
+    for (let f = 0; f < file.length; f++) {
+        if (!foundStart && file[f].includes('# commands start')) {
+            foundStart = true;
+            newFile.push(file[f]);
+            yaml.forEach(line => newFile.push(line));
+            continue;
+        } else
+        if (file[f].includes('# commands stop')) {
+            foundEnd = true;
+        }
+        if (!foundStart || foundEnd) {
+            newFile.push(file[f]);
+        }
+    }
+
+    fs.writeFileSync(__dirname + '/lib/api/swagger/swagger.yaml', newFile.join('\n'));
 
     done();
 });
