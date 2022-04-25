@@ -19,12 +19,13 @@
     "url": "https://github.com/ioBroker/ioBroker.rest-api"
   },
   "dependencies": {
+    "@iobroker/adapter-core": "^2.6.0",
+    "@iobroker/socket-classes": "^0.1.4",
     "express": "^4.17.3",
     "body-parser": "^1.20.0",
     "swagger-node-runner-fork": "^0.8.0",
     "swagger-ui-express": "^4.3.0",
     "yamljs": "^0.3.0",
-    "@iobroker/adapter-core": "^2.6.0",
     "axios": "^0.26.1",
     "cors": "^2.8.5"
   },
@@ -37,7 +38,8 @@
     "eslint-plugin-react": "^7.29.4",
     "mocha": "^9.2.2",
     "chai": "^4.3.6",
-    "@iobroker/testing": "^2.6.0"
+    "@iobroker/testing": "^2.6.0",
+    "gulp": "^4.0.2"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.rest-api/issues"
@@ -53,6 +55,7 @@
     "io-package.json"
   ],
   "scripts": {
+    "build": "gulp",
     "test": "node node_modules/mocha/bin/mocha --exit",
     "release": "release-script",
     "release-patch": "release-script patch --yes --no-update-lockfile",

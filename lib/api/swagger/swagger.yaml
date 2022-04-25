@@ -851,6 +851,8 @@ paths:
             $ref: "#/definitions/EnumResponse"
         404:
           description: "Category not found"
+# commands start
+# commands stop
 definitions:
   State:
     type: "object"

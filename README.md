@@ -45,6 +45,96 @@ This adapter can run as web-extension. In this case the path is available under 
 - `PUT` is for checking if resource exists then update, else create new resource
 - `PATCH` is always for updating a resource
 
+## Commands
+Additionally, you can execute many socket commands via special interface:
+
+`http://ipaddress:8093/v1/command/<commandName>?arg1=Value2&arg2=Value2`
+
+*Not available via GUI*
+
+E.g.
+- `http://ipaddress:8093/v1/command/getState?id=system.adapter.admin.0.alive` - to read the state of `system.adapter.admin.0.alive`
+- `http://ipaddress:8093/v1/command/readFile?adapter=admin.admin&fileName=admin.png` - to read the file `admin.admin/admin.png` as JSON result
+- `http://ipaddress:8093/v1/command/readFile?adapter=admin.admin&fileName=admin.png?binary` - to read the file `admin.admin/admin.png` as file
+- `http://ipaddress:8093/v1/command/extendObject?id=system.adapter.admin.0?obj={"common":{"enabled":true}}` - to restart admin
+
+<!-- START -->
+### States
+- delState(id) - delState
+- getStates(pattern) - getStates
+- getState(id) - getState
+- setState(id, state) - setState
+- getBinaryState(id) - getBinaryState
+- setBinaryState(id, base64) - setBinaryState
+- getForeignStates(pattern) - getForeignStates
+
+### Objects
+- getObject(id) - getObject
+- getObjects() - getObjects
+- getObjectView(design, search, params) - getObjectView
+- setObject(id, obj) - setObject
+- getAllObjects() - getAllObjects
+- extendObject(id, obj) - extendObject
+- getForeignObjects(pattern, type) - getForeignObjects
+- delObject(id, options) - delObject
+- delObjects(id, options) - delObjects
+
+### Files
+- readFile(adapter, fileName) - readFile
+- readFile64(adapter, fileName) - readFile64
+- writeFile64(adapter, fileName, data64, options) - writeFile64
+- writeFile(adapter, fileName, data64, options) - writeFile
+- unlink(adapter, name) - unlink
+- deleteFile(adapter, name) - deleteFile
+- deleteFolder(adapter, name) - deleteFolder
+- renameFile(adapter, oldName, newName) - renameFile
+- rename(adapter, oldName, newName) - rename
+- mkdir(adapter, dirName) - mkdir
+- readDir(adapter, dirName, options) - readDir
+- chmodFile(adapter, fileName, options) - chmodFile
+- chownFile(adapter, fileName, options) - chownFile
+- fileExists(adapter, fileName) - fileExists
+
+### Admins
+- getUserPermissions() - getUserPermissions
+- updateLicenses(login, password) - updateLicenses
+- getCompactInstances() - getCompactInstances
+- getCompactAdapters() - getCompactAdapters
+- getCompactInstalled(host) - getCompactInstalled
+- getCompactSystemConfig() - getCompactSystemConfig
+- getCompactRepository(host) - getCompactRepository
+- getCompactHosts() - getCompactHosts
+- addUser(user, pass) - addUser
+- delUser(user) - delUser
+- addGroup(group, desc, acl) - addGroup
+- delGroup(group) - delGroup
+- changePassword(user, pass) - changePassword
+
+### Others
+- log(text, level[info]) - no answer - log
+- getHistory(id, options) - getHistory
+- httpGet(url) - httpGet
+- sendTo(adapterInstance, command, message) - sendTo
+- sendToHost(host, command, message) - sendToHost
+- authEnabled() - authEnabled
+- listPermissions() - listPermissions
+- getVersion() - getVersion
+- getAdapterName() - getAdapterName
+- getHostByIp(ip) - getHostByIp
+- requireLog(isEnabled) - requireLog
+- readLogs(host) - readLogs
+- cmdExec(host, id, cmd) - cmdExec
+- getRatings(update) - getRatings
+- getCurrentInstance() - getCurrentInstance
+- checkFeatureSupported(feature) - checkFeatureSupported
+- decrypt(encryptedText) - decrypt
+- encrypt(plainText) - encrypt
+- getIsEasyModeStrict() - getIsEasyModeStrict
+- getEasyMode() - getEasyMode
+- getAdapterInstances(adapterName) - getAdapterInstances
+- getAdapters(adapterName) - getAdapters
+
+<!-- END -->
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
