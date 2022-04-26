@@ -50,89 +50,93 @@ Additionally, you can execute many socket commands via special interface:
 
 `http://ipaddress:8093/v1/command/<commandName>?arg1=Value2&arg2=Value2`
 
-*Not available via GUI*
-
 E.g.
 - `http://ipaddress:8093/v1/command/getState?id=system.adapter.admin.0.alive` - to read the state of `system.adapter.admin.0.alive`
 - `http://ipaddress:8093/v1/command/readFile?adapter=admin.admin&fileName=admin.png` - to read the file `admin.admin/admin.png` as JSON result
 - `http://ipaddress:8093/v1/command/readFile?adapter=admin.admin&fileName=admin.png?binary` - to read the file `admin.admin/admin.png` as file
 - `http://ipaddress:8093/v1/command/extendObject?id=system.adapter.admin.0?obj={"common":{"enabled":true}}` - to restart admin
 
+You can request all commands with POST method too. As body must be an object with parameters. E.g:
+```
+curl --location --request POST 'http://ipaddress:8093/v1/command/sendTo' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"adapterInstance": "history.0",
+"command": "getHistory",
+"message": {"id": "system.adapter.admin.0.memRss","options": {"aggregate": "onchange", "addId": true}}
+}'
+```
+
+You cannot send POST request to commands via GUI.
+
 <!-- START -->
 ### States
-- delState(id) - delState
-- getStates(pattern) - getStates
-- getState(id) - getState
-- setState(id, state) - setState
-- getBinaryState(id) - getBinaryState
-- setBinaryState(id, base64) - setBinaryState
-- getForeignStates(pattern) - getForeignStates
+- `getStates(pattern)` - get the list of states for pattern (e.g. for system.adapter.admin.0.*). GUI can have problems by visualization of answer.
+- `getState(id)` - get state value by ID
+- `setState(id, state)` - set state value with JSON object (e.g. `{"val": 1, "ack": true}`)
+- `getBinaryState(id)` - get binary state by ID
+- `setBinaryState(id, base64)` - set binary state by ID
 
 ### Objects
-- getObject(id) - getObject
-- getObjects() - getObjects
-- getObjectView(design, search, params) - getObjectView
-- setObject(id, obj) - setObject
-- getAllObjects() - getAllObjects
-- extendObject(id, obj) - extendObject
-- getForeignObjects(pattern, type) - getForeignObjects
-- delObject(id, options) - delObject
-- delObjects(id, options) - delObjects
+- `getObject(id)` - get object by ID
+- `getObjects()` - get all states and rooms. GUI can have problems by visualization of answer.
+- `getObjectView(design, search, params)` - get specific objects, e.g. design=system, search=state, params=`{"startkey": "system.adapter.admin.", "endkey": "system.adapter.admin.\u9999"}`
+- `setObject(id, obj)` - set object with JSON object (e.g. `{"common": {"type": "boolean"}, "native": {}, "type": "state"}`)
+- `delObject(id, options)` - delete object by ID
 
 ### Files
-- readFile(adapter, fileName) - readFile
-- readFile64(adapter, fileName) - readFile64
-- writeFile64(adapter, fileName, data64, options) - writeFile64
-- writeFile(adapter, fileName, data64, options) - writeFile
-- unlink(adapter, name) - unlink
-- deleteFile(adapter, name) - deleteFile
-- deleteFolder(adapter, name) - deleteFolder
-- renameFile(adapter, oldName, newName) - renameFile
-- rename(adapter, oldName, newName) - rename
-- mkdir(adapter, dirName) - mkdir
-- readDir(adapter, dirName, options) - readDir
-- chmodFile(adapter, fileName, options) - chmodFile
-- chownFile(adapter, fileName, options) - chownFile
-- fileExists(adapter, fileName) - fileExists
+- `readFile(adapter, fileName)` - read file, e.g. adapter=vis.0, fileName=main/vis-views.json. Additionally, you can set option in query binary=true to get answer as file and not as json
+- `readFile64(adapter, fileName)` - read file as base64 string, e.g. adapter=vis.0, fileName=main/vis-views.json. Additionally, you can set option in query binary=true to get answer as file and not as json
+- `writeFile64(adapter, fileName, data64, options)` - write file, e.g. adapter=vis.0, fileName=main/vis-test.json, data64=eyJhIjogMX0=
+- `unlink(adapter, name)` - delete file or folder
+- `deleteFile(adapter, name)` - delete file
+- `deleteFolder(adapter, name)` - delete folder
+- `renameFile(adapter, oldName, newName)` - rename file
+- `rename(adapter, oldName, newName)` - rename file or folder
+- `mkdir(adapter, dirName)` - create folder
+- `readDir(adapter, dirName, options)` - read content of folder
+- `chmodFile(adapter, fileName, options)` - change file mode. E.g. adapter=vis.0, fileName=main/*, options = `{"mode": 0x644}`
+- `chownFile(adapter, fileName, options)` - change file owner. E.g. adapter=vis.0, fileName=main/*, options = `{"owner": "newOwner", "ownerGroup": "newgroup"}`
+- `fileExists(adapter, fileName)` - check if file exists
 
 ### Admins
-- getUserPermissions() - getUserPermissions
-- updateLicenses(login, password) - updateLicenses
-- getCompactInstances() - getCompactInstances
-- getCompactAdapters() - getCompactAdapters
-- getCompactInstalled(host) - getCompactInstalled
-- getCompactSystemConfig() - getCompactSystemConfig
-- getCompactRepository(host) - getCompactRepository
-- getCompactHosts() - getCompactHosts
-- addUser(user, pass) - addUser
-- delUser(user) - delUser
-- addGroup(group, desc, acl) - addGroup
-- delGroup(group) - delGroup
-- changePassword(user, pass) - changePassword
+- `getHostByIp(ip)` - read host information by IP. e.g. by localhost
+- `readLogs(host)` - read file name and size of log files. You can read them with http://ipaddress:8093/<fileName>
+- `delState(id)` - delete state and object. Same as delObject
+- `getRatings(update)` - read adapter ratings (as in admin)
+- `getCurrentInstance()` - read adapter namespace (always rest-api.0)
+- `checkFeatureSupported(feature)` - check if feature is supported by js-controller.
+- `decrypt(encryptedText)` - decrypt string with system secret
+- `encrypt(plainText)` - encrypt string with system secret
+- `getAdapterInstances(adapterName)` - get objects of type "instance". You can define optionally adapterName
+- `getAdapters(adapterName)` - get objects of type "adapter". You can define optionally adapterName
+- `updateLicenses(login, password)` - read licenses from ioBroker.net portal
+- `getCompactInstances()` - read list of instances with short information
+- `getCompactAdapters()` - read list of installed adapters with short information
+- `getCompactInstalled(host)` - read short information about installed adapters
+- `getCompactSystemConfig()` - read short system config
+- `getCompactRepository(host)` - read short repository
+- `getCompactHosts()` - get short information about hosts
+- `addUser(user, pass)` - add new user
+- `delUser(user)` - delete user
+- `addGroup(group, desc, acl)` - create new group
+- `delGroup(group)` - delete group
+- `changePassword(user, pass)` - change user password
+- `getAllObjects()` - read all objects as list. GUI can have problems by visualization of answer.
+- `extendObject(id, obj)` - modify object by ID with JSON. (.e.g. `{"common":{"enabled": true}}`) 
+- `getForeignObjects(pattern, type)` - same as getObjects
+- `getForeignStates(pattern)` - same as getStates
+- `delObjects(id, options)` - delete objects by pattern
 
 ### Others
-- log(text, level[info]) - no answer - log
-- getHistory(id, options) - getHistory
-- httpGet(url) - httpGet
-- sendTo(adapterInstance, command, message) - sendTo
-- sendToHost(host, command, message) - sendToHost
-- authEnabled() - authEnabled
-- listPermissions() - listPermissions
-- getVersion() - getVersion
-- getAdapterName() - getAdapterName
-- getHostByIp(ip) - getHostByIp
-- requireLog(isEnabled) - requireLog
-- readLogs(host) - readLogs
-- cmdExec(host, id, cmd) - cmdExec
-- getRatings(update) - getRatings
-- getCurrentInstance() - getCurrentInstance
-- checkFeatureSupported(feature) - checkFeatureSupported
-- decrypt(encryptedText) - decrypt
-- encrypt(plainText) - encrypt
-- getIsEasyModeStrict() - getIsEasyModeStrict
-- getEasyMode() - getEasyMode
-- getAdapterInstances(adapterName) - getAdapterInstances
-- getAdapters(adapterName) - getAdapters
+- `log(text, level[info])` - no answer - add log entry to ioBroker log
+- `getHistory(id, options)` - read history. See for options: https://github.com/ioBroker/ioBroker.history/blob/master/docs/en/README.md#access-values-from-javascript-adapter
+- `httpGet(url)` - read URL from server. You can set binary=true to get answer as file
+- `sendTo(adapterInstance, command, message)` - send command to instance. E.g. adapterInstance=history.0, command=getHistory, message=`{"id": "system.adapter.admin.0.memRss","options": {"aggregate": "onchange", "addId": true}}`
+- `listPermissions()` - read static information with function permissions
+- `getUserPermissions()` - read object with user permissions
+- `getVersion()` - read adapter name and version
+- `getAdapterName()` - read adapter name (always rest-api)
 
 <!-- END -->
 <!--
@@ -141,6 +145,9 @@ E.g.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Added socket commands
+
 ### 0.3.6 (2022-04-22)
 * (bluefox) Added object creation and enumerations reading
 

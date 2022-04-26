@@ -140,6 +140,22 @@
           "sm": 12,
           "md": 6,
           "lg": 2
+        },
+        "noCommands": {
+          "newLine": true,
+          "type": "checkbox",
+          "label": "Do not allow commands execution",
+          "sm": 12,
+          "md": 6,
+          "lg": 3
+        },
+        "noAdminCommands": {
+          "hidden": "!!data.noCommands",
+          "type": "checkbox",
+          "label": "Do not allow admin commands execution",
+          "sm": 12,
+          "md": 6,
+          "lg": 3
         }
       }
     },

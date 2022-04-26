@@ -154,7 +154,9 @@
     "checkInterval": 30000,
     "hookTimeout": 3000,
     "noUI": false,
-    "dataSource": ""
+    "dataSource": "",
+    "noCommands": false,
+    "noAdminCommands": false
   },
   "instanceObjects": [
     {
