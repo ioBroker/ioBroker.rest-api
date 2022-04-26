@@ -145,7 +145,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 0.4.0 (2022-04-26)
 * (bluefox) Added socket commands
 
 ### 0.3.6 (2022-04-22)

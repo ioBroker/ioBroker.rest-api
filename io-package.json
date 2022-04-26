@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "0.3.6",
+    "version": "0.4.0",
     "news": {
+      "0.4.0": {
+        "en": "Added socket commands",
+        "de": "Socket-Befehle hinzugefügt",
+        "ru": "Добавлены команды сокета",
+        "pt": "Comandos de soquete adicionados",
+        "nl": "Socket-opdrachten toegevoegd",
+        "fr": "Commandes de socket ajoutées",
+        "it": "Aggiunti comandi socket",
+        "es": "Comandos de socket agregados",
+        "pl": "Dodano polecenia dotyczące gniazd",
+        "zh-cn": "添加了套接字命令"
+      },
       "0.3.6": {
         "en": "Added object creation and enumerations reading",
         "de": "Objekterstellung und Lesen von Aufzählungen hinzugefügt",
@@ -74,11 +86,6 @@
         "es": "Primer lanzamiento",
         "pl": "Pierwsze wydanie",
         "zh-cn": "首次发布"
-      },
-      "0.2.0": {
-        "en": "initial commit",
-        "de": "initial commit",
-        "ru": "initial commit"
       }
     },
     "title": "REST API",
