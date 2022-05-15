@@ -122,10 +122,12 @@ tests.integration(path.join(__dirname, '..'), {
     loglevel: 'info',
 
     defineAdditionalTests({ suite }) {
-        suite('Test RESTful API as User', (harness) => {
+        suite('Test RESTful API as User', (getHarness) => {
+            let harness;
             before(async function () {
                 // The adapter start can take a bit
                 this.timeout(TESTS_TIMEOUT);
+                harness = getHarness();
                 await setupTests(harness);
             });
 

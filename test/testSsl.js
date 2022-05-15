@@ -15,10 +15,13 @@ tests.integration(path.join(__dirname, '..'), {
     loglevel: 'info',
 
     defineAdditionalTests({ suite }) {
-        suite('Test REST API SSL', (harness) => {
+        suite('Test REST API SSL', (getHarness) => {
+            let harness;
             before(async function () {
                 // The adapter start can take a bit
                 this.timeout(TESTS_TIMEOUT);
+
+                harness = getHarness();
 
                 await harness.changeAdapterConfig(harness.adapterName, {
                     native: {
