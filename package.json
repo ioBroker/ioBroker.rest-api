@@ -30,9 +30,9 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@alcalzone/release-script": "^3.5.8",
-    "@alcalzone/release-script-plugin-iobroker": "^3.5.8",
-    "@alcalzone/release-script-plugin-license": "^3.5.8",
+    "@alcalzone/release-script": "^3.5.9",
+    "@alcalzone/release-script-plugin-iobroker": "^3.5.9",
+    "@alcalzone/release-script-plugin-license": "^3.5.9",
     "@iobroker/testing": "^3.0.2",
     "chai": "^4.3.6",
     "eslint-plugin-eqeqeq-fix": "^1.0.3",
