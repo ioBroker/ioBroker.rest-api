@@ -1,6 +1,6 @@
 const path = require('path');
-const { tests } = require('@iobroker/testing');
 const axios = require('axios');
+const { tests } = require('@iobroker/testing');
 const { expect } = require('chai');
 
 const PORT = 18186;
@@ -33,6 +33,7 @@ tests.integration(path.join(__dirname, '..'), {
                         certPrivate: 'defaultPrivate',
                     }
                 });
+
                 // Start the adapter and wait until it has started
                 await harness.startAdapterAndWait(true);
             });
@@ -113,4 +114,3 @@ tests.integration(path.join(__dirname, '..'), {
         });
     },
 });
-

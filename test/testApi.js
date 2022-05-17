@@ -1,14 +1,13 @@
 const path = require('path');
-const { tests } = require('@iobroker/testing');
 const axios = require('axios');
+const { tests } = require('@iobroker/testing');
 const { expect } = require('chai');
-const adapterName = require('../package.json').name.split('.').pop();
 
 const PORT = 18183;
 const TESTS_TIMEOUT = 10000;
 process.env.NO_PROXY = '127.0.0.1';
 
-async function setupTests(harness, setupBoolean, setupString, setupNumber) {
+async function createVariables(harness, setupBoolean, setupString, setupNumber) {
     if (setupString !== undefined && setupString !== null) {
         await harness.objects.setObjectAsync('javascript.0.test-string1', {
             common: {
@@ -38,6 +37,7 @@ async function setupTests(harness, setupBoolean, setupString, setupNumber) {
         });
         await harness.states.setStateAsync('javascript.0.test-number', setupNumber);
     }
+
     if (setupBoolean !== undefined && setupBoolean !== null) {
         await harness.objects.setObjectAsync('javascript.0.test-boolean', {
             common: {
@@ -51,7 +51,6 @@ async function setupTests(harness, setupBoolean, setupString, setupNumber) {
         });
         await harness.states.setStateAsync('javascript.0.test-boolean', setupBoolean);
     }
-
 }
 
 // Run tests
@@ -60,14 +59,13 @@ tests.integration(path.join(__dirname, '..'), {
     loglevel: 'info',
 
     defineAdditionalTests({ suite }) {
-        suite('Test REST API', (getHarness) => {
+        suite('Test REST API', getHarness => {
             let harness;
             before(async function () {
                 // The adapter start can take a bit
                 this.timeout(TESTS_TIMEOUT);
 
                 harness = getHarness();
-                await setupTests(harness);
 
                 await harness.changeAdapterConfig(harness.adapterName, {
                     native: {
@@ -80,8 +78,6 @@ tests.integration(path.join(__dirname, '..'), {
             });
 
             it('Test REST API: get - must return state', async () => {
-                await setupTests(harness);
-
                 const response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive`);
                 const obj = response.data;
                 // console.log(`get/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`);
@@ -103,8 +99,6 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: get - must return state with info', async () => {
-                await setupTests(harness);
-
                 const response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive?withInfo=true`);
                 const obj = response.data;
                 // console.log(`[GET] /v1/state/system.adapter.${harness.adapterName}.0.alive?withInfo=true => ${JSON.stringify(response.data)}`);
@@ -149,7 +143,7 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: set - must set state', async () => {
-                await setupTests(harness, null, '');
+                await createVariables(harness, null, '');
 
                 let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string1?value=bla`);
                 const obj = response.data;
@@ -185,8 +179,6 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: getPlainValue - must return plain value', async () => {
-                await setupTests(harness);
-
                 const response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive/plain`, {
                     responseType: 'arraybuffer',
                     responseEncoding: 'binary'
@@ -197,7 +189,7 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: set - must set string value with POST', async () => {
-                await setupTests(harness, null, '');
+                await createVariables(harness, null, '');
 
                 let response = await axios.patch(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string1`, {
                     val: '60',
@@ -218,7 +210,7 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: set - must set encoded string value', async () => {
-                await setupTests(harness, null, '');
+                await createVariables(harness, null, '');
 
                 let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-string1?value=bla%26fasel%2efoo%3Dhummer+hey`);
                 const obj = response.data
@@ -237,7 +229,7 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: set - must set boolean value', async () => {
-                await setupTests(harness, false);
+                await createVariables(harness, false);
 
                 let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean?value=true`);
                 const obj = response.data;
@@ -255,7 +247,7 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: toggle - must toggle boolean value to false', async () => {
-                await setupTests(harness, true);
+                await createVariables(harness, true);
 
                 let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean/toggle`);
                 const obj = response.data;
@@ -270,7 +262,7 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: toggle - must toggle boolean value to true', async () => {
-                await setupTests(harness, false);
+                await createVariables(harness, false);
 
                 let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean/toggle`);
                 const obj = response.data;
@@ -285,7 +277,7 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: toggle - must toggle number value to 100', async () => {
-                await setupTests(harness, null, null, 0);
+                await createVariables(harness, null, null, 0);
 
                 let response = await axios.get(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test-number/toggle`);
                 let obj = response.data;
@@ -314,8 +306,6 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: objects - must return objects', async () => {
-                await setupTests(harness);
-
                 const response = await axios.get(`http://127.0.0.1:${PORT}/v1/objects?filter=system.adapter.*`);
                 const obj = response.data
                 // console.log('[GET] /v1/objects?filter=system.adapter.* => ' + JSON.stringify(obj));
@@ -323,8 +313,6 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: objects - must return objects', async () => {
-                await setupTests(harness);
-
                 const response = await axios.get(`http://127.0.0.1:${PORT}/v1/objects?filter=system.adapter.*&type=instance`);
                 const obj = response.data
                 // console.log('[GET] /v1/objects?filter=system.adapter.*&type=instance => ' + JSON.stringify(obj));
@@ -333,8 +321,6 @@ tests.integration(path.join(__dirname, '..'), {
             }).timeout(TESTS_TIMEOUT)
 
             it('Test REST API: states - must return states', async () => {
-                await setupTests(harness);
-
                 const response = await axios.get(`http://127.0.0.1:${PORT}/v1/states?filter=system.adapter.*`);
                 const states = response.data
                 // console.log('[GET] /v1/states?filter=system.adapter.* => ' + JSON.stringify(states));

@@ -4,8 +4,8 @@
 'use strict';
 
 const utils       = require('@iobroker/adapter-core'); // Get common adapter utils
-const RestAPI     = require('./lib/rest-api.js');
 const LE          = require(utils.controllerDir + '/lib/letsencrypt.js');
+const RestAPI     = require('./lib/rest-api.js');
 const adapterName = require('./package.json').name.split('.').pop();
 
 let webServer = null;
