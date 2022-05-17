@@ -126,7 +126,6 @@ You cannot send POST request to commands via GUI.
 - `extendObject(id, obj)` - modify object by ID with JSON. (.e.g. `{"common":{"enabled": true}}`) 
 - `getForeignObjects(pattern, type)` - same as getObjects
 - `getForeignStates(pattern)` - same as getStates
-- `delObjects(id, options)` - delete objects by pattern
 
 ### Others
 - `log(text, level[info])` - no answer - add log entry to ioBroker log
@@ -145,7 +144,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 0.5.0 (2022-05-17)
 * (bluefox) Some access errors were corrected
 
 ### 0.4.0 (2022-04-26)

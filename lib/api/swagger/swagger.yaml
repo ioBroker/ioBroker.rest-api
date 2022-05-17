@@ -1838,29 +1838,6 @@ paths:
       responses:
         200:
           description: "successful operation"
-  /command/delObjects:
-    get:
-      tags:
-        - "commands"
-      summary: "delete objects by pattern"
-      produces:
-        - "application/json"
-      parameters:
-
-        - name: "id"            
-          in: "query"
-          description: ""
-          type: "string"
-          required: true
-
-        - name: "options"            
-          in: "query"
-          description: "JSON object"
-          type: "string"
-          required: false        
-      responses:
-        200:
-          description: "successful operation"
 # admin commands end
   /command/log:
     get:
