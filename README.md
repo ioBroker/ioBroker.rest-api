@@ -145,7 +145,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 0.6.0 (2022-05-18)
 * (bluefox) Added sendTo path
 
 ### 0.5.0 (2022-05-17)

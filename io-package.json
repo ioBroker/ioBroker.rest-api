@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "news": {
+      "0.6.0": {
+        "en": "Added sendTo path",
+        "de": "sendTo-Pfad hinzugefügt",
+        "ru": "Добавлен путь отправки",
+        "pt": "Adicionado caminho sendTo",
+        "nl": "SendTo-pad toegevoegd",
+        "fr": "Ajout du chemin sendTo",
+        "it": "Aggiunto il percorso sendTo",
+        "es": "Ruta de envío agregada",
+        "pl": "Dodano ścieżkę sendTo",
+        "zh-cn": "添加了 sendTo 路径"
+      },
       "0.5.0": {
         "en": "Some access errors were corrected",
         "de": "Einige Zugriffsfehler wurden behoben",
@@ -64,18 +76,6 @@
         "zh-cn": "更正订阅"
       },
       "0.3.3": {
-        "en": "Corrected subscription",
-        "de": "Abonnement korrigiert",
-        "ru": "Исправлена подписка",
-        "pt": "Assinatura corrigida",
-        "nl": "Gecorrigeerd abonnement",
-        "fr": "Abonnement corrigé",
-        "it": "Abbonamento corretto",
-        "es": "Suscripción corregida",
-        "pl": "Poprawiona subskrypcja",
-        "zh-cn": "更正订阅"
-      },
-      "0.3.2": {
         "en": "Corrected subscription",
         "de": "Abonnement korrigiert",
         "ru": "Исправлена подписка",
