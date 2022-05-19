@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "This is a REST server for ioBroker."
-  version: "1.0.0"
+  0.6.0
   title: "ioBroker Swagger UI"
   contact:
     email: "admin@iobroker.net"

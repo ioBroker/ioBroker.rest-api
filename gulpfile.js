@@ -1,6 +1,7 @@
 const gulp = require('gulp');
 const fs = require('fs');
 const common = require('./lib/common');
+const pkg = require('./package.json');
 
 const isFile = name => {
     return name.toLowerCase().includes('file')
@@ -286,4 +287,11 @@ ${parameters.join('\n')}`;
     done();
 });
 
-gulp.task('default', gulp.series('generateList'));
+gulp.task('updateYamlVersion', done => {
+    let yaml = fs.readFileSync(__dirname + '/lib/api/swagger/swagger.yaml').toString('utf8');
+    yaml = yaml.replace(/version: "\d+\.\d+.\d+"/, pkg.version);
+    fs.writeFileSync(__dirname + '/lib/api/swagger/swagger.yaml', yaml);
+    done();
+});
+
+gulp.task('default', gulp.series('generateList', 'updateYamlVersion'));
