@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "0.6.0",
+    "version": "1.0.0",
     "news": {
+      "1.0.0": {
+        "en": "Final release",
+        "de": "Endgültige Veröffentlichung",
+        "ru": "Окончательный релиз",
+        "pt": "Último lançamento",
+        "nl": "Laatste versie",
+        "fr": "Version finale",
+        "it": "Rilascio finale",
+        "es": "Lanzamiento final",
+        "pl": "Ostateczne wydanie",
+        "zh-cn": "最终版本"
+      },
       "0.6.0": {
         "en": "Added sendTo path",
         "de": "sendTo-Pfad hinzugefügt",
@@ -64,18 +76,6 @@
         "zh-cn": "允许阅读当前订阅"
       },
       "0.3.4": {
-        "en": "Corrected subscription",
-        "de": "Abonnement korrigiert",
-        "ru": "Исправлена подписка",
-        "pt": "Assinatura corrigida",
-        "nl": "Gecorrigeerd abonnement",
-        "fr": "Abonnement corrigé",
-        "it": "Abbonamento corretto",
-        "es": "Suscripción corregida",
-        "pl": "Poprawiona subskrypcja",
-        "zh-cn": "更正订阅"
-      },
-      "0.3.3": {
         "en": "Corrected subscription",
         "de": "Abonnement korrigiert",
         "ru": "Исправлена подписка",
