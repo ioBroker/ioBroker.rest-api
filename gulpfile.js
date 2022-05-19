@@ -289,7 +289,7 @@ ${parameters.join('\n')}`;
 
 gulp.task('updateYamlVersion', done => {
     let yaml = fs.readFileSync(__dirname + '/lib/api/swagger/swagger.yaml').toString('utf8');
-    yaml = yaml.replace(/version: "\d+\.\d+.\d+"/, pkg.version);
+    yaml = yaml.replace(/version: "\d+\.\d+.\d+"/, `version: "${pkg.version}"`);
     fs.writeFileSync(__dirname + '/lib/api/swagger/swagger.yaml', yaml);
     done();
 });
