@@ -145,6 +145,9 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Increased the max size of body to 100Mb
+
 ### 1.0.0 (2022-05-19)
 * (bluefox) Final release
 
