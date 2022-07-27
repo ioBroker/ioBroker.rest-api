@@ -16,6 +16,8 @@ basePath: "/v1"
 tags:
   - name: "state"
     description: "Read, write the states"
+  - name: "binary"
+    description: "Read, write the binary states"
   - name: "object"
     description: "Read the objects"
   - name: "history"
@@ -94,6 +96,12 @@ paths:
           required: false
           type: "integer"
           format: "int64"
+        - in: "body"
+          required: true
+          name: "data"
+          description: "State object to write"
+          schema:
+            $ref: "#/definitions/WriteState"
       responses:
         200:
           description: "successful operation"
@@ -105,6 +113,7 @@ paths:
           description: "State not found"
         405:
           description: "Invalid value"
+
   /state/{stateId}/toggle:
     x-swagger-router-controller: state
     get:
@@ -262,6 +271,63 @@ paths:
           description: "State not found"
         400:
           description: "Invalid state ID supplied"
+  /binary/{stateId}:
+    x-swagger-router-controller: state
+    get:
+      tags:
+        - "binary"
+      summary: "Read value of the binary state as stream"
+      operationId: "readBinaryState"
+      produces:
+        - "application/octet-stream"
+      parameters:
+        - name: "stateId"
+          in: "path"
+          description: "ID of the state to return"
+          required: true
+          type: "string"
+
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "State not found"
+        400:
+          description: "Invalid state ID supplied"
+    patch:
+      tags:
+        - "binary"
+      summary: "Update the value of the state"
+      description: ""
+      operationId: "writeBinaryState"
+      consumes:
+        - "application/octet-stream"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "stateId"
+          description: "ID of the state to write"
+          required: true
+          type: "string"
+        - in: "body"
+          required: true
+          name: "data"
+          description: "Binary data to write"
+          schema:
+            type: string
+            format: binary
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/State"
+        400:
+          description: "Invalid state ID supplied"
+        404:
+          description: "State not found"
+        405:
+          description: "Invalid value"
   /states:
     x-swagger-router-controller: state
     get:
@@ -2114,6 +2180,30 @@ definitions:
       native:
         type: "object"
         description: "Native state description"
+  WriteState:
+    type: "object"
+    properties:
+      val:
+        type: "string"
+        description: "Actual value"
+      q:
+        type: "integer"
+        format: "int32"
+        description: "Quality"
+      ts:
+        type: "integer"
+        format: "int64"
+        description: "Timestamp in ms from epoch of last update"
+      lc:
+        type: "integer"
+        format: "int64"
+        description: "Timestamp in ms from epoch of last value change"
+      ack:
+        type: "boolean"
+        description: "Is acknowledged. true = update, false = command"
+      expire:
+        type: "integer"
+        description: "Expire in seconds"
   #Type:
   #  type: "string"
   #  enum: [state, channel, device, enum, instance, adapter, host, chart, script, folder]

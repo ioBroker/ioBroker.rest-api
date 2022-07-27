@@ -145,6 +145,9 @@ You cannot send POST request to commands via GUI.
 	### **WORK IN PROGRESS**
 -->
 
+## Todo
+- [ ] Implement GET,PATCH,POST,DELETE file operations
+
 ## Changelog
 ### 1.0.1 (2022-07-27)
 * (bluefox) Increased the max size of body to 100Mb
