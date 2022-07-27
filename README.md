@@ -140,15 +140,19 @@ You cannot send POST request to commands via GUI.
 - `getAdapterInstances(adapterName)` - get objects of type "instance". You can define optionally adapterName
 
 <!-- END -->
+
+## Todo
+- [ ] Implement GET,PATCH,POST,DELETE file operations
+
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
 
-## Todo
-- [ ] Implement GET,PATCH,POST,DELETE file operations
-
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Implemented binary read/write operations
+
 ### 1.0.1 (2022-07-27)
 * (bluefox) Increased the max size of body to 100Mb
 
