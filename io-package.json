@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "news": {
+      "1.0.1": {
+        "en": "Increased the max size of body to 100Mb",
+        "de": "Erhöht die maximale Körpergröße auf 100Mb",
+        "ru": "Увеличение максимального размера тела до 100Мб",
+        "pt": "Aumento do tamanho máximo do corpo para 100Mb",
+        "nl": "Verhoog de maximale grootte van lichaam tot 100MB",
+        "fr": "Augmentation de la taille maximale du corps à 100Mb",
+        "it": "Aumentata la dimensione massima del corpo a 100Mb",
+        "es": "Aumento del tamaño máximo del cuerpo a 100Mb",
+        "pl": "Zwiększono maksymalną wielkość ciała do 100 Mb",
+        "zh-cn": "提高机构规模,使之达到100千兆瓦"
+      },
       "1.0.0": {
         "en": "Final release",
         "de": "Endgültige Veröffentlichung",
@@ -74,18 +86,6 @@
         "es": "Permitida la lectura de suscripciones vigentes",
         "pl": "Umożliwił czytanie aktualnych subskrypcji",
         "zh-cn": "允许阅读当前订阅"
-      },
-      "0.3.4": {
-        "en": "Corrected subscription",
-        "de": "Abonnement korrigiert",
-        "ru": "Исправлена подписка",
-        "pt": "Assinatura corrigida",
-        "nl": "Gecorrigeerd abonnement",
-        "fr": "Abonnement corrigé",
-        "it": "Abbonamento corretto",
-        "es": "Suscripción corregida",
-        "pl": "Poprawiona subskrypcja",
-        "zh-cn": "更正订阅"
       }
     },
     "title": "REST API",

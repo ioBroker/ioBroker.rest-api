@@ -109,7 +109,6 @@ You cannot send POST request to commands via GUI.
 - `checkFeatureSupported(feature)` - check if feature is supported by js-controller.
 - `decrypt(encryptedText)` - decrypt string with system secret
 - `encrypt(plainText)` - encrypt string with system secret
-- `getAdapterInstances(adapterName)` - get objects of type "instance". You can define optionally adapterName
 - `getAdapters(adapterName)` - get objects of type "adapter". You can define optionally adapterName
 - `updateLicenses(login, password)` - read licenses from ioBroker.net portal
 - `getCompactInstances()` - read list of instances with short information
@@ -127,6 +126,7 @@ You cannot send POST request to commands via GUI.
 - `extendObject(id, obj)` - modify object by ID with JSON. (.e.g. `{"common":{"enabled": true}}`) 
 - `getForeignObjects(pattern, type)` - same as getObjects
 - `getForeignStates(pattern)` - same as getStates
+- `delObjects(id, options)` - delete objects by pattern
 
 ### Others
 - `log(text, level[info])` - no answer - add log entry to ioBroker log
@@ -137,6 +137,7 @@ You cannot send POST request to commands via GUI.
 - `getUserPermissions()` - read object with user permissions
 - `getVersion()` - read adapter name and version
 - `getAdapterName()` - read adapter name (always rest-api)
+- `getAdapterInstances(adapterName)` - get objects of type "instance". You can define optionally adapterName
 
 <!-- END -->
 <!--
@@ -145,7 +146,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.0.1 (2022-07-27)
 * (bluefox) Increased the max size of body to 100Mb
 
 ### 1.0.0 (2022-05-19)

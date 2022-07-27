@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "This is a REST server for ioBroker."
-  version: "1.0.0"
+  version: "1.0.1"
   title: "ioBroker Swagger UI"
   contact:
     email: "admin@iobroker.net"
@@ -1604,23 +1604,6 @@ paths:
       responses:
         200:
           description: "successful operation"
-  /command/getAdapterInstances:
-    get:
-      tags:
-        - "commands"
-      summary: "get objects of type \"instance\". You can define optionally adapterName"
-      produces:
-        - "application/json"
-      parameters:
-
-        - name: "adapterName"            
-          in: "query"
-          description: ""
-          type: "string"
-          required: false        
-      responses:
-        200:
-          description: "successful operation"
   /command/getAdapters:
     get:
       tags:
@@ -1917,6 +1900,29 @@ paths:
       responses:
         200:
           description: "successful operation"
+  /command/delObjects:
+    get:
+      tags:
+        - "commands"
+      summary: "delete objects by pattern"
+      produces:
+        - "application/json"
+      parameters:
+
+        - name: "id"            
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+
+        - name: "options"            
+          in: "query"
+          description: "JSON object"
+          type: "string"
+          required: false        
+      responses:
+        200:
+          description: "successful operation"
 # admin commands end
   /command/log:
     get:
@@ -2047,6 +2053,23 @@ paths:
       summary: "read adapter name (always rest-api)"
       produces:
         - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getAdapterInstances:
+    get:
+      tags:
+        - "commands"
+      summary: "get objects of type \"instance\". You can define optionally adapterName"
+      produces:
+        - "application/json"
+      parameters:
+
+        - name: "adapterName"            
+          in: "query"
+          description: ""
+          type: "string"
+          required: false        
       responses:
         200:
           description: "successful operation"
