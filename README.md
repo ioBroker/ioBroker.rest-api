@@ -150,7 +150,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.0.2 (2022-07-27)
 * (bluefox) Implemented binary read/write operations
 
 ### 1.0.1 (2022-07-27)
