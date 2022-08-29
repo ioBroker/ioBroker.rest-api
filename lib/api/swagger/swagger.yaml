@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "This is a REST server for ioBroker."
-  version: "1.0.2"
+  version: "1.0.3"
   title: "ioBroker Swagger UI"
   contact:
     email: "admin@iobroker.net"
@@ -1752,6 +1752,16 @@ paths:
       tags:
         - "commands"
       summary: "read short system config"
+      produces:
+        - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/getCompactSystemRepositories:
+    get:
+      tags:
+        - "commands"
+      summary: ""
       produces:
         - "application/json"        
       responses:

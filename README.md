@@ -115,6 +115,7 @@ You cannot send POST request to commands via GUI.
 - `getCompactAdapters()` - read list of installed adapters with short information
 - `getCompactInstalled(host)` - read short information about installed adapters
 - `getCompactSystemConfig()` - read short system config
+- `getCompactSystemRepositories()`
 - `getCompactRepository(host)` - read short repository
 - `getCompactHosts()` - get short information about hosts
 - `addUser(user, pass)` - add new user
@@ -150,7 +151,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.0.3 (2022-08-29)
 * (bluefox) Check if the port is occupied only on defined interface
 
 ### 1.0.2 (2022-07-27)
