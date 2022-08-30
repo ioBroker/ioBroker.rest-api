@@ -92,6 +92,7 @@ tests.integration(path.join(__dirname, '..'), {
                     _id: 'system.group.writer',
                     type: 'group'
                 });
+
                 await harness.objects.setObjectAsync('javascript.0.test', {
                     common: {
                         name: 'test',
@@ -110,6 +111,7 @@ tests.integration(path.join(__dirname, '..'), {
                         state: 1638
                     }
                 });
+
                 await harness.states.setStateAsync('javascript.0.test', 1);
 
                 // Start the adapter and wait until it has started
@@ -175,13 +177,13 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as Owner-User: states - must not return states', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/states?filter=system.adapter.*`, {validateStatus: () => true});
-                console.log(`states?pattern=system.adapter.* => ` + JSON.stringify(response.data));
+                console.log(`states?pattern=system.adapter.* => ${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             });
 
             it('Test RESTful API as Owner-User: setValueFromBody(POST) - must not set one value', async () => {
                 const response = await axios.patch(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive`, {val: true, ack: false}, {validateStatus: () => true});
-                console.log(`setValueFromBody/?system.adapter.${harness.adapterName}.upload => ` + JSON.stringify(response.data));
+                console.log(`setValueFromBody/?system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             });
         });

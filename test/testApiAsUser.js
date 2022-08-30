@@ -92,6 +92,7 @@ tests.integration(path.join(__dirname, '..'), {
                     _id: 'system.group.writer',
                     type: 'group'
                 });
+
                 await harness.objects.setObjectAsync('javascript.0.test', {
                     common: {
                         name: 'test',
@@ -110,6 +111,7 @@ tests.integration(path.join(__dirname, '..'), {
                         state: 1638
                     }
                 });
+
                 await harness.states.setStateAsync('javascript.0.test', 1);
 
                 // Start the adapter and wait until it has started
@@ -283,31 +285,31 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as User: objects - must return objects', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/objects?filter=system.adapter.*`, {validateStatus: () => true});
-                console.log('objects?pattern=system.adapter.* => ' + JSON.stringify(response.data));
+                console.log(`objects?pattern=system.adapter.* => ${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             })
                 .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: objects - must return objects', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/objects?filter=system.adapter.*&type=instance`, {validateStatus: () => true});
-                console.log('objects?pattern=system.adapter.* => ' + JSON.stringify(response.data));
+                console.log(`objects?pattern=system.adapter.* => ${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             })
                 .timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: states - must return states', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/states?filter=system.adapter.*`, {validateStatus: () => true});
-                console.log('states?pattern=system.adapter.* => ' + JSON.stringify(response.data));
+                console.log(`states?pattern=system.adapter.* => ${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             })
                 .timeout(TESTS_TIMEOUT);
 
-            it('Test RESTful API as User: setValueFromBody(POST) - must set one value', async () => {
+            it('Test RESTful API as User: setValueFromBody(PATCH) - must set one value', async () => {
                 let response = await axios.patch(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test`, {
                     val: 55,
                     ack: true
                 });
-                console.log(`setValueFromBody/?system.adapter.${harness.adapterName}.upload => ` + JSON.stringify(response.data));
+                console.log(`[PATCH] /v1/state/javascript.0.test => ${JSON.stringify(response.data)}`);
 
                 let obj = response.data;
                 expect(obj).to.be.ok;
@@ -315,7 +317,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.id).to.equal(`javascript.0.test`);
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test`);
-                console.log(`getBulk/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`);
+                console.log(`[GET] /v1/state/javascript.0.test => ${JSON.stringify(response.data)}`);
 
                 obj = response.data;
                 expect(obj.val).equal(55);

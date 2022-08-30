@@ -332,7 +332,7 @@ tests.integration(path.join(__dirname, '..'), {
                 // create object with binary state
                 let response;
                 try {
-                    response = await axios.get('http://127.0.0.1:8093/v1/object/0_userdata.0.file');
+                    response = await axios.get(`http://127.0.0.1:${PORT}/v1/object/0_userdata.0.file`);
                 } catch (e) {
                     response = await axios.post(`http://127.0.0.1:${PORT}/v1/object/0_userdata.0.file`, {
                         "common": {

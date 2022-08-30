@@ -151,7 +151,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### 1.0.3 (2022-08-29)
+### **WORK IN PROGRESS**
 * (bluefox) Check if the port is occupied only on defined interface
 
 ### 1.0.2 (2022-07-27)

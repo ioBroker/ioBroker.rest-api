@@ -13,6 +13,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 tests.integration(path.join(__dirname, '..'), {
     allowedExitCodes: [11],
     loglevel: 'info',
+    controllerVersion: process.env.CONTROLLER_VERSION,
 
     defineAdditionalTests({ suite }) {
         suite('Test REST API SSL', (getHarness) => {
@@ -103,7 +104,7 @@ tests.integration(path.join(__dirname, '..'), {
             it('Test REST API SSL: get - get with wrong credentials in header', async () => {
                 const response = await axios.get(`https://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive`, {
                     headers: {
-                        'Authorization': 'Basic ' + Buffer.from('admin:io').toString('base64')
+                        'Authorization': `Basic ${Buffer.from('admin:io').toString('base64')}`
                     },
                     validateStatus: () => true
                 })
