@@ -971,7 +971,7 @@ paths:
         - "sendTo"
       summary: "Send message to instance as POST"
       description: "You can send message to instance that supports it"
-      operationId: "sendTo"
+      operationId: "sendToPost"
       consumes:
         - "application/json"
       produces:

@@ -10,6 +10,7 @@ process.env.NO_PROXY = '127.0.0.1';
 tests.integration(path.join(__dirname, '..'), {
     allowedExitCodes: [11],
     loglevel: 'info',
+    controllerVersion: process.env.CONTROLLER_VERSION || undefined,
 
     defineAdditionalTests({ suite }) {
         suite('Test RESTful API as Owner-User', getHarness => {
@@ -120,25 +121,25 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as Owner-User: get - must not return value', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive`, {validateStatus: () => true});
-                console.log(`get/system.adapter.${harness.adapterName}.0.alive => ` + JSON.stringify(response.data));
+                console.log(`get/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             });
 
             it('Test RESTful API as Owner-User: getPlainValue - must not return plain value', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive/plain`, {validateStatus: () => true});
-                console.log(`v1/state/system.adapter.${harness.adapterName}.0.alive => /plain` + JSON.stringify(response.data));
+                console.log(`v1/state/system.adapter.${harness.adapterName}.0.alive => /plain${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             });
 
             it('Test RESTful API as Owner-User: getPlainValue 4 Test-Endpoint - must not return plain value', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/plain`, {validateStatus: () => true});
-                console.log(`v1/state/javascript.0.test => /plain` + JSON.stringify(response.data));
+                console.log(`v1/state/javascript.0.test => /plain${JSON.stringify(response.data)}`);
                 expect(response.data).equal(1);
             });
 
             it('Test RESTful API as Owner-User: set 4 Test-Endpoint - must set value', async () => {
                 let response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test?value=2`);
-                console.log(`set/javascript.0.test?value=false => ` + JSON.stringify(response.data));
+                console.log(`set/javascript.0.test?value=false => ${JSON.stringify(response.data)}`);
 
                 const obj = response.data;
                 expect(obj).to.be.ok;
@@ -146,14 +147,14 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.id).to.equal('javascript.0.test');
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/plain`);
-                console.log(`v1/state/javascript.0.test => /plain` + JSON.stringify(response.data));
+                console.log(`v1/state/javascript.0.test => /plain${JSON.stringify(response.data)}`);
 
                 expect(response.data).equal(2);
             });
 
             it('Test RESTful API as Owner-User: set - must not set value', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive?value=false`, {validateStatus: () => true});
-                console.log(`set/system.adapter.${harness.adapterName}.0.alive?value=false => ` + JSON.stringify(response.data));
+                console.log(`set/system.adapter.${harness.adapterName}.0.alive?value=false => ${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             });
 
@@ -165,13 +166,13 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as Owner-User: objects - must not return objects', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/objects?filter=system.adapter.*`, {validateStatus: () => true});
-                console.log(`objects?pattern=system.adapter.* => ` + JSON.stringify(response.data));
+                console.log(`objects?pattern=system.adapter.* => ${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             });
 
             it('Test RESTful API as Owner-User: objects - must not return objects', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/objects?filter=system.adapter.*&type=instance`, {validateStatus: () => true});
-                console.log(`objects?pattern=system.adapter.* => ` + JSON.stringify(response.data));
+                console.log(`objects?pattern=system.adapter.* => ${JSON.stringify(response.data)}`);
                 expect(response.data.error).to.be.equal('permissionError');
             });
 

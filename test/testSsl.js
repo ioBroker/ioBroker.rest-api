@@ -13,7 +13,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 tests.integration(path.join(__dirname, '..'), {
     allowedExitCodes: [11],
     loglevel: 'info',
-    controllerVersion: process.env.CONTROLLER_VERSION,
+    controllerVersion: process.env.CONTROLLER_VERSION || undefined,
 
     defineAdditionalTests({ suite }) {
         suite('Test REST API SSL', (getHarness) => {

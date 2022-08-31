@@ -11,6 +11,7 @@ process.env.NO_PROXY = '127.0.0.1';
 tests.integration(path.join(__dirname, '..'), {
     allowedExitCodes: [11],
     loglevel: 'info',
+    controllerVersion: process.env.CONTROLLER_VERSION || undefined,
 
     defineAdditionalTests({suite}) {
         suite('Test RESTful API as User', getHarness => {

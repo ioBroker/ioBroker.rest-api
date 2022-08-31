@@ -57,6 +57,7 @@ async function createVariables(harness, setupBoolean, setupString, setupNumber) 
 tests.integration(path.join(__dirname, '..'), {
     allowedExitCodes: [11],
     loglevel: 'info',
+    controllerVersion: process.env.CONTROLLER_VERSION || undefined,
 
     defineAdditionalTests({ suite }) {
         suite('Test REST API', getHarness => {
