@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "news": {
+      "1.0.4": {
+        "en": "Check if the port is occupied only on defined interface",
+        "de": "Überprüfen Sie, ob der Port nur auf definierter Schnittstelle besetzt ist",
+        "ru": "Проверьте, занят ли порт только на определенном интерфейсе",
+        "pt": "Verifique se a porta está ocupada apenas na interface definida",
+        "nl": "Controleer of de haven alleen bezet is op definitieve interface",
+        "fr": "Vérifiez si le port n'est occupé que sur l'interface définie",
+        "it": "Controllare se la porta è occupata solo su interfaccia definita",
+        "es": "Compruebe si el puerto está ocupado sólo en la interfaz definida",
+        "pl": "Jeśli port jest zajęty tylko na określonym interfejsie",
+        "zh-cn": "如果港口只在界定的界线上被占有,则该港口将被扣押。"
+      },
       "1.0.2": {
         "en": "Implemented binary read/write operations",
         "de": "Implementierung binärer Schreib-/Lesevorgänge",
