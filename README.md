@@ -151,6 +151,10 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
+
+### __WORK IN PROGRESS__
+* (Apollon77) Prepare for future js-controller versions
+
 ### 1.0.4 (2022-08-31)
 * (bluefox) Check if the port is occupied only on defined interface
 

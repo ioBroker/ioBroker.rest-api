@@ -19,10 +19,10 @@
     "url": "https://github.com/ioBroker/ioBroker.rest-api"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.6.0",
-    "@iobroker/socket-classes": "^0.5.3",
+    "@iobroker/adapter-core": "^2.6.7",
+    "@iobroker/socket-classes": "^0.5.4",
     "axios": "^0.27.2",
-    "body-parser": "^1.20.0",
+    "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "swagger-node-runner-fork": "^0.8.0",
@@ -33,13 +33,14 @@
     "@alcalzone/release-script": "^3.5.9",
     "@alcalzone/release-script-plugin-iobroker": "^3.5.9",
     "@alcalzone/release-script-plugin-license": "^3.5.9",
+    "@iobroker/adapter-dev": "^1.1.0",
     "@iobroker/testing": "^4.1.0",
     "chai": "^4.3.6",
     "eslint-plugin-eqeqeq-fix": "^1.0.3",
     "eslint-plugin-only-warn": "^1.0.3",
-    "eslint-plugin-react": "^7.31.1",
+    "eslint-plugin-react": "^7.31.8",
     "gulp": "^4.0.2",
-    "mocha": "^9.2.2"
+    "mocha": "^10.0.0"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.rest-api/issues"
@@ -60,7 +61,8 @@
     "release": "release-script",
     "release-patch": "release-script patch --yes --no-update-lockfile",
     "release-minor": "release-script minor --yes --no-update-lockfile",
-    "release-major": "release-script major --yes --no-update-lockfile"
+    "release-major": "release-script major --yes --no-update-lockfile",
+    "translate": "translate-adapter"
   },
   "license": "Apache-2.0"
 }
