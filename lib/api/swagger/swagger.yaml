@@ -625,9 +625,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Object"
+            $ref: "#/definitions/ObjectArray"
         404:
           description: "URL or session not found"
         422:
@@ -2231,6 +2229,10 @@ definitions:
       native:
         type: "object"
         description: "Native state description"
+  ObjectArray:
+    type: "object"
+    additionalProperties:
+      $ref: "#/definitions/Object"
   UrlHook:
     type: "object"
     properties:
