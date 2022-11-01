@@ -38,7 +38,7 @@
     "chai": "^4.3.6",
     "eslint-plugin-eqeqeq-fix": "^1.0.3",
     "eslint-plugin-only-warn": "^1.0.3",
-    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react": "^7.31.10",
     "gulp": "^4.0.2",
     "mocha": "^10.1.0"
   },
