@@ -151,8 +151,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-
-### __WORK IN PROGRESS__
+### 1.0.5 (2023-03-27)
 * (Apollon77) Prepare for future js-controller versions
 
 ### 1.0.4 (2022-08-31)
@@ -194,4 +193,4 @@ You cannot send POST request to commands via GUI.
 ## License
 Apache 2.0
 
-Copyright (c) 2017-2022 bluefox <dogafox@gmail.com>
+Copyright (c) 2017-2023 bluefox <dogafox@gmail.com>

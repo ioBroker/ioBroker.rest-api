@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "news": {
+      "1.0.5": {
+        "en": "Prepare for future js-controller versions",
+        "de": "Bereiten Sie sich auf zukünftige js-Controller-Versionen",
+        "ru": "Подготовьтесь к будущим версиям js-controller",
+        "pt": "Prepare-se para futuras versões js-controller",
+        "nl": "Bereid je voor op toekomstige Js-controller versie",
+        "fr": "Préparez-vous pour les versions futures de js-controller",
+        "it": "Prepararsi per le future versioni js-controller",
+        "es": "Prepararse para futuras versiones js-controller",
+        "pl": "Prepare for future js-controller version",
+        "uk": "Підготовка до майбутніх версій js-controller",
+        "zh-cn": "今后防污版本的编制"
+      },
       "1.0.4": {
         "en": "Check if the port is occupied only on defined interface",
         "de": "Überprüfen Sie, ob der Port nur auf definierter Schnittstelle besetzt ist",
@@ -74,18 +87,6 @@
         "es": "Se corrigieron algunos errores de acceso",
         "pl": "Poprawiono niektóre błędy dostępu",
         "zh-cn": "一些访问错误已得到纠正"
-      },
-      "0.4.0": {
-        "en": "Added socket commands",
-        "de": "Socket-Befehle hinzugefügt",
-        "ru": "Добавлены команды сокета",
-        "pt": "Comandos de soquete adicionados",
-        "nl": "Socket-opdrachten toegevoegd",
-        "fr": "Commandes de socket ajoutées",
-        "it": "Aggiunti comandi socket",
-        "es": "Comandos de socket agregados",
-        "pl": "Dodano polecenia dotyczące gniazd",
-        "zh-cn": "添加了套接字命令"
       }
     },
     "title": "REST API",
