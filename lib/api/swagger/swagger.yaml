@@ -1014,6 +1014,23 @@ paths:
       responses:
         200:
           description: "successful operation"
+  /command/getForeignStates:
+    get:
+      tags:
+        - "commands"
+      summary: "same as getStates"
+      produces:
+        - "application/json"
+      parameters:
+
+        - name: "pattern"            
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
+      responses:
+        200:
+          description: "successful operation"
   /command/getState:
     get:
       tags:
@@ -1950,23 +1967,6 @@ paths:
           required: true
 
         - name: "type"            
-          in: "query"
-          description: ""
-          type: "string"
-          required: true        
-      responses:
-        200:
-          description: "successful operation"
-  /command/getForeignStates:
-    get:
-      tags:
-        - "commands"
-      summary: "same as getStates"
-      produces:
-        - "application/json"
-      parameters:
-
-        - name: "pattern"            
           in: "query"
           description: ""
           type: "string"

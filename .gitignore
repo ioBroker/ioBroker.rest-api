@@ -4,3 +4,5 @@ package-lock.json
 /tmp
 /lib/api/swagger/swagger_extension.yaml
 /lib/api/swagger/swaggerEdited.yaml
+
+.dev-server
