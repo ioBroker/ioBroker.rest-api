@@ -21,13 +21,14 @@
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.8",
     "@iobroker/socket-classes": "^1.1.5",
-    "axios": "^1.3.4",
+    "axios": "^1.4.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "swagger-node-runner-fork": "^0.8.0",
     "swagger-ui-express": "^4.6.2",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.5.9",
@@ -62,7 +63,8 @@
     "release-patch": "release-script patch --yes --no-update-lockfile",
     "release-minor": "release-script minor --yes --no-update-lockfile",
     "release-major": "release-script major --yes --no-update-lockfile",
-    "translate": "translate-adapter"
+    "translate": "translate-adapter",
+    "update-packages": "ncu --upgrade"
   },
   "license": "Apache-2.0"
 }

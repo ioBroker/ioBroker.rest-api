@@ -28,6 +28,8 @@ tags:
     description: "Socket commands"
   - name: "sendTo"
     description: "Send message to instance"
+  - name: "file"
+    description: "Read/Write files and directories"
 securityDefinitions:
   basicAuth:
     type: basic
@@ -995,8 +997,136 @@ paths:
           description: "Invalid state ID supplied"
         500:
           description: "instance is offline"
+  /file/{objectId}/{fileName}:
+    x-swagger-router-controller: file
+    get:
+      tags:
+        - "file"
+      summary: "Reads file"
+      operationId: "readFile"
+      produces:
+        - "application/octet-stream"
+      parameters:
+        - name: "objectId"
+          in: "path"
+          description: "Object ID, like vis.0"
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "path"
+          description: "File name, like main/vis-views.json"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "File not found"
+    post:
+      tags:
+        - "file"
+      summary: "Writes file"
+      operationId: "writeFile"
+      produces:
+        - "application/json"
+      consumes:
+        - "multipart/form-data"
+      parameters:
+        - name: "objectId"
+          in: "path"
+          description: "Object ID, like vis.0"
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "path"
+          description: "File name, like main/vis-views.json"
+          type: "string"
+          required: true
+        - name: "file"
+          in: "formData"
+          description: "File content"
+          required: true
+          type: "file"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "File not found"
+    delete:
+      tags:
+        - "file"
+      summary: "deletes file"
+      operationId: "deleteFile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "objectId"
+          in: "path"
+          description: "Object ID, like vis.0"
+          type: "string"
+          required: true
+        - name: "fileName"
+          in: "path"
+          description: "File name, like main/vis-views.json"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "File not found"
+  /dir/{objectId}/{dirName}:
+    x-swagger-router-controller: file
+    get:
+      tags:
+        - "file"
+      summary: "List directory"
+      operationId: "readDir"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "objectId"
+          in: "path"
+          description: "Object ID, like vis.0"
+          type: "string"
+          required: true
+        - name: "dirName"
+          in: "path"
+          description: "File name, like main/vis-views.json"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/DirResponse"
+        404:
+          description: "File not found"
+  /dir/{objectId}:
+    x-swagger-router-controller: file
+    get:
+      tags:
+        - "file"
+      summary: "List directory"
+      operationId: "readDir"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "objectId"
+          in: "path"
+          description: "Object ID, like vis.0"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/DirResponse"
+        404:
+          description: "File not found"
 
-# commands start
+
+  # commands start
   /command/getStates:
     get:
       tags:
@@ -1006,11 +1136,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "pattern"            
+        - name: "pattern"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1023,11 +1153,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "pattern"            
+        - name: "pattern"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1040,11 +1170,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1057,17 +1187,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "state"            
+        - name: "state"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1075,16 +1205,16 @@ paths:
     get:
       tags:
         - "commands"
-      summary: "get binary state by ID"
+      summary: "get binary state by ID (deprecated - use files)"
       produces:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1092,22 +1222,22 @@ paths:
     get:
       tags:
         - "commands"
-      summary: "set binary state by ID"
+      summary: "set binary state by ID (deprecated - use files)"
       produces:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "base64"            
+        - name: "base64"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1120,11 +1250,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1134,7 +1264,7 @@ paths:
         - "commands"
       summary: "get all states and rooms. GUI can have problems by visualization of answer."
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -1147,23 +1277,23 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "design"            
+        - name: "design"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "search"            
+        - name: "search"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "params"            
+        - name: "params"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1176,17 +1306,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "obj"            
+        - name: "obj"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1199,17 +1329,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "options"            
+        - name: "options"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: false        
+          required: false
       responses:
         200:
           description: "successful operation"
@@ -1222,17 +1352,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "fileName"            
+        - name: "fileName"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1245,17 +1375,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "fileName"            
+        - name: "fileName"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1268,29 +1398,29 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "fileName"            
+        - name: "fileName"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "data64"            
+        - name: "data64"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "options"            
+        - name: "options"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: false        
+          required: false
       responses:
         200:
           description: "successful operation"
@@ -1303,17 +1433,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "name"            
+        - name: "name"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1326,17 +1456,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "name"            
+        - name: "name"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1349,17 +1479,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "name"            
+        - name: "name"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1372,23 +1502,23 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "oldName"            
+        - name: "oldName"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "newName"            
+        - name: "newName"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1401,23 +1531,23 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "oldName"            
+        - name: "oldName"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "newName"            
+        - name: "newName"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1430,17 +1560,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "dirName"            
+        - name: "dirName"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1453,23 +1583,23 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "dirName"            
+        - name: "dirName"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "options"            
+        - name: "options"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: false        
+          required: false
       responses:
         200:
           description: "successful operation"
@@ -1482,23 +1612,23 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "fileName"            
+        - name: "fileName"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "options"            
+        - name: "options"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1511,23 +1641,23 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "fileName"            
+        - name: "fileName"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "options"            
+        - name: "options"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1540,17 +1670,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapter"            
+        - name: "adapter"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "fileName"            
+        - name: "fileName"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1564,11 +1694,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "ip"            
+        - name: "ip"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1581,11 +1711,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "host"            
+        - name: "host"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1598,11 +1728,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1615,11 +1745,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "update"            
+        - name: "update"
           in: "query"
           description: ""
           type: "boolean"
-          required: false        
+          required: false
       responses:
         200:
           description: "successful operation"
@@ -1629,7 +1759,7 @@ paths:
         - "commands"
       summary: "read adapter namespace (always rest-api.0)"
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -1642,12 +1772,12 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "feature"            
+        - name: "feature"
           in: "query"
           description: ""
           type: "string"
           required: true
-          enum: [ALIAS, ALIAS_SEPARATE_READ_WRITE_ID, ADAPTER_GETPORT_BIND, ADAPTER_DEL_OBJECT_RECURSIVE, ADAPTER_SET_OBJECT_SETS_DEFAULT_VALUE, ADAPTER_AUTO_DECRYPT_NATIVE, PLUGINS, CONTROLLER_NPM_AUTO_REBUILD, CONTROLLER_READWRITE_BASE_SETTINGS, CONTROLLER_MULTI_REPO, CONTROLLER_LICENSE_MANAGER, DEL_INSTANCE_CUSTOM]        
+          enum: [ALIAS, ALIAS_SEPARATE_READ_WRITE_ID, ADAPTER_GETPORT_BIND, ADAPTER_DEL_OBJECT_RECURSIVE, ADAPTER_SET_OBJECT_SETS_DEFAULT_VALUE, ADAPTER_AUTO_DECRYPT_NATIVE, PLUGINS, CONTROLLER_NPM_AUTO_REBUILD, CONTROLLER_READWRITE_BASE_SETTINGS, CONTROLLER_MULTI_REPO, CONTROLLER_LICENSE_MANAGER, DEL_INSTANCE_CUSTOM]
       responses:
         200:
           description: "successful operation"
@@ -1660,11 +1790,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "encryptedText"            
+        - name: "encryptedText"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1677,11 +1807,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "plainText"            
+        - name: "plainText"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1694,11 +1824,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapterName"            
+        - name: "adapterName"
           in: "query"
           description: ""
           type: "string"
-          required: false        
+          required: false
       responses:
         200:
           description: "successful operation"
@@ -1711,17 +1841,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "login"            
+        - name: "login"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "password"            
+        - name: "password"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1731,7 +1861,7 @@ paths:
         - "commands"
       summary: "read list of instances with short information"
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -1741,7 +1871,7 @@ paths:
         - "commands"
       summary: "read list of installed adapters with short information"
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -1754,11 +1884,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "host"            
+        - name: "host"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1768,7 +1898,7 @@ paths:
         - "commands"
       summary: "read short system config"
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -1778,7 +1908,7 @@ paths:
         - "commands"
       summary: ""
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -1791,11 +1921,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "host"            
+        - name: "host"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1805,7 +1935,7 @@ paths:
         - "commands"
       summary: "get short information about hosts"
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -1818,17 +1948,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "user"            
+        - name: "user"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "pass"            
+        - name: "pass"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1841,11 +1971,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "user"            
+        - name: "user"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1858,23 +1988,23 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "group"            
+        - name: "group"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "desc"            
+        - name: "desc"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "acl"            
+        - name: "acl"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1887,11 +2017,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "group"            
+        - name: "group"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1904,17 +2034,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "user"            
+        - name: "user"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "pass"            
+        - name: "pass"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1924,7 +2054,7 @@ paths:
         - "commands"
       summary: "read all objects as list. GUI can have problems by visualization of answer."
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -1937,17 +2067,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "obj"            
+        - name: "obj"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1960,17 +2090,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "pattern"            
+        - name: "pattern"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "type"            
+        - name: "type"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -1983,17 +2113,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "options"            
+        - name: "options"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: false        
+          required: false
       responses:
         200:
           description: "successful operation"
@@ -2007,17 +2137,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "text"            
+        - name: "text"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "level"            
+        - name: "level"
           in: "query"
           description: ""
           type: "string"
-          required: false        
+          required: false
       responses:
         200:
           description: "successful operation"
@@ -2030,17 +2160,17 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "id"            
+        - name: "id"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "options"            
+        - name: "options"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: false        
+          required: false
       responses:
         200:
           description: "successful operation"
@@ -2053,11 +2183,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "url"            
+        - name: "url"
           in: "query"
           description: ""
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -2070,23 +2200,23 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapterInstance"            
+        - name: "adapterInstance"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "command"            
+        - name: "command"
           in: "query"
           description: ""
           type: "string"
           required: true
 
-        - name: "message"            
+        - name: "message"
           in: "query"
           description: "JSON object"
           type: "string"
-          required: true        
+          required: true
       responses:
         200:
           description: "successful operation"
@@ -2096,7 +2226,7 @@ paths:
         - "commands"
       summary: "read static information with function permissions"
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -2106,7 +2236,7 @@ paths:
         - "commands"
       summary: "read object with user permissions"
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -2116,7 +2246,7 @@ paths:
         - "commands"
       summary: "read adapter name and version"
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -2126,7 +2256,7 @@ paths:
         - "commands"
       summary: "read adapter name (always rest-api)"
       produces:
-        - "application/json"        
+        - "application/json"
       responses:
         200:
           description: "successful operation"
@@ -2139,11 +2269,11 @@ paths:
         - "application/json"
       parameters:
 
-        - name: "adapterName"            
+        - name: "adapterName"
           in: "query"
           description: ""
           type: "string"
-          required: false        
+          required: false
       responses:
         200:
           description: "successful operation"
@@ -2410,6 +2540,33 @@ definitions:
     type: "array"
     items:
       $ref: "#/definitions/EnumEntry"
+  FileEntry:
+    type: "object"
+    properties:
+      file:
+        type: "string"
+        description: "File name"
+      stats:
+        type: "object"
+        description: "File size"
+        properties:
+          size:
+            type: "number"
+            description: "File size in bytes"
+      isDir:
+        type: "boolean"
+        description: "Is directory"
+      modifiedAt:
+        type: "number"
+        description: "Modification time in ms"
+      createdAt:
+        type: "number"
+        description: "Creation time in ms"
+  DirResponse:
+    type: "array"
+    items:
+      $ref: "#/definitions/FileEntry"
+
   SendToData:
     type: "object"
     properties:
