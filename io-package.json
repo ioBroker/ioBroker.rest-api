@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "1.0.5",
+    "version": "1.1.0",
     "news": {
+      "1.1.0": {
+        "en": "Converting of the setState values to the according type\nImplemented file operations",
+        "de": "Umrechnung der setState-Werte in den entsprechenden Typ\nImplementierung von Dateioperationen",
+        "ru": "Преобразование значений setState в согласно типу\nРеализованные файловые операции",
+        "pt": "Convertendo dos valores setState para o tipo de acordo\nOperações de arquivo implementadas",
+        "nl": "Omkeren van de setstate waarden naar het type\nGeïmplementeerde bestand operaties",
+        "fr": "Conversion des valeurs déterminées de l'état dans le type suivant\nOpérations de fichiers mises en œuvre",
+        "it": "Convertizione dei valori setState secondo il tipo\nOperazioni di file implementate",
+        "es": "Convertir los valores establecidos en el tipo\nOperaciones de archivo aplicadas",
+        "pl": "Przetłumaczył wartości zbioru zgodnie z typem\nImplementacja",
+        "uk": "Перетворення значень setState до за типом\nРеалізовані операції файлів",
+        "zh-cn": "避免按类型划分国家数值\n执行档案业务"
+      },
       "1.0.5": {
         "en": "Prepare for future js-controller versions",
         "de": "Bereiten Sie sich auf zukünftige js-Controller-Versionen",
@@ -75,18 +88,6 @@
         "es": "Ruta de envío agregada",
         "pl": "Dodano ścieżkę sendTo",
         "zh-cn": "添加了 sendTo 路径"
-      },
-      "0.5.0": {
-        "en": "Some access errors were corrected",
-        "de": "Einige Zugriffsfehler wurden behoben",
-        "ru": "Исправлены некоторые ошибки доступа",
-        "pt": "Alguns erros de acesso foram corrigidos",
-        "nl": "Sommige toegangsfouten zijn gecorrigeerd",
-        "fr": "Certaines erreurs d'accès ont été corrigées",
-        "it": "Alcuni errori di accesso sono stati corretti",
-        "es": "Se corrigieron algunos errores de acceso",
-        "pl": "Poprawiono niektóre błędy dostępu",
-        "zh-cn": "一些访问错误已得到纠正"
       }
     },
     "title": "REST API",

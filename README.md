@@ -148,7 +148,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.1.0 (2023-05-03)
 * (bluefox) Converting of the setState values to the according type
 * (bluefox) Implemented file operations
 
