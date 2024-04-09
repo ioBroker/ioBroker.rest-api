@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "This is a REST server for ioBroker."
-  version: "1.1.0"
+  version: "2.0.0"
   title: "ioBroker Swagger UI"
   contact:
     email: "admin@iobroker.net"
@@ -1264,7 +1264,14 @@ paths:
         - "commands"
       summary: "get all states and rooms. GUI can have problems by visualization of answer."
       produces:
-        - "application/json"        
+        - "application/json"
+      parameters:
+
+        - name: "list"            
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
       responses:
         200:
           description: "successful operation"
@@ -1763,24 +1770,6 @@ paths:
       responses:
         200:
           description: "successful operation"
-  /command/checkFeatureSupported:
-    get:
-      tags:
-        - "commands"
-      summary: "check if feature is supported by js-controller."
-      produces:
-        - "application/json"
-      parameters:
-
-        - name: "feature"            
-          in: "query"
-          description: ""
-          type: "string"
-          required: true
-          enum: [ALIAS, ALIAS_SEPARATE_READ_WRITE_ID, ADAPTER_GETPORT_BIND, ADAPTER_DEL_OBJECT_RECURSIVE, ADAPTER_SET_OBJECT_SETS_DEFAULT_VALUE, ADAPTER_AUTO_DECRYPT_NATIVE, PLUGINS, CONTROLLER_NPM_AUTO_REBUILD, CONTROLLER_READWRITE_BASE_SETTINGS, CONTROLLER_MULTI_REPO, CONTROLLER_LICENSE_MANAGER, DEL_INSTANCE_CUSTOM]        
-      responses:
-        200:
-          description: "successful operation"
   /command/decrypt:
     get:
       tags:
@@ -2151,6 +2140,24 @@ paths:
       responses:
         200:
           description: "successful operation"
+  /command/checkFeatureSupported:
+    get:
+      tags:
+        - "commands"
+      summary: "check if feature is supported by js-controller."
+      produces:
+        - "application/json"
+      parameters:
+
+        - name: "feature"            
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+          enum: [ALIAS, ALIAS_SEPARATE_READ_WRITE_ID, ADAPTER_GETPORT_BIND, ADAPTER_DEL_OBJECT_RECURSIVE, ADAPTER_SET_OBJECT_SETS_DEFAULT_VALUE, ADAPTER_AUTO_DECRYPT_NATIVE, PLUGINS, CONTROLLER_NPM_AUTO_REBUILD, CONTROLLER_READWRITE_BASE_SETTINGS, CONTROLLER_MULTI_REPO, CONTROLLER_LICENSE_MANAGER, DEL_INSTANCE_CUSTOM]        
+      responses:
+        200:
+          description: "successful operation"
   /command/getHistory:
     get:
       tags:
@@ -2257,6 +2264,35 @@ paths:
       summary: "read adapter name (always rest-api)"
       produces:
         - "application/json"        
+      responses:
+        200:
+          description: "successful operation"
+  /command/clientSubscribe:
+    get:
+      tags:
+        - "commands"
+      summary: ""
+      produces:
+        - "application/json"
+      parameters:
+
+        - name: "targetInstance"            
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+
+        - name: "messageType"            
+          in: "query"
+          description: ""
+          type: "string"
+          required: true
+
+        - name: "data"            
+          in: "query"
+          description: ""
+          type: "string"
+          required: true        
       responses:
         200:
           description: "successful operation"

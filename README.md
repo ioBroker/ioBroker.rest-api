@@ -72,7 +72,7 @@ You cannot send POST request to commands via GUI.
 
 <!-- START -->
 ### States
-- `getStates(pattern)` - get the list of states for a pattern (e.g. for system.adapter.admin.0.*). GUI can have problems by visualization of answer.
+- `getStates(pattern)` - get the list of states for pattern (e.g. for system.adapter.admin.0.*). GUI can have problems by visualization of answer.
 - `getForeignStates(pattern)` - same as getStates
 - `getState(id)` - get state value by ID
 - `setState(id, state)` - set state value with JSON object (e.g. `{"val": 1, "ack": true}`)
@@ -81,14 +81,14 @@ You cannot send POST request to commands via GUI.
 
 ### Objects
 - `getObject(id)` - get object by ID
-- `getObjects()` - get all states and rooms. GUI can have problems by visualization of answer.
-- `getObjectView(design, search, params)` - get specific objects, e.g., design=system, search=state, params=`{"startkey": "system.adapter.admin.", "endkey": "system.adapter.admin.\u9999"}`
+- `getObjects(list)` - get all states and rooms. GUI can have problems by visualization of answer.
+- `getObjectView(design, search, params)` - get specific objects, e.g. design=system, search=state, params=`{"startkey": "system.adapter.admin.", "endkey": "system.adapter.admin.\u9999"}`
 - `setObject(id, obj)` - set object with JSON object (e.g. `{"common": {"type": "boolean"}, "native": {}, "type": "state"}`)
 - `delObject(id, options)` - delete object by ID
 
 ### Files
-- `readFile(adapter, fileName)` - read file, e.g., adapter=vis.0, fileName=main/vis-views.json. Additionally, you can set the option in query binary=true to get answer as file and not as json
-- `readFile64(adapter, fileName)` - read file as base64 string, e.g., adapter=vis.0, fileName=main/vis-views.json. Additionally, you can set the option in query binary=true to get answer as file and not as json
+- `readFile(adapter, fileName)` - read file, e.g. adapter=vis.0, fileName=main/vis-views.json. Additionally, you can set option in query binary=true to get answer as file and not as json
+- `readFile64(adapter, fileName)` - read file as base64 string, e.g. adapter=vis.0, fileName=main/vis-views.json. Additionally, you can set option in query binary=true to get answer as file and not as json
 - `writeFile64(adapter, fileName, data64, options)` - write file, e.g. adapter=vis.0, fileName=main/vis-test.json, data64=eyJhIjogMX0=
 - `unlink(adapter, name)` - delete file or folder
 - `deleteFile(adapter, name)` - delete file
@@ -102,18 +102,17 @@ You cannot send POST request to commands via GUI.
 - `fileExists(adapter, fileName)` - check if file exists
 
 ### Admins
-- `getHostByIp(ip)` - read host information by IP. e.g., by localhost
+- `getHostByIp(ip)` - read host information by IP. e.g. by localhost
 - `readLogs(host)` - read file name and size of log files. You can read them with http://ipaddress:8093/<fileName>
 - `delState(id)` - delete state and object. Same as delObject
 - `getRatings(update)` - read adapter ratings (as in admin)
 - `getCurrentInstance()` - read adapter namespace (always rest-api.0)
-- `checkFeatureSupported(feature)` - check if feature is supported by js-controller.
 - `decrypt(encryptedText)` - decrypt string with system secret
 - `encrypt(plainText)` - encrypt string with system secret
 - `getAdapters(adapterName)` - get objects of type "adapter". You can define optionally adapterName
 - `updateLicenses(login, password)` - read licenses from ioBroker.net portal
-- `getCompactInstances()` - read a list of instances with short information
-- `getCompactAdapters()` - read a list of installed adapters with short information
+- `getCompactInstances()` - read list of instances with short information
+- `getCompactAdapters()` - read list of installed adapters with short information
 - `getCompactInstalled(host)` - read short information about installed adapters
 - `getCompactSystemConfig()` - read short system config
 - `getCompactSystemRepositories()`
@@ -121,24 +120,26 @@ You cannot send POST request to commands via GUI.
 - `getCompactHosts()` - get short information about hosts
 - `addUser(user, pass)` - add new user
 - `delUser(user)` - delete user
-- `addGroup(group, desc, acl)` - create a new group
+- `addGroup(group, desc, acl)` - create new group
 - `delGroup(group)` - delete group
 - `changePassword(user, pass)` - change user password
-- `getAllObjects()` - read all objects as a list. GUI can have problems by visualization of answer.
-- `extendObject(id, obj)` - modify an object by ID with JSON. (.e.g. `{"common":{"enabled": true}}`) 
+- `getAllObjects()` - read all objects as list. GUI can have problems by visualization of answer.
+- `extendObject(id, obj)` - modify object by ID with JSON. (.e.g. `{"common":{"enabled": true}}`) 
 - `getForeignObjects(pattern, type)` - same as getObjects
 - `delObjects(id, options)` - delete objects by pattern
 
 ### Others
 - `log(text, level[info])` - no answer - add log entry to ioBroker log
+- `checkFeatureSupported(feature)` - check if feature is supported by js-controller.
 - `getHistory(id, options)` - read history. See for options: https://github.com/ioBroker/ioBroker.history/blob/master/docs/en/README.md#access-values-from-javascript-adapter
 - `httpGet(url)` - read URL from server. You can set binary=true to get answer as file
-- `sendTo(adapterInstance, command, message)` - send command to instance. E.g., adapterInstance=history.0, command=getHistory, message=`{"id": "system.adapter.admin.0.memRss","options": {"aggregate": "onchange", "addId": true}}`
+- `sendTo(adapterInstance, command, message)` - send command to instance. E.g. adapterInstance=history.0, command=getHistory, message=`{"id": "system.adapter.admin.0.memRss","options": {"aggregate": "onchange", "addId": true}}`
 - `listPermissions()` - read static information with function permissions
-- `getUserPermissions()` - read an object with user permissions
+- `getUserPermissions()` - read object with user permissions
 - `getVersion()` - read adapter name and version
 - `getAdapterName()` - read adapter name (always rest-api)
-- `getAdapterInstances(adapterName)` - get objects of a type `instance`. You can define optionally adapterName
+- `clientSubscribe(targetInstance, messageType, data)`
+- `getAdapterInstances(adapterName)` - get objects of type "instance". You can define optionally adapterName
 
 <!-- END -->
 
@@ -148,7 +149,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.0.0 (2024-04-09)
 * (theshengfui) Fixed history requests
 * (bluefox) Minimum required node.js version is 16
 
