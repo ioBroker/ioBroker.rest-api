@@ -135,6 +135,11 @@
     "adminUI": {
       "config": "json"
     },
+    "licenseInformation": {
+      "type": "free",
+      "link": "https://github.com/ioBroker/ioBroker.iot/blob/master/LICENSE"
+    },
+    "tier": 3,
     "dependencies": [
       {
         "js-controller": ">=4.0.0"
