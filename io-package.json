@@ -110,7 +110,6 @@
     "authors": [
       "bluefox <dogafox@gmail.com>"
     ],
-    "license": "Apache-2.0",
     "platform": "Javascript/Node.js",
     "mode": "daemon",
     "connectionType": "local",
@@ -138,7 +137,7 @@
     },
     "licenseInformation": {
       "type": "free",
-      "link": "https://github.com/ioBroker/ioBroker.iot/blob/master/LICENSE"
+      "license": "Apache-2.0"
     },
     "tier": 3,
     "dependencies": [
