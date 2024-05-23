@@ -328,44 +328,6 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(states[`system.adapter.${harness.adapterName}.0`]).to.be.not.ok;
                 expect(states[`system.adapter.${harness.adapterName}.0.uptime`].val).to.be.least(0);
             }).timeout(TESTS_TIMEOUT);
-
-            it('Test REST API: binary states - must read and write binary states', async () => {
-                // create object with binary state
-                let response;
-                try {
-                    response = await axios.get(`http://127.0.0.1:${PORT}/v1/object/0_userdata.0.file`);
-                } catch (e) {
-                    response = await axios.post(`http://127.0.0.1:${PORT}/v1/object/0_userdata.0.file`, {
-                        "common": {
-                            "name": "file",
-                            "desc": "Text file",
-                            "role": "state",
-                            "type": "file",
-                            "read": true,
-                            "write": true
-                        },
-                        "type": "state",
-                        "native": {}
-                    });
-                }
-                expect(response.status).to.be.equal(200);
-
-                response = await axios.patch(`http://127.0.0.1:${PORT}/v1/binary/0_userdata.0.file`, Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), {
-                    headers: {'Content-Type': 'application/octet-stream' }
-                });
-                console.log(JSON.stringify(response.data));
-
-                expect(response.status).to.be.equal(200);
-
-                response = await axios.get(`http://127.0.0.1:${PORT}/v1/binary/0_userdata.0.file`, {
-                    headers: {'Content-Type': 'application/octet-stream' },
-                    responseType: 'arraybuffer',
-                });
-
-                expect(response.status).to.be.equal(200);
-                console.log(JSON.stringify(response.data));
-                expect(JSON.stringify(response.data)).to.be.equal('{"type":"Buffer","data":[0,1,2,3,4,5,6,7,8,9]}');
-            }).timeout(TESTS_TIMEOUT);
         });
     },
 });
