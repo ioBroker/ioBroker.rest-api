@@ -4,7 +4,7 @@
 'use strict';
 
 const utils       = require('@iobroker/adapter-core'); // Get common adapter utils
-const LE          = utils.commonTools.letsEncrypt;
+const { WebServer } = require('@iobroker/webserver');
 const RestAPI     = require('./lib/rest-api.js');
 const adapterName = require('./package.json').name.split('.').pop();
 
@@ -106,7 +106,12 @@ function initWebServer(settings, callback) {
             }
 
             try {
-                server.server = await LE.createServerAsync(app, settings, adapter.config.certificates, adapter.config.leConfig, adapter.log);
+                const webserver = new WebServer({
+                    app: server.app,
+                    adapter,
+                    secure: adapter.config.secure
+                });
+                server.server = await webserver.init();
             } catch (err) {
                 adapter.log.error(`Cannot create webserver: ${err}`);
                 adapter.terminate ? adapter.terminate(1) : process.exit(1);
