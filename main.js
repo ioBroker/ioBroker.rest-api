@@ -107,7 +107,7 @@ function initWebServer(settings, callback) {
 
             try {
                 const webserver = new WebServer({
-                    app: server.app,
+                    app,
                     adapter,
                     secure: adapter.config.secure
                 });
