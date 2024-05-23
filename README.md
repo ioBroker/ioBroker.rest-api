@@ -149,7 +149,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### 2.0.0 (2024-04-09)
+### **WORK IN PROGRESS**
 * (theshengfui) Fixed history requests
 * (bluefox) Minimum required node.js version is 16
 
