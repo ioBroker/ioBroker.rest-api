@@ -149,7 +149,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### 2.0.2 (2024-07-13)
+### **WORK IN PROGRESS**
 * (jkuenemund) Changed response for the endpoint get states to the dictionary in swagger
 
 ### 2.0.1 (2024-05-23)
