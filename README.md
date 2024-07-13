@@ -149,6 +149,9 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (jkuenemund) Changed response for the endpoint get states to the dictionary in swagger 
+
 ### 2.0.1 (2024-05-23)
 * (foxriver76) ported to `@iobroker/webserver`
 * (theshengfui) Fixed history requests
