@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "news": {
+      "2.0.3": {
+        "en": "Changed response for the endpoint get states to the dictionary in swagger",
+        "de": "Geänderte Antwort für den Endpunkt erhalten Zustände zum Wörterbuch in Swagger",
+        "ru": "Измененный ответ для конечной точки получить состояния в словарь в swagger",
+        "pt": "Resposta alterada para o endpoint obter estados para o dicionário em swagger",
+        "nl": "Veranderde respons voor het eindpunt krijgt toestanden naar het woordenboek in swagger",
+        "fr": "Réponse modifiée pour le paramètre obtenir des états au dictionnaire dans swagger",
+        "it": "Cambiata risposta per il punto finale ottenere stati al dizionario in swagger",
+        "es": "Cambio de respuesta para el punto final conseguir estados al diccionario en swagger",
+        "pl": "Zmieniona odpowiedź na punkt końcowy uzyskać stany do słownika w swagger",
+        "uk": "Змінена відповідь на кінцеву точку, яка отримує штати словника в лебідці",
+        "zh-cn": "对端点的更改响应以 swagger 方式将状态变为字典"
+      },
       "2.0.1": {
         "en": "ported to `@iobroker/webserver`\nFixed history requests\nMinimum required node.js version is 16",
         "de": "an `@iobroker/webserver `\nGeschichtsanfragen behoben\nMinimum erforderlich node.js Version ist 16",

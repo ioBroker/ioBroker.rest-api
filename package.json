@@ -1,6 +1,6 @@
 {
   "name": "iobroker.rest-api",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "RESTful interface for ioBroker with GUI.",
   "author": {
     "name": "bluefox",
