@@ -349,8 +349,8 @@ paths:
         200:
           description: "successful operation"
           schema:
-            type: array
-            items:
+            type: "object"
+            additionalProperties:
               $ref: "#/definitions/State"
         400:
           description: "Invalid filter supplied"
