@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "news": {
+      "2.0.2": {
+        "en": "Changed response for the endpoint get states to the dictionary in swagger",
+        "de": "Geänderte Antwort für den Endpunkt erhalten Zustände zum Wörterbuch in Swagger",
+        "ru": "Измененный ответ для конечной точки получить состояния в словарь в swagger",
+        "pt": "Resposta alterada para o endpoint obter estados para o dicionário em swagger",
+        "nl": "Veranderde respons voor het eindpunt krijgt toestanden naar het woordenboek in swagger",
+        "fr": "Réponse modifiée pour le paramètre obtenir des états au dictionnaire dans swagger",
+        "it": "Cambiata risposta per il punto finale ottenere stati al dizionario in swagger",
+        "es": "Cambio de respuesta para el punto final conseguir estados al diccionario en swagger",
+        "pl": "Zmieniona odpowiedź na punkt końcowy uzyskać stany do słownika w swagger",
+        "uk": "Змінена відповідь на кінцеву точку, яка отримує штати словника в лебідці",
+        "zh-cn": "对端点的更改响应以 swagger 方式将状态变为字典"
+      },
       "2.0.1": {
         "en": "ported to `@iobroker/webserver`\nFixed history requests\nMinimum required node.js version is 16",
         "de": "an `@iobroker/webserver `\nGeschichtsanfragen behoben\nMinimum erforderlich node.js Version ist 16",
@@ -78,18 +91,6 @@
         "es": "Operaciones de lectura y escritura binarias aplicadas",
         "pl": "Poprawianie binarnego odczytu/pisania operacji",
         "zh-cn": "执行本文的文字/仪式作业"
-      },
-      "1.0.1": {
-        "en": "Increased the max size of body to 100Mb",
-        "de": "Erhöht die maximale Körpergröße auf 100Mb",
-        "ru": "Увеличение максимального размера тела до 100Мб",
-        "pt": "Aumento do tamanho máximo do corpo para 100Mb",
-        "nl": "Verhoog de maximale grootte van lichaam tot 100MB",
-        "fr": "Augmentation de la taille maximale du corps à 100Mb",
-        "it": "Aumentata la dimensione massima del corpo a 100Mb",
-        "es": "Aumento del tamaño máximo del cuerpo a 100Mb",
-        "pl": "Zwiększono maksymalną wielkość ciała do 100 Mb",
-        "zh-cn": "提高机构规模,使之达到100千兆瓦"
       }
     },
     "title": "REST API",
