@@ -45,7 +45,7 @@
     "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-react": "^7.34.3",
     "gulp": "^4.0.2",
-    "mocha": "^10.6.0"
+    "mocha": "^10.7.0"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.rest-api/issues"
