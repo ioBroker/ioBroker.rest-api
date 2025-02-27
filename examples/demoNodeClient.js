@@ -10,7 +10,9 @@ let connectInterval = null;
 
 function processAxiosError(error) {
     if (error.response) {
-        console.log(`Request error: ${error.response.data ? JSON.stringify(error.response.data, null, 2) : error.response.status}`);
+        console.log(
+            `Request error: ${error.response.data ? JSON.stringify(error.response.data, null, 2) : error.response.status}`,
+        );
     } else {
         console.log(`Request error: ${error.message}`);
     }
@@ -19,7 +21,7 @@ function processAxiosError(error) {
 async function initSubscribe() {
     try {
         const url = `${IO_BROKER_SWAGGER_URL}v1/state/${STATE_ID}/subscribe`;
-        const response = await axios.post(url, {url: `${OWN_URL}api/updates`})
+        const response = await axios.post(url, { url: `${OWN_URL}api/updates` });
         console.log(`Subscribed on changes of ${STATE_ID}: ${JSON.stringify(response.data)}`);
         connectInterval && clearInterval(connectInterval);
         connectInterval = null;
@@ -31,8 +33,7 @@ async function initSubscribe() {
 function startConnect(immediate) {
     if (!connectInterval) {
         connectInterval = setInterval(async () => initSubscribe(), 5000);
-        immediate && initSubscribe()
-            .then(() => {});
+        immediate && initSubscribe().then(() => {});
     }
 }
 
@@ -65,14 +66,14 @@ app.post('/api/updates', async (req, res) => {
             setTimeout(async () => {
                 try {
                     // object or state was deleted
-                    await axios.delete(`${IO_BROKER_SWAGGER_URL}v1/api/object/${id}`, {url: OWN_URL});
+                    await axios.delete(`${IO_BROKER_SWAGGER_URL}v1/api/object/${id}`, { url: OWN_URL });
                 } catch (error) {
                     processAxiosError(error);
                 }
             }, 300);
         }
     } else {
-        res.status(422).json({error: 'Cannot parse data'});
+        res.status(422).json({ error: 'Cannot parse data' });
     }
 });
 

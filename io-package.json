@@ -1,213 +1,206 @@
 {
-  "common": {
-    "name": "rest-api",
-    "version": "2.0.3",
-    "news": {
-      "2.0.3": {
-        "en": "Changed response for the endpoint get states to the dictionary in swagger",
-        "de": "Geänderte Antwort für den Endpunkt erhalten Zustände zum Wörterbuch in Swagger",
-        "ru": "Измененный ответ для конечной точки получить состояния в словарь в swagger",
-        "pt": "Resposta alterada para o endpoint obter estados para o dicionário em swagger",
-        "nl": "Veranderde respons voor het eindpunt krijgt toestanden naar het woordenboek in swagger",
-        "fr": "Réponse modifiée pour le paramètre obtenir des états au dictionnaire dans swagger",
-        "it": "Cambiata risposta per il punto finale ottenere stati al dizionario in swagger",
-        "es": "Cambio de respuesta para el punto final conseguir estados al diccionario en swagger",
-        "pl": "Zmieniona odpowiedź na punkt końcowy uzyskać stany do słownika w swagger",
-        "uk": "Змінена відповідь на кінцеву точку, яка отримує штати словника в лебідці",
-        "zh-cn": "对端点的更改响应以 swagger 方式将状态变为字典"
-      },
-      "2.0.1": {
-        "en": "ported to `@iobroker/webserver`\nFixed history requests\nMinimum required node.js version is 16",
-        "de": "an `@iobroker/webserver `\nGeschichtsanfragen behoben\nMinimum erforderlich node.js Version ist 16",
-        "ru": "в порту `@iobroker/webserver \"\nИсправленные просьбы об истории\nМинимальная требуемая версия node.js - 16",
-        "pt": "portado para `@iobroker/webserver \"\nPedidos de histórico fixo\nA versão mínima necessária do node.js é 16",
-        "nl": "geporteerd naar .@iobroker/webserver wat\nVaste historische verzoeken\nMinimum vereiste node.js versie is 16",
-        "fr": "porté à `@iobroker/webserver \"\nDemande d'historique fixe\nLa version minimum requise node.js est 16",
-        "it": "inviato a `@iobroker/webserver #\nRisolte richieste di storia\nVersione minima richiesta node.js è 16",
-        "es": "portada a `@iobroker/webserver `\nSolicitudes de historia fija\nLa versión mínima requerida node.js es 16",
-        "pl": "wysłany do '@ iobroker / webserver'\nPoprawione żądania dotyczące historii\nMinimalna wymagana node.js wersja jest 16",
-        "uk": "сайт: www.iobroker.com й\nВиправлені запити історії\nМінімальний необхідний вузол.js версія 16",
-        "zh-cn": "移植到 xqio 经纪人/网络服务器 `\n固定历史请求\n最低要求的节点.js版本为16"
-      },
-      "2.0.0": {
-        "en": "Fixed history requests\nMinimum required node.js version is 16",
-        "de": "Geschichtsanfragen behoben\nMinimum erforderlich node.js Version ist 16",
-        "ru": "Исправленные просьбы об истории\nМинимальная требуемая версия node.js - 16",
-        "pt": "Pedidos de histórico fixo\nA versão mínima necessária do node.js é 16",
-        "nl": "Vaste historische verzoeken\nMinimum vereiste node.js versie is 16",
-        "fr": "Demande d'historique fixe\nLa version minimum requise node.js est 16",
-        "it": "Risolte richieste di storia\nVersione minima richiesta node.js è 16",
-        "es": "Solicitudes de historia fija\nLa versión mínima requerida node.js es 16",
-        "pl": "Poprawione żądania dotyczące historii\nMinimalna wymagana node.js wersja jest 16",
-        "uk": "Виправлені запити історії\nМінімальний необхідний вузол.js версія 16",
-        "zh-cn": "固定历史请求\n最低要求的节点.js版本为16"
-      },
-      "1.1.0": {
-        "en": "Converting of the setState values to the according type\nImplemented file operations",
-        "de": "Umrechnung der setState-Werte in den entsprechenden Typ\nImplementierung von Dateioperationen",
-        "ru": "Преобразование значений setState в согласно типу\nРеализованные файловые операции",
-        "pt": "Convertendo dos valores setState para o tipo de acordo\nOperações de arquivo implementadas",
-        "nl": "Omkeren van de setstate waarden naar het type\nGeïmplementeerde bestand operaties",
-        "fr": "Conversion des valeurs déterminées de l'état dans le type suivant\nOpérations de fichiers mises en œuvre",
-        "it": "Convertizione dei valori setState secondo il tipo\nOperazioni di file implementate",
-        "es": "Convertir los valores establecidos en el tipo\nOperaciones de archivo aplicadas",
-        "pl": "Przetłumaczył wartości zbioru zgodnie z typem\nImplementacja",
-        "uk": "Перетворення значень setState до за типом\nРеалізовані операції файлів",
-        "zh-cn": "避免按类型划分国家数值\n执行档案业务"
-      },
-      "1.0.5": {
-        "en": "Prepare for future js-controller versions",
-        "de": "Bereiten Sie sich auf zukünftige js-Controller-Versionen",
-        "ru": "Подготовьтесь к будущим версиям js-controller",
-        "pt": "Prepare-se para futuras versões js-controller",
-        "nl": "Bereid je voor op toekomstige Js-controller versie",
-        "fr": "Préparez-vous pour les versions futures de js-controller",
-        "it": "Prepararsi per le future versioni js-controller",
-        "es": "Prepararse para futuras versiones js-controller",
-        "pl": "Prepare for future js-controller version",
-        "uk": "Підготовка до майбутніх версій js-controller",
-        "zh-cn": "今后防污版本的编制"
-      },
-      "1.0.4": {
-        "en": "Check if the port is occupied only on defined interface",
-        "de": "Überprüfen Sie, ob der Port nur auf definierter Schnittstelle besetzt ist",
-        "ru": "Проверьте, занят ли порт только на определенном интерфейсе",
-        "pt": "Verifique se a porta está ocupada apenas na interface definida",
-        "nl": "Controleer of de haven alleen bezet is op definitieve interface",
-        "fr": "Vérifiez si le port n'est occupé que sur l'interface définie",
-        "it": "Controllare se la porta è occupata solo su interfaccia definita",
-        "es": "Compruebe si el puerto está ocupado sólo en la interfaz definida",
-        "pl": "Jeśli port jest zajęty tylko na określonym interfejsie",
-        "zh-cn": "如果港口只在界定的界线上被占有,则该港口将被扣押。"
-      },
-      "1.0.2": {
-        "en": "Implemented binary read/write operations",
-        "de": "Implementierung binärer Schreib-/Lesevorgänge",
-        "ru": "Внедренные бинарные чтения / записи операции",
-        "pt": "Operações de leitura/escrita binárias implementadas",
-        "nl": "Geïmplementeerde binaire las/schrijf operaties",
-        "fr": "Opérations de lecture/écriture binaires mises en œuvre",
-        "it": "Operazioni di lettura/scrittura binarie implementate",
-        "es": "Operaciones de lectura y escritura binarias aplicadas",
-        "pl": "Poprawianie binarnego odczytu/pisania operacji",
-        "zh-cn": "执行本文的文字/仪式作业"
-      }
+    "common": {
+        "name": "rest-api",
+        "version": "2.0.3",
+        "news": {
+            "2.0.3": {
+                "en": "Changed response for the endpoint get states to the dictionary in swagger",
+                "de": "Geänderte Antwort für den Endpunkt erhalten Zustände zum Wörterbuch in Swagger",
+                "ru": "Измененный ответ для конечной точки получить состояния в словарь в swagger",
+                "pt": "Resposta alterada para o endpoint obter estados para o dicionário em swagger",
+                "nl": "Veranderde respons voor het eindpunt krijgt toestanden naar het woordenboek in swagger",
+                "fr": "Réponse modifiée pour le paramètre obtenir des états au dictionnaire dans swagger",
+                "it": "Cambiata risposta per il punto finale ottenere stati al dizionario in swagger",
+                "es": "Cambio de respuesta para el punto final conseguir estados al diccionario en swagger",
+                "pl": "Zmieniona odpowiedź na punkt końcowy uzyskać stany do słownika w swagger",
+                "uk": "Змінена відповідь на кінцеву точку, яка отримує штати словника в лебідці",
+                "zh-cn": "对端点的更改响应以 swagger 方式将状态变为字典"
+            },
+            "2.0.1": {
+                "en": "ported to `@iobroker/webserver`\nFixed history requests\nMinimum required node.js version is 16",
+                "de": "an `@iobroker/webserver `\nGeschichtsanfragen behoben\nMinimum erforderlich node.js Version ist 16",
+                "ru": "в порту `@iobroker/webserver \"\nИсправленные просьбы об истории\nМинимальная требуемая версия node.js - 16",
+                "pt": "portado para `@iobroker/webserver \"\nPedidos de histórico fixo\nA versão mínima necessária do node.js é 16",
+                "nl": "geporteerd naar .@iobroker/webserver wat\nVaste historische verzoeken\nMinimum vereiste node.js versie is 16",
+                "fr": "porté à `@iobroker/webserver \"\nDemande d'historique fixe\nLa version minimum requise node.js est 16",
+                "it": "inviato a `@iobroker/webserver #\nRisolte richieste di storia\nVersione minima richiesta node.js è 16",
+                "es": "portada a `@iobroker/webserver `\nSolicitudes de historia fija\nLa versión mínima requerida node.js es 16",
+                "pl": "wysłany do '@ iobroker / webserver'\nPoprawione żądania dotyczące historii\nMinimalna wymagana node.js wersja jest 16",
+                "uk": "сайт: www.iobroker.com й\nВиправлені запити історії\nМінімальний необхідний вузол.js версія 16",
+                "zh-cn": "移植到 xqio 经纪人/网络服务器 `\n固定历史请求\n最低要求的节点.js版本为16"
+            },
+            "2.0.0": {
+                "en": "Fixed history requests\nMinimum required node.js version is 16",
+                "de": "Geschichtsanfragen behoben\nMinimum erforderlich node.js Version ist 16",
+                "ru": "Исправленные просьбы об истории\nМинимальная требуемая версия node.js - 16",
+                "pt": "Pedidos de histórico fixo\nA versão mínima necessária do node.js é 16",
+                "nl": "Vaste historische verzoeken\nMinimum vereiste node.js versie is 16",
+                "fr": "Demande d'historique fixe\nLa version minimum requise node.js est 16",
+                "it": "Risolte richieste di storia\nVersione minima richiesta node.js è 16",
+                "es": "Solicitudes de historia fija\nLa versión mínima requerida node.js es 16",
+                "pl": "Poprawione żądania dotyczące historii\nMinimalna wymagana node.js wersja jest 16",
+                "uk": "Виправлені запити історії\nМінімальний необхідний вузол.js версія 16",
+                "zh-cn": "固定历史请求\n最低要求的节点.js版本为16"
+            },
+            "1.1.0": {
+                "en": "Converting of the setState values to the according type\nImplemented file operations",
+                "de": "Umrechnung der setState-Werte in den entsprechenden Typ\nImplementierung von Dateioperationen",
+                "ru": "Преобразование значений setState в согласно типу\nРеализованные файловые операции",
+                "pt": "Convertendo dos valores setState para o tipo de acordo\nOperações de arquivo implementadas",
+                "nl": "Omkeren van de setstate waarden naar het type\nGeïmplementeerde bestand operaties",
+                "fr": "Conversion des valeurs déterminées de l'état dans le type suivant\nOpérations de fichiers mises en œuvre",
+                "it": "Convertizione dei valori setState secondo il tipo\nOperazioni di file implementate",
+                "es": "Convertir los valores establecidos en el tipo\nOperaciones de archivo aplicadas",
+                "pl": "Przetłumaczył wartości zbioru zgodnie z typem\nImplementacja",
+                "uk": "Перетворення значень setState до за типом\nРеалізовані операції файлів",
+                "zh-cn": "避免按类型划分国家数值\n执行档案业务"
+            },
+            "1.0.5": {
+                "en": "Prepare for future js-controller versions",
+                "de": "Bereiten Sie sich auf zukünftige js-Controller-Versionen",
+                "ru": "Подготовьтесь к будущим версиям js-controller",
+                "pt": "Prepare-se para futuras versões js-controller",
+                "nl": "Bereid je voor op toekomstige Js-controller versie",
+                "fr": "Préparez-vous pour les versions futures de js-controller",
+                "it": "Prepararsi per le future versioni js-controller",
+                "es": "Prepararse para futuras versiones js-controller",
+                "pl": "Prepare for future js-controller version",
+                "uk": "Підготовка до майбутніх версій js-controller",
+                "zh-cn": "今后防污版本的编制"
+            },
+            "1.0.4": {
+                "en": "Check if the port is occupied only on defined interface",
+                "de": "Überprüfen Sie, ob der Port nur auf definierter Schnittstelle besetzt ist",
+                "ru": "Проверьте, занят ли порт только на определенном интерфейсе",
+                "pt": "Verifique se a porta está ocupada apenas na interface definida",
+                "nl": "Controleer of de haven alleen bezet is op definitieve interface",
+                "fr": "Vérifiez si le port n'est occupé que sur l'interface définie",
+                "it": "Controllare se la porta è occupata solo su interfaccia definita",
+                "es": "Compruebe si el puerto está ocupado sólo en la interfaz definida",
+                "pl": "Jeśli port jest zajęty tylko na określonym interfejsie",
+                "zh-cn": "如果港口只在界定的界线上被占有,则该港口将被扣押。"
+            },
+            "1.0.2": {
+                "en": "Implemented binary read/write operations",
+                "de": "Implementierung binärer Schreib-/Lesevorgänge",
+                "ru": "Внедренные бинарные чтения / записи операции",
+                "pt": "Operações de leitura/escrita binárias implementadas",
+                "nl": "Geïmplementeerde binaire las/schrijf operaties",
+                "fr": "Opérations de lecture/écriture binaires mises en œuvre",
+                "it": "Operazioni di lettura/scrittura binarie implementate",
+                "es": "Operaciones de lectura y escritura binarias aplicadas",
+                "pl": "Poprawianie binarnego odczytu/pisania operacji",
+                "zh-cn": "执行本文的文字/仪式作业"
+            }
+        },
+        "title": "REST API",
+        "titleLang": {
+            "en": "REST API"
+        },
+        "desc": {
+            "en": "This adapter allows to read and write ioBroker objects and state with web RESTful API and Swagger UI",
+            "de": "Dieser Adapter erlaubt die ioBroker-Objekte mit Web RESTful API und Swagger UI zu lesen und zu schreiben",
+            "ru": "Этот адаптер позволяет читать и записывать объекты ioBroker и контактировать с RESTful API и Swagger UI",
+            "pt": "Esse adaptador permite ler e gravar objetos ioBroker e declarar com a API RESTful da Web e a interface do usuário do Swagger",
+            "nl": "Deze adapter maakt het mogelijk om ioBroker-objecten te lezen en te schrijven met de web RESTful API en Swagger UI",
+            "fr": "Cet adaptateur permet de lire et d'écrire des objets et des états ioBroker avec l'API Web RESTful et l'interface utilisateur Swagger.",
+            "it": "Questo adattatore consente di leggere e scrivere oggetti ioBroker e lo stato con l'API RESTful Web e l'interfaccia utente di Swagger",
+            "es": "Este adaptador permite leer y escribir objetos y estados ioBroker con la API RESTful web y la interfaz de usuario Swagger",
+            "pl": "Ten adapter pozwala na odczyt i zapis obiektów ioBroker oraz ich stan za pomocą web RESTful API i Swagger UI",
+            "zh-cn": "该适配器允许使用Web RESTful API和Swagger UI读写ioBroker对象和状态"
+        },
+        "authors": ["bluefox <dogafox@gmail.com>"],
+        "platform": "Javascript/Node.js",
+        "mode": "daemon",
+        "connectionType": "local",
+        "dataSource": "push",
+        "loglevel": "info",
+        "icon": "rest-api.svg",
+        "compact": true,
+        "materialize": true,
+        "webExtension": "lib/rest-api.js",
+        "readme": "https://github.com/ioBroker/ioBroker.rest-api/blob/master/README.md",
+        "keywords": ["web", "rest-api", "RESTful", "API", "communication"],
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.rest-api/master/admin/rest-api.svg",
+        "type": "communication",
+        "stopBeforeUpdate": true,
+        "localLink": "%protocol%://%ip%:%port%/",
+        "adminUI": {
+            "config": "json"
+        },
+        "licenseInformation": {
+            "type": "free",
+            "license": "Apache-2.0"
+        },
+        "tier": 3,
+        "dependencies": [
+            {
+                "js-controller": ">=4.0.0"
+            }
+        ],
+        "plugins": {
+            "sentry": {
+                "dsn": "https://250dffd65cee420e837563860d2b403f@sentry.iobroker.net/189"
+            }
+        }
     },
-    "title": "REST API",
-    "titleLang": {
-      "en": "REST API"
+    "native": {
+        "port": 8093,
+        "auth": false,
+        "secure": false,
+        "bind": "0.0.0.0",
+        "certPublic": "",
+        "certPrivate": "",
+        "certChained": "",
+        "defaultUser": "admin",
+        "ttl": 3600,
+        "onlyAllowWhenUserIsOwner": false,
+        "webInstance": "",
+        "leEnabled": false,
+        "leUpdate": false,
+        "leCheckPort": 80,
+        "checkInterval": 30000,
+        "hookTimeout": 3000,
+        "noUI": false,
+        "dataSource": "",
+        "noCommands": false,
+        "noAdminCommands": false
     },
-    "desc": {
-      "en": "This adapter allows to read and write ioBroker objects and state with web RESTful API and Swagger UI",
-      "de": "Dieser Adapter erlaubt die ioBroker-Objekte mit Web RESTful API und Swagger UI zu lesen und zu schreiben",
-      "ru": "Этот адаптер позволяет читать и записывать объекты ioBroker и контактировать с RESTful API и Swagger UI",
-      "pt": "Esse adaptador permite ler e gravar objetos ioBroker e declarar com a API RESTful da Web e a interface do usuário do Swagger",
-      "nl": "Deze adapter maakt het mogelijk om ioBroker-objecten te lezen en te schrijven met de web RESTful API en Swagger UI",
-      "fr": "Cet adaptateur permet de lire et d'écrire des objets et des états ioBroker avec l'API Web RESTful et l'interface utilisateur Swagger.",
-      "it": "Questo adattatore consente di leggere e scrivere oggetti ioBroker e lo stato con l'API RESTful Web e l'interfaccia utente di Swagger",
-      "es": "Este adaptador permite leer y escribir objetos y estados ioBroker con la API RESTful web y la interfaz de usuario Swagger",
-      "pl": "Ten adapter pozwala na odczyt i zapis obiektów ioBroker oraz ich stan za pomocą web RESTful API i Swagger UI",
-      "zh-cn": "该适配器允许使用Web RESTful API和Swagger UI读写ioBroker对象和状态"
-    },
-    "authors": [
-      "bluefox <dogafox@gmail.com>"
-    ],
-    "platform": "Javascript/Node.js",
-    "mode": "daemon",
-    "connectionType": "local",
-    "dataSource": "push",
-    "loglevel": "info",
-    "icon": "rest-api.png",
-    "compact": true,
-    "materialize": true,
-    "webExtension": "lib/rest-api.js",
-    "readme": "https://github.com/ioBroker/ioBroker.rest-api/blob/master/README.md",
-    "keywords": [
-      "web",
-      "rest-api",
-      "RESTful",
-      "API",
-      "communication"
-    ],
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.rest-api/master/admin/rest-api.png",
-    "type": "communication",
-    "stopBeforeUpdate": true,
-    "localLink": "%protocol%://%ip%:%port%/",
-    "adminUI": {
-      "config": "json"
-    },
-    "licenseInformation": {
-      "type": "free",
-      "license": "Apache-2.0"
-    },
-    "tier": 3,
-    "dependencies": [
-      {
-        "js-controller": ">=4.0.0"
-      }
-    ],
-    "plugins": {
-      "sentry": {
-        "dsn": "https://250dffd65cee420e837563860d2b403f@sentry.iobroker.net/189"
-      }
-    }
-  },
-  "native": {
-    "port": 8093,
-    "auth": false,
-    "secure": false,
-    "bind": "0.0.0.0",
-    "certPublic": "",
-    "certPrivate": "",
-    "certChained": "",
-    "defaultUser": "admin",
-    "onlyAllowWhenUserIsOwner": false,
-    "webInstance": "",
-    "leEnabled": false,
-    "leUpdate": false,
-    "leCheckPort": 80,
-    "checkInterval": 30000,
-    "hookTimeout": 3000,
-    "noUI": false,
-    "dataSource": "",
-    "noCommands": false,
-    "noAdminCommands": false
-  },
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "If server started",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.extension",
-      "type": "state",
-      "common": {
-        "role": "indicator",
-        "name": "If instance is in only extension mode",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    }
-  ]
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "If server started",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.extension",
+            "type": "state",
+            "common": {
+                "role": "indicator",
+                "name": "If instance is in only extension mode",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }

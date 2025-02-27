@@ -1,96 +1,109 @@
 <html>
-<head>
-    <script src="longPolling.js"></script>
-</head>
-<body>
-<h2>This is client example how to work with long polling and REST-API.</h2>
+    <head>
+        <script src="longPolling.js"></script>
+    </head>
+    <body>
+        <h2>This is a client example of how to work with long polling and REST-API.</h2>
 
-    <div id="connected"></div>
-    <div id="output"></div>
-<script>
-    const IOBROKER_SWAGGER = 'http://localhost:8093/';
+        <div id="connected"></div>
+        <div id="output"></div>
+        <script>
+            const IOBROKER_SWAGGER = 'http://localhost:8093/';
 
-    // Demo long polling
-    const output = [];
-    let subscribed = false;
-    let lastID = false;
-    let lastTimeout = 0;
-    let connectionInterval = null;
-    let password = '';
+            // Demo long polling
+            const output = [];
+            let subscribed = false;
+            let lastID = false;
+            let lastTimeout = 0;
+            let connectionInterval = null;
+            let password = '';
 
-    function addOutput(data) {
-        console.log(data);
-        output.push(data);
-        if (output.length > 40) {
-            output.splice(0, output.length - 40);
-        }
-        document.getElementById('output').innerHTML = output.join('<br/>');
-    }
-
-    function setConnectionStatus(isConnected) {
-        if (isConnected) {
-            connectionInterval && clearInterval(connectionInterval);
-            connectionInterval = null;
-
-            document.getElementById('connected').innerHTML = '<span style="color: green"><b>CONNECTED</b></span>';
-
-            connection.getState('system.adapter.rest-api.0.alive')
-                .then(data => addOutput('system.adapter.rest-api.0.alive: ' + JSON.stringify(data)))
-
-            // subscribe must be done only one time by first connection
-            if (!subscribed) {
-                subscribed = true;
-                connection.subscribeStates('system.adapter.rest-api.0.*')
-                    .then(data => addOutput('<span style="color: green">Connected: </span>' + JSON.stringify(data)));
-            }
-        } else {
-            document.getElementById('connected').innerHTML = '<span style="color: red"><b>No connection with ' + IOBROKER_SWAGGER + '</b></span>';
-            if (isConnected !== undefined) {
-                addOutput('<span style="color: red">Disconnected. Try to connect every 5 seconds</span>');
-            }
-        }
-    }
-
-    setConnectionStatus();
-
-    let connection;
-    function createConnection() {
-        connection = new LongPolling(IOBROKER_SWAGGER, {
-            onConnection: setConnectionStatus,
-            onError: error => {
-                addOutput('ERROR: ' + JSON.stringify(error));
-                if (error.toString().includes('Invalid password or user name') || error.toString().includes('User is required')) {
-                    connection.close();
-                    connection = null;
-                    do {
-                        password = window.prompt('Please enter password for "admin":');
-                    } while (!password);
-
-                    createConnection();
+            function addOutput(data) {
+                console.log(data);
+                output.push(data);
+                if (output.length > 40) {
+                    output.splice(0, output.length - 40);
                 }
-            },
-            onEvent: event => {
-                addOutput('Event: ' + JSON.stringify(event));
-            },
-            onConnectionAttempt: timeout => {
-                lastID = Date.now();
-                lastTimeout = timeout / 1000;
-                connectionInterval = connectionInterval || setInterval(() => {
-                    const el = document.getElementById(lastID);
-                    if (el) {
-                        lastTimeout && lastTimeout--;
-                        el.innerText = lastTimeout;
-                    }
-                }, 1000);
-                addOutput(`${new Date().toLocaleString()} Try to connect...<span id="${lastID}">${lastTimeout}</span>`);
-            },
-            autoConnect: true, // else you must call connection.connect()
-            user: 'admin',
-            password,
-        });
-    }
+                document.getElementById('output').innerHTML = output.join('<br/>');
+            }
 
-    createConnection();
-</script>
-</body>
+            function setConnectionStatus(isConnected) {
+                if (isConnected) {
+                    connectionInterval && clearInterval(connectionInterval);
+                    connectionInterval = null;
+
+                    document.getElementById('connected').innerHTML =
+                        '<span style="color: green"><b>CONNECTED</b></span>';
+
+                    connection
+                        .getState('system.adapter.rest-api.0.alive')
+                        .then(data => addOutput('system.adapter.rest-api.0.alive: ' + JSON.stringify(data)));
+
+                    // subscribe must be done only one time by first connection
+                    if (!subscribed) {
+                        subscribed = true;
+                        connection
+                            .subscribeStates('system.adapter.rest-api.0.*')
+                            .then(data =>
+                                addOutput('<span style="color: green">Connected: </span>' + JSON.stringify(data)),
+                            );
+                    }
+                } else {
+                    document.getElementById('connected').innerHTML =
+                        '<span style="color: red"><b>No connection with ' + IOBROKER_SWAGGER + '</b></span>';
+                    if (isConnected !== undefined) {
+                        addOutput('<span style="color: red">Disconnected. Try to connect every 5 seconds</span>');
+                    }
+                }
+            }
+
+            setConnectionStatus();
+
+            let connection;
+            function createConnection() {
+                connection = new LongPolling(IOBROKER_SWAGGER, {
+                    onConnection: setConnectionStatus,
+                    onError: error => {
+                        addOutput('ERROR: ' + JSON.stringify(error));
+                        if (
+                            error.toString().includes('Invalid password or user name') ||
+                            error.toString().includes('User is required')
+                        ) {
+                            connection.close();
+                            connection = null;
+                            do {
+                                password = window.prompt('Please enter password for "admin":');
+                            } while (!password);
+
+                            createConnection();
+                        }
+                    },
+                    onEvent: event => {
+                        addOutput(`Event: ${JSON.stringify(event)}`);
+                    },
+                    onConnectionAttempt: timeout => {
+                        lastID = Date.now();
+                        lastTimeout = timeout / 1000;
+                        connectionInterval =
+                            connectionInterval ||
+                            setInterval(() => {
+                                const el = document.getElementById(lastID);
+                                if (el) {
+                                    lastTimeout && lastTimeout--;
+                                    el.innerText = lastTimeout;
+                                }
+                            }, 1000);
+                        addOutput(
+                            `${new Date().toLocaleString()} Try to connect...<span id="${lastID}">${lastTimeout}</span>`,
+                        );
+                    },
+                    autoConnect: true, // else you must call connection.connect()
+                    user: 'admin',
+                    password,
+                });
+            }
+
+            createConnection();
+        </script>
+    </body>
 </html>
