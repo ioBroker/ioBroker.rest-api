@@ -105,7 +105,7 @@ You cannot send POST request to commands via GUI.
 
 <!-- START -->
 ### States
-- `getStates(pattern)` - get the list of states for a pattern (e.g., for system.adapter.admin.0.*). GUI can have problems by visualization of answer.
+- `getStates(pattern)` - get the list of states for pattern (e.g. for system.adapter.admin.0.*). GUI can have problems by visualization of answer.
 - `getForeignStates(pattern)` - same as getStates
 - `getState(id)` - get state value by ID
 - `setState(id, state)` - set state value with JSON object (e.g. `{"val": 1, "ack": true}`)
@@ -183,7 +183,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 2.1.0 (2025-02-27)
 * (@GermanBluefox) Added OAuth2 support
 * (@GermanBluefox) Updated packages
 * (@GermanBluefox) Replaced icons with SVG
