@@ -57,14 +57,13 @@
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.rest-api/issues"
   },
-  "main": "main.ts",
+  "main": "dist/main.js",
   "files": [
     "admin/",
     "img/",
-    "lib/",
+    "dist/",
     "examples/",
     "LICENSE",
-    "main.ts",
     "io-package.json"
   ],
   "scripts": {

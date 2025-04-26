@@ -1,5 +1,5 @@
-const { readFileSync, writeFileSync } = require('node:fs');
-const common = require('./lib/common');
+const { readFileSync, writeFileSync, copyFileSync, existsSync, mkdirSync } = require('node:fs');
+const common = require('./dist/lib/common');
 const pkg = require('./package.json');
 
 const isFile = name => {
@@ -115,8 +115,8 @@ const description = {
 function generateList() {
     const CommandsAdmin = require('@iobroker/socket-classes').SocketCommandsAdmin;
     const CommandsCommon = require('@iobroker/socket-classes').SocketCommands;
-    const commands = new CommandsAdmin({ config: {} });
-    const commandsCommon = new CommandsCommon({ config: {} });
+    const commands = new CommandsAdmin({ config: {} }, null, { language: 'en' });
+    const commandsCommon = new CommandsCommon({ config: {} }, null, { language: 'en' });
 
     const ignore = [
         'authenticate',
@@ -287,7 +287,7 @@ ${parameters.join('\n')}`;
         group === 'admin' && yamlTextes.push('# admin commands end');
     });
 
-    file = readFileSync(`${__dirname}/lib/api/swagger/swagger.yaml`).toString('utf8').split('\n');
+    file = readFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`).toString('utf8').split('\n');
     // find <!-- START -->
     newFile = [];
     foundStart = false;
@@ -306,13 +306,13 @@ ${parameters.join('\n')}`;
         }
     }
 
-    writeFileSync(`${__dirname}/lib/api/swagger/swagger.yaml`, newFile.join('\n'));
+    writeFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`, newFile.join('\n'));
 }
 
 function updateYamlVersion() {
-    let yaml = readFileSync(`${__dirname}/lib/api/swagger/swagger.yaml`).toString('utf8');
+    let yaml = readFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`).toString('utf8');
     yaml = yaml.replace(/version: "\d+\.\d+.\d+"/, `version: "${pkg.version}"`);
-    writeFileSync(`${__dirname}/lib/api/swagger/swagger.yaml`, yaml);
+    writeFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`, yaml);
 }
 
 if (process.argv.includes('--generate-list')) {
@@ -322,4 +322,9 @@ if (process.argv.includes('--generate-list')) {
 } else {
     generateList();
     updateYamlVersion();
+    !existsSync(`${__dirname}/dist/lib/config`) && mkdirSync(`${__dirname}/dist/lib/config`);
+    !existsSync(`${__dirname}/dist/lib/api/swagger`) && mkdirSync(`${__dirname}/dist/lib/api/swagger`);
+
+    copyFileSync(`${__dirname}/src/lib/config/default.yaml`, `${__dirname}/dist/lib/config/default.yaml`);
+    copyFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`, `${__dirname}/dist/lib/api/swagger/swagger.yaml`);
 }

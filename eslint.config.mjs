@@ -16,8 +16,6 @@ export default [
     {
         ignores: [
             'dist/*',
-            'main.js',
-            'lib/**/*.js',
             'test/**/*',
             'eslint.config.mjs',
             'prettier.config.mjs',

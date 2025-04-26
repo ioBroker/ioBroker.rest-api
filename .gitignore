@@ -6,3 +6,4 @@ package-lock.json
 /lib/api/swagger/swaggerEdited.yaml
 
 .dev-server
+/dist
