@@ -23,14 +23,14 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3",
-    "@iobroker/socket-classes": "^2.1.12",
-    "@iobroker/webserver": "^1.1.7",
-    "axios": "^1.8.1",
-    "body-parser": "^1.20.3",
+    "@iobroker/socket-classes": "^2.2.12",
+    "@iobroker/webserver": "^1.2.7",
+    "axios": "^1.9.0",
+    "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^1.4.5-lts.2",
     "swagger-node-runner-fork": "^0.8.0",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
@@ -40,12 +40,10 @@
     "@alcalzone/release-script-plugin-iobroker": "^3.7.2",
     "@alcalzone/release-script-plugin-license": "^3.7.0",
     "@iobroker/adapter-dev": "^1.4.0",
-    "@iobroker/eslint-config": "^1.0.0",
-    "@iobroker/testing": "^5.0.3",
+    "@iobroker/eslint-config": "^2.0.1",
+    "@iobroker/testing": "^5.0.4",
     "@types/body-parser": "^1.19.5",
-    "@types/cookie-parser": "^1.4.8",
-    "chai": "^4.5.0",
-    "mocha": "^11.1.0"
+    "@types/cookie-parser": "^1.4.8"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.rest-api/issues"
