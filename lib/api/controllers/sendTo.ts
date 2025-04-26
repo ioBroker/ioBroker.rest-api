@@ -1,30 +1,31 @@
-'use strict';
-const commonLib = require('./common.js');
+import { checkPermissions, errorResponse, parseUrl } from './common';
+import type { RequestExt } from '../../types';
+import type { Response } from 'express';
 
-function sendTo(req, res) {
-    commonLib.checkPermissions(req._adapter, req._user, [{ type: 'other', operation: 'sendto' }], async error => {
+export function sendTo(req: RequestExt, res: Response): void {
+    checkPermissions(req._adapter, req._user, [{ type: 'other', operation: 'sendto' }], async error => {
         if (error) {
-            commonLib.errorResponse(req, res, error);
+            errorResponse(req, res, error);
         } else {
-            const params = commonLib.parseUrl(req.url, req.swagger, req._adapter.WEB_EXTENSION_PREFIX);
-            let message = req.query.message;
-            let noResponse = req.query.noResponse;
-            let timeout = req.query.timeout;
-            let data = req.query.data;
-            if (req.body && req.body.message) {
-                message = req.query.message;
+            const params = parseUrl<{ instance: string }>(req.url, req.swagger, req._adapter.WEB_EXTENSION_PREFIX);
+            let message = req.query.message as string;
+            let noResponseStr = req.query.noResponse as string;
+            let timeout: string | number = req.query.timeout as string;
+            let data: any = req.query.data as string;
+            if (req.body?.message) {
+                message = req.body.message;
             }
-            if (req.body && req.body.timeout) {
-                timeout = req.query.timeout;
+            if (req.body?.timeout) {
+                timeout = req.body.timeout;
             }
-            timeout = parseInt(timeout, 10) || 10000;
-            if (req.body && req.body.noResponse !== undefined) {
-                noResponse = req.query.noResponse;
+            timeout = parseInt(timeout as string, 10) || 10000;
+            if (req.body?.noResponse !== undefined) {
+                noResponseStr = req.body.noResponse;
             }
-            noResponse = noResponse === 'true';
+            const noResponse = noResponseStr === 'true';
 
-            if (req.body && req.body.data !== undefined) {
-                data = req.query.data;
+            if (req.body?.data !== undefined) {
+                data = req.body.data;
             } else {
                 if (data !== undefined && data !== null) {
                     if (data === 'null') {
@@ -40,18 +41,19 @@ function sendTo(req, res) {
                     } else if (data.startsWith('{') && data.endsWith('}')) {
                         try {
                             data = JSON.parse(data);
-                        } catch (error) {
+                        } catch {
                             // ignore
                         }
                     } else if (data.startsWith('[') && data.endsWith(']')) {
                         try {
                             data = JSON.parse(data);
-                        } catch (error) {
+                        } catch {
                             // ignore
                         }
                     }
                 }
             }
+
             const instance = params.instance;
 
             if (!instance) {
@@ -71,7 +73,7 @@ function sendTo(req, res) {
                     res.status(500).json({ error: 'instance is not online', instance });
                     return;
                 }
-            } catch (error) {
+            } catch {
                 res.status(500).json({ error: 'invalid instance', instance });
                 return;
             }
@@ -79,7 +81,7 @@ function sendTo(req, res) {
                 req._adapter.sendTo(instance, message, data);
                 res.json({ result: 'sent' });
             } else {
-                let timer;
+                let timer: NodeJS.Timeout | null = null;
                 let answerDone = false;
                 if (timeout) {
                     timer = setTimeout(() => {
@@ -91,17 +93,13 @@ function sendTo(req, res) {
                     }, timeout);
                 }
 
-                req._adapter.sendTo(instance, message, data, (result, result1) => {
-                    timer && clearTimeout(timer);
+                req._adapter.sendTo(instance, message, data, (result: any): void => {
+                    if (timer) {
+                        clearTimeout(timer);
+                    }
                     if (!answerDone) {
                         answerDone = true;
-                        if (!result && result1) {
-                            res.json(result1);
-                        } else if (result && !result1) {
-                            res.json(result);
-                        } else {
-                            res.json({ error: result, result: result1 });
-                        }
+                        res.json(result);
                     }
                 });
             }
@@ -109,7 +107,4 @@ function sendTo(req, res) {
     });
 }
 
-module.exports = {
-    sendToPost: sendTo,
-    sendTo: sendTo,
-};
+export const sendToPost = sendTo;

@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3",
-    "@iobroker/socket-classes": "^2.2.12",
+    "@iobroker/socket-classes": "^2.2.15",
     "@iobroker/webserver": "^1.2.7",
     "axios": "^1.9.0",
     "body-parser": "^2.2.0",
@@ -42,24 +42,34 @@
     "@iobroker/adapter-dev": "^1.4.0",
     "@iobroker/eslint-config": "^2.0.1",
     "@iobroker/testing": "^5.0.4",
+    "@iobroker/types": "^7.0.7",
     "@types/body-parser": "^1.19.5",
-    "@types/cookie-parser": "^1.4.8"
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.15.2",
+    "@types/swagger-node-runner": "^0.6.6",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/yamljs": "^0.2.34",
+    "typescript": "^5.8.3"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.rest-api/issues"
   },
-  "main": "main.js",
+  "main": "main.ts",
   "files": [
     "admin/",
     "img/",
     "lib/",
     "examples/",
     "LICENSE",
-    "main.js",
+    "main.ts",
     "io-package.json"
   ],
   "scripts": {
-    "build": "node tasks",
+    "build": "npm run build:ts && node tasks",
+    "build:ts": "tsc -p tsconfig.build.json",
     "test": "mocha --exit",
     "release": "release-script",
     "release-patch": "release-script patch --yes --no-update-lockfile",
@@ -67,7 +77,8 @@
     "release-major": "release-script major --yes --no-update-lockfile",
     "translate": "translate-adapter",
     "update-packages": "npx -y npm-check-updates --upgrade",
-    "npm": "npm i"
+    "npm": "npm i",
+    "lint": "eslint -c eslint.config.mjs"
   },
   "license": "Apache-2.0"
 }
