@@ -112,6 +112,23 @@ tests.integration(path.join(__dirname, '..'), {
                     },
                 });
 
+                await harness.objects.setObjectAsync('javascript.0.boolean', {
+                    common: {
+                        name: 'test',
+                        type: 'boolean',
+                        role: 'switch',
+                        def: true,
+                    },
+                    native: {},
+                    type: 'state',
+                    acl: {
+                        object: 1638, // 666
+                        owner: 'system.user.myuser',
+                        ownerGroup: 'system.group.administrator',
+                        state: 1638,
+                    },
+                });
+
                 await harness.states.setStateAsync('javascript.0.test', 1);
 
                 // Start the adapter and wait until it has started
@@ -125,7 +142,7 @@ tests.integration(path.join(__dirname, '..'), {
                 );
 
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ` + JSON.stringify(response.data),
+                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`,
                 );
                 const obj = response.data;
                 //{
@@ -165,7 +182,7 @@ tests.integration(path.join(__dirname, '..'), {
                     `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive/plain`,
                 );
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ` + JSON.stringify(response.data),
+                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`,
                 );
 
                 expect(response.data).equal(true);
@@ -173,13 +190,13 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as User: Test-Endpoint - must return plain value', async () => {
                 const response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/plain`);
-                console.log('v1/state/javascript.0.test => ' + JSON.stringify(response.data));
+                console.log(`v1/state/javascript.0.test => ${JSON.stringify(response.data)}`);
                 expect(response.data).equal(1);
             }).timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: set 4 Test-Endpoint  - must set value', async () => {
                 let response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test?value=2`);
-                console.log('set/javascript.0.test?value=false => ' + JSON.stringify(response.data));
+                console.log(`set/javascript.0.test?value=false => ${JSON.stringify(response.data)}`);
 
                 const obj = response.data;
 
@@ -188,50 +205,50 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.id).to.equal('javascript.0.test');
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/plain`);
-                console.log('v1/state/javascript.0.test => ' + JSON.stringify(response.data));
+                console.log(`v1/state/javascript.0.test => ${JSON.stringify(response.data)}`);
 
                 expect(response.data).equal(2);
             }).timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: set - must set value', async () => {
                 let response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive?value=false`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean?value=false`,
                 );
                 console.log(
-                    `set/system.adapter.${harness.adapterName}.0.alive?value=false => ` + JSON.stringify(response.data),
+                    `set/javascript.0.boolean?value=false => ${JSON.stringify(response.data)}`,
                 );
                 const obj = response.data;
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.false;
-                expect(obj.id).to.equal(`system.adapter.${harness.adapterName}.0.alive`);
+                expect(obj.id).to.equal(`javascript.0.boolean`);
 
                 response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive/plain`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean/plain`,
                 );
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ` + JSON.stringify(response.data),
+                    `v1/state/javascript.0.boolean => ${JSON.stringify(response.data)}`,
                 );
                 expect(response.data).equal(false);
             }).timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: set - must set val', async () => {
                 let response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive?value=true`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean?value=true`,
                 );
                 console.log(
-                    `set/system.adapter.${harness.adapterName}.0.alive?value=true => ` + JSON.stringify(response.data),
+                    `set/javascript.0.boolean?value=true => ${JSON.stringify(response.data)}`,
                 );
 
                 const obj = response.data;
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.true;
-                expect(obj.id).to.equal(`system.adapter.${harness.adapterName}.0.alive`);
+                expect(obj.id).to.equal(`javascript.0.boolean`);
 
                 response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive/plain`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean/plain`,
                 );
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ` + JSON.stringify(response.data),
+                    `v1/state/javascript.0.boolean => ${JSON.stringify(response.data)}`,
                 );
 
                 expect(response.data).equal(true);
@@ -239,20 +256,20 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as User: toggle - must toggle boolean value to false', async () => {
                 let response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive?toggle`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean?toggle`,
                 );
-                console.log(`toggle/system.adapter.${harness.adapterName}.0.alive => ` + JSON.stringify(response.data));
+                console.log(`toggle/javascript.0.boolean => ${JSON.stringify(response.data)}`);
 
                 const obj = response.data;
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.false;
-                expect(obj.id).to.equal(`system.adapter.${harness.adapterName}.0.alive`);
+                expect(obj.id).to.equal(`javascript.0.boolean`);
 
                 response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive/plain`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean/plain`,
                 );
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ` + JSON.stringify(response.data),
+                    `v1/state/javascript.0.boolean => ${JSON.stringify(response.data)}`,
                 );
 
                 expect(response.data).equal(false);
@@ -260,28 +277,32 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as User: toggle - must toggle boolean value to true', async () => {
                 let response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive?toggle`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean?toggle`,
                 );
-                console.log(`toggle/system.adapter.${harness.adapterName}.0.alive => ` + JSON.stringify(response.data));
+                console.log(`toggle/javascript.0.boolean => ${JSON.stringify(response.data)}`);
 
                 const obj = response.data;
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.true;
-                expect(obj.id).to.equal(`system.adapter.${harness.adapterName}.0.alive`);
+                expect(obj.id).to.equal(`javascript.0.boolean`);
 
                 response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive/plain`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean/plain`,
                 );
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ` + JSON.stringify(response.data),
+                    `v1/state/javascript.0.boolean => ${JSON.stringify(response.data)}`,
                 );
 
                 expect(response.data).equal(true);
             }).timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: toggle - must toggle number value to 100', async () => {
-                let response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/toggle`);
-                console.log(`toggle/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`);
+                // set predefined value
+                let response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/toggle?value=49`);
+                console.log(`set/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`);
+
+                response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/toggle`);
+                console.log(`toggle/javascript.0.test => ${JSON.stringify(response.data)}`);
 
                 let obj = response.data;
                 expect(obj).to.be.ok;
@@ -289,19 +310,15 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.id).to.equal(`javascript.0.test`);
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/plain`);
-                console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`,
-                );
+                console.log(`v1/state/javascript.0.test => ${JSON.stringify(response.data)}`);
 
                 expect(response.data).equal(-2);
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test?value=49`);
-                console.log(
-                    `set/system.adapter.${harness.adapterName}.upload?value=49 => ${JSON.stringify(response.data)}`,
-                );
+                console.log(`set/javascript.0.test?value=49 => ${JSON.stringify(response.data)}`);
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test?toggle`);
-                console.log(`toggle/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`);
+                console.log(`toggle/javascript.0.test => ${JSON.stringify(response.data)}`);
 
                 obj = response.data;
                 expect(obj).to.be.ok;
@@ -309,9 +326,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.id).to.equal(`javascript.0.test`);
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/plain`);
-                console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`,
-                );
+                console.log(`v1/state/javascript.0.test => ${JSON.stringify(response.data)}`);
 
                 expect(response.data).equal(-49);
             }).timeout(TESTS_TIMEOUT);
