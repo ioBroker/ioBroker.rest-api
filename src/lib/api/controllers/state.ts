@@ -322,6 +322,8 @@ export function readState(req: RequestExt, res: Response): void {
                         } catch (error) {
                             req._adapter.log.warn(`Error by reading of object "${id}": ${error}`);
                         }
+                    } else {
+                        vObj.id = id;
                     }
 
                     if (!result) {
