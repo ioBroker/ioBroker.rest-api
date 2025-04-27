@@ -129,12 +129,25 @@ export function parseUrl<T extends Record<string, string> = Record<string, strin
         let i = 0;
         swagger.operation.parameters.forEach((param: { in: string; name: string }): void => {
             if (param.in === 'path') {
-                (result as any)[param.name] = parts[i] !== undefined ? decodeURIComponent(parts[i]) : '';
+                try {
+                    (result as any)[param.name] = parts[i] !== undefined ? decodeURIComponent(parts[i]) : '';
+                } catch {
+                    console.error(`Cannot decode ${parts[i]}"`);
+                    (result as any)[param.name] = parts[i];
+                }
+
                 i++;
             }
         });
     } else {
-        parts.forEach((param, i) => ((result as any)[`arg${i}`] = decodeURIComponent(param)));
+        parts.forEach((param, i) => {
+            try {
+                (result as any)[`arg${i}`] = decodeURIComponent(param);
+            } catch {
+                console.error(`Cannot decode ${param}"`);
+                (result as any)[`arg${i}`] = param;
+            }
+        });
     }
 
     return result;

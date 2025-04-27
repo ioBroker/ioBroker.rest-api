@@ -22,7 +22,13 @@ const pattern2RegEx = adapter_core_1.commonTools.pattern2RegEx;
 process.env.SUPPRESS_NO_CONFIG_WARNING = 'true';
 const WEB_EXTENSION_PREFIX = 'rest-api/';
 function parseQuery(_url) {
-    let url = decodeURI(_url);
+    let url;
+    try {
+        url = decodeURI(_url);
+    }
+    catch {
+        url = _url;
+    }
     const pos = url.indexOf('?');
     const values = {};
     if (pos !== -1) {
@@ -30,8 +36,14 @@ function parseQuery(_url) {
         url = url.substring(0, pos);
         for (let i = 0; i < arr.length; i++) {
             const parts = arr[i].split('=');
-            values[parts[0].trim()] =
-                parts[1] === undefined ? null : decodeURIComponent(`${parts[1]}`.replace(/\+/g, '%20'));
+            try {
+                values[parts[0].trim()] =
+                    parts[1] === undefined ? null : decodeURIComponent(`${parts[1]}`.replace(/\+/g, '%20'));
+            }
+            catch {
+                console.error(`Unable to parse ${url}`);
+                values[parts[0].trim()] = `${parts[1]}`.replace(/\+/g, '%20');
+            }
         }
         // Default value for wait
         if (values.timeout === null) {
@@ -581,7 +593,13 @@ class SwaggerUI {
             }
         });
         this.app.get(`${this.routerPrefix}log/*`, (req, res) => {
-            let parts = decodeURIComponent(req.url).split('/');
+            let parts = [];
+            try {
+                parts = decodeURIComponent(req.url).split('/');
+            }
+            catch {
+                this.adapter.log.warn(`Cannot decode "${req.url}"`);
+            }
             if (req.originalUrl.startsWith(`/${WEB_EXTENSION_PREFIX}`)) {
                 parts.shift();
             }

@@ -89,13 +89,27 @@ function parseUrl(url, swagger, webExtensionPrefix) {
         let i = 0;
         swagger.operation.parameters.forEach((param) => {
             if (param.in === 'path') {
-                result[param.name] = parts[i] !== undefined ? decodeURIComponent(parts[i]) : '';
+                try {
+                    result[param.name] = parts[i] !== undefined ? decodeURIComponent(parts[i]) : '';
+                }
+                catch {
+                    console.error(`Cannot decode ${parts[i]}"`);
+                    result[param.name] = parts[i];
+                }
                 i++;
             }
         });
     }
     else {
-        parts.forEach((param, i) => (result[`arg${i}`] = decodeURIComponent(param)));
+        parts.forEach((param, i) => {
+            try {
+                result[`arg${i}`] = decodeURIComponent(param);
+            }
+            catch {
+                console.error(`Cannot decode ${param}"`);
+                result[`arg${i}`] = param;
+            }
+        });
     }
     return result;
 }
