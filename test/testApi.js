@@ -79,6 +79,7 @@ tests.integration(path.join(__dirname, '..'), {
             });
 
             it('Test REST API: get - must return state', async () => {
+                await createVariables(harness, true);
                 let response = await axios.get(
                     `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean?value=true`,
                 );
