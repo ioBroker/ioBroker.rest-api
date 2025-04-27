@@ -298,7 +298,7 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as User: toggle - must toggle number value to 100', async () => {
                 // set predefined value
-                let response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/toggle?value=49`);
+                let response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test?value=2`);
                 console.log(`set/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`);
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/toggle`);

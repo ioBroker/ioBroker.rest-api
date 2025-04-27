@@ -126,7 +126,7 @@
         "tier": 3,
         "globalDependencies": [
             {
-                "admin": ">=6.0.0"
+                "admin": ">=7.4.10"
             }
         ],
         "dependencies": [
