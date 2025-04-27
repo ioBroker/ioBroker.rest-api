@@ -102,7 +102,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.val).to.be.true;
                 expect(obj.ack).to.be.false;
                 expect(obj.ts).to.be.ok;
-                expect(obj.from).to.equal('javascript.0.test-boolean');
+                expect(obj.from).to.equal('system.adapter.rest-api.0');
             }).timeout(TESTS_TIMEOUT);
 
             it('Test REST API: get - must return state with info', async () => {
