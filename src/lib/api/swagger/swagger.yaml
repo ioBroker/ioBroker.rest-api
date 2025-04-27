@@ -16,8 +16,6 @@ basePath: "/v1"
 tags:
   - name: "state"
     description: "Read, write the states"
-  - name: "binary"
-    description: "Read, write the binary states"
   - name: "object"
     description: "Read the objects"
   - name: "history"
@@ -279,63 +277,6 @@ paths:
           description: "State not found"
         400:
           description: "Invalid state ID supplied"
-  /binary/{stateId}:
-    x-swagger-router-controller: state
-    get:
-      tags:
-        - "binary"
-      summary: "Read value of the binary state as stream"
-      operationId: "readBinaryState"
-      produces:
-        - "application/octet-stream"
-      parameters:
-        - name: "stateId"
-          in: "path"
-          description: "ID of the state to return"
-          required: true
-          type: "string"
-
-      responses:
-        200:
-          description: "successful operation"
-        404:
-          description: "State not found"
-        400:
-          description: "Invalid state ID supplied"
-    patch:
-      tags:
-        - "binary"
-      summary: "Update the value of the state"
-      description: ""
-      operationId: "writeBinaryState"
-      consumes:
-        - "application/octet-stream"
-      produces:
-        - "application/json"
-      parameters:
-        - in: "path"
-          name: "stateId"
-          description: "ID of the state to write"
-          required: true
-          type: "string"
-        - in: "body"
-          required: true
-          name: "data"
-          description: "Binary data to write"
-          schema:
-            type: string
-            format: binary
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/State"
-        400:
-          description: "Invalid state ID supplied"
-        404:
-          description: "State not found"
-        405:
-          description: "Invalid value"
   /states:
     x-swagger-router-controller: state
     get:
@@ -1131,7 +1072,6 @@ paths:
         404:
           description: "File not found"
 
-
   # commands start
   /command/getStates:
     get:
@@ -1200,46 +1140,6 @@ paths:
           required: true
 
         - name: "state"
-          in: "query"
-          description: ""
-          type: "string"
-          required: true
-      responses:
-        200:
-          description: "successful operation"
-  /command/getBinaryState:
-    get:
-      tags:
-        - "commands"
-      summary: "get binary state by ID"
-      produces:
-        - "application/json"
-      parameters:
-
-        - name: "id"
-          in: "query"
-          description: ""
-          type: "string"
-          required: true
-      responses:
-        200:
-          description: "successful operation"
-  /command/setBinaryState:
-    get:
-      tags:
-        - "commands"
-      summary: "set binary state by ID"
-      produces:
-        - "application/json"
-      parameters:
-
-        - name: "id"
-          in: "query"
-          description: ""
-          type: "string"
-          required: true
-
-        - name: "base64"
           in: "query"
           description: ""
           type: "string"

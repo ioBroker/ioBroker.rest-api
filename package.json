@@ -23,8 +23,10 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3",
-    "@iobroker/socket-classes": "^2.2.15",
+    "@iobroker/socket-classes": "^2.2.16",
     "@iobroker/webserver": "^1.2.7",
+    "@iobroker/ws-server": "^4.3.7",
+    "@iobroker/js-controller-common-db": "^7.0.7",
     "axios": "^1.9.0",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
@@ -67,7 +69,8 @@
     "io-package.json"
   ],
   "scripts": {
-    "build": "npm run build:ts && node tasks",
+    "build": "npm run build:ts && node tasks --copy-yaml",
+    "build:all": "npm run build:ts && node tasks",
     "build:ts": "tsc -p tsconfig.build.json",
     "test": "mocha --exit",
     "release": "release-script",

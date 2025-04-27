@@ -113,10 +113,10 @@ const description = {
 };
 
 function generateList() {
-    const CommandsAdmin = require('@iobroker/socket-classes').SocketCommandsAdmin;
-    const CommandsCommon = require('@iobroker/socket-classes').SocketCommands;
-    const commands = new CommandsAdmin({ config: {} }, null, { language: 'en' });
-    const commandsCommon = new CommandsCommon({ config: {} }, null, { language: 'en' });
+    const { SocketCommands } = require('@iobroker/socket-classes');
+    const { SocketCommandsAdmin } = require('@iobroker/socket-classes');
+    const commands = new SocketCommandsAdmin({ config: {} });
+    const commandsCommon = new SocketCommands({ config: {} });
 
     const ignore = [
         'authenticate',
@@ -315,16 +315,23 @@ function updateYamlVersion() {
     writeFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`, yaml);
 }
 
-if (process.argv.includes('--generate-list')) {
-    generateList();
-} else if (process.argv.includes('--update-yaml-version')) {
-    updateYamlVersion();
-} else {
-    generateList();
-    updateYamlVersion();
+function copyYaml() {
     !existsSync(`${__dirname}/dist/lib/config`) && mkdirSync(`${__dirname}/dist/lib/config`);
     !existsSync(`${__dirname}/dist/lib/api/swagger`) && mkdirSync(`${__dirname}/dist/lib/api/swagger`);
 
     copyFileSync(`${__dirname}/src/lib/config/default.yaml`, `${__dirname}/dist/lib/config/default.yaml`);
     copyFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`, `${__dirname}/dist/lib/api/swagger/swagger.yaml`);
+
+}
+
+if (process.argv.includes('--generate-list')) {
+    generateList();
+} else if (process.argv.includes('--update-yaml-version')) {
+    updateYamlVersion();
+} else if (process.argv.includes('--copy-yaml')) {
+    copyYaml();
+} else {
+    generateList();
+    updateYamlVersion();
+    copyYaml();
 }
