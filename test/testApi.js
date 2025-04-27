@@ -80,7 +80,7 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test REST API: get - must return state', async () => {
                 const response = await axios.get(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean`,
                 );
                 const obj = response.data;
                 // console.log(`get/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`);
@@ -95,15 +95,15 @@ tests.integration(path.join(__dirname, '..'), {
                 // }
 
                 expect(obj).to.be.ok;
-                expect(obj.val).to.be.true;
+                expect(obj.val).to.be.false;
                 expect(obj.ack).to.be.true;
                 expect(obj.ts).to.be.ok;
-                expect(obj.from).to.equal(`system.adapter.${harness.adapterName}.0`);
+                expect(obj.from).to.equal('javascript.0.test-boolean');
             }).timeout(TESTS_TIMEOUT);
 
             it('Test REST API: get - must return state with info', async () => {
                 const response = await axios.get(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive?withInfo=true`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean?withInfo=true`,
                 );
                 const obj = response.data;
                 // console.log(`[GET] /v1/state/system.adapter.${harness.adapterName}.0.alive?withInfo=true => ${JSON.stringify(response.data)}`);
@@ -135,16 +135,16 @@ tests.integration(path.join(__dirname, '..'), {
                 // }
 
                 expect(obj).to.be.ok;
-                expect(obj.val).to.be.true;
+                expect(obj.val).to.be.false;
                 expect(obj.ack).to.be.true;
                 expect(obj.ts).to.be.ok;
                 expect(obj.from).to.equal(`system.adapter.${harness.adapterName}.0`);
                 expect(obj.type).to.equal('state');
-                expect(obj.id).to.equal(`system.adapter.${harness.adapterName}.0.alive`);
+                expect(obj.id).to.equal(`javascript.0.test-boolean`);
                 expect(obj.common).to.be.ok;
                 expect(obj.native).to.be.ok;
-                expect(obj.common.name).to.equal(`${harness.adapterName}.0 alive`);
-                expect(obj.common.role).to.equal('indicator.state');
+                expect(obj.common.name).to.equal('test');
+                expect(obj.common.role).to.equal('value');
             }).timeout(TESTS_TIMEOUT);
 
             it('Test REST API: set - must set state', async () => {
@@ -188,7 +188,7 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test REST API: getPlainValue - must return plain value', async () => {
                 const response = await axios.get(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive/plain`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean/plain`,
                     {
                         responseType: 'arraybuffer',
                         responseEncoding: 'binary',
@@ -196,7 +196,7 @@ tests.integration(path.join(__dirname, '..'), {
                 );
                 const body = response.data.toString('utf8');
                 // console.log(`[GET] /v1/state/system.adapter.${harness.adapterName}.0.alive/plain => ${body} type is "${typeof body}"`);
-                expect(body).equal('true');
+                expect(body).equal('false');
             }).timeout(TESTS_TIMEOUT);
 
             it('Test REST API: set - must set string value with POST', async () => {
