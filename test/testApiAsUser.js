@@ -137,6 +137,11 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as User: get - must return value', async () => {
                 let response;
+                // set value
+                await axios(
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean?value=true`,
+                );
+
                 response = await axios(
                     `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean?withInfo=true`,
                 );
