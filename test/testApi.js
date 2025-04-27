@@ -79,7 +79,11 @@ tests.integration(path.join(__dirname, '..'), {
             });
 
             it('Test REST API: get - must return state', async () => {
-                const response = await axios.get(
+                let response = await axios.get(
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean?value=true`,
+                );
+
+                response = await axios.get(
                     `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean`,
                 );
                 const obj = response.data;
@@ -95,8 +99,8 @@ tests.integration(path.join(__dirname, '..'), {
                 // }
 
                 expect(obj).to.be.ok;
-                expect(obj.val).to.be.false;
-                expect(obj.ack).to.be.true;
+                expect(obj.val).to.be.true;
+                expect(obj.ack).to.be.false;
                 expect(obj.ts).to.be.ok;
                 expect(obj.from).to.equal('javascript.0.test-boolean');
             }).timeout(TESTS_TIMEOUT);
@@ -135,8 +139,8 @@ tests.integration(path.join(__dirname, '..'), {
                 // }
 
                 expect(obj).to.be.ok;
-                expect(obj.val).to.be.false;
-                expect(obj.ack).to.be.true;
+                expect(obj.val).to.be.true;
+                expect(obj.ack).to.be.false;
                 expect(obj.ts).to.be.ok;
                 expect(obj.from).to.equal(`system.adapter.${harness.adapterName}.0`);
                 expect(obj.type).to.equal('state');
@@ -196,7 +200,7 @@ tests.integration(path.join(__dirname, '..'), {
                 );
                 const body = response.data.toString('utf8');
                 // console.log(`[GET] /v1/state/system.adapter.${harness.adapterName}.0.alive/plain => ${body} type is "${typeof body}"`);
-                expect(body).equal('false');
+                expect(body).equal('true');
             }).timeout(TESTS_TIMEOUT);
 
             it('Test REST API: set - must set string value with POST', async () => {
