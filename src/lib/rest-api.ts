@@ -13,10 +13,12 @@ import path from 'node:path';
 import multer from 'multer';
 import { commonTools } from '@iobroker/adapter-core';
 import { SocketCommandsAdmin as CommandsAdmin, SocketCommands as CommandsCommon } from '@iobroker/socket-classes';
+import { COMMANDS_PERMISSIONS } from '@iobroker/socket-classes/dist/lib/socketCommands';
 import { getParamNames, DEFAULT_VALUES } from './common';
 import type { RequestExt, RestApiAdapter, RestApiAdapterConfig, SubscribeMethod, Swagger } from './types';
 import type { Express, NextFunction, Response, Request } from 'express';
 import { gunzipSync } from 'node:zlib';
+import { CommandsPermissions } from '@iobroker/types/build/types';
 
 const pattern2RegEx = commonTools.pattern2RegEx;
 
@@ -260,7 +262,8 @@ export default class SwaggerUI {
     private readonly routerPrefix: string;
     private gcInterval: NodeJS.Timeout | null = null;
     private commands: CommandsCommon | CommandsAdmin;
-    private defaultUser: `system.user.${string}`;
+    private readonly defaultUser: `system.user.${string}`;
+    private adminAcl: ioBroker.PermissionSet | undefined;
 
     constructor(
         server: HttpServer | HttpsServer,
@@ -318,7 +321,11 @@ export default class SwaggerUI {
 
         this.adapter._addTimeout = this._addTimeout;
 
-        this.readyPromise = new Promise<void>(resolve => this.init(resolve));
+        const aclPromise = this.adapter
+            .calculatePermissionsAsync('system.user.admin', COMMANDS_PERMISSIONS as CommandsPermissions)
+            .then((_acl: ioBroker.PermissionSet) => (this.adminAcl = _acl));
+
+        this.readyPromise = new Promise<void>(resolve => aclPromise.then(() => this.init(resolve)));
     }
 
     ready(): Promise<void> {
@@ -573,11 +580,26 @@ export default class SwaggerUI {
                     return;
                 }
 
-                const _acl = {
-                    user: req._user,
-                };
+                // We must calculate _acl here, because socket-classes does not check it if a user is already defined
+                let _acl: ioBroker.PermissionSet;
 
-                const _arguments: any[] = [{ _acl }];
+                if (req._user) {
+                    if (req._user === 'system.user.admin') {
+                        _acl = this.adminAcl!;
+                    } else {
+                        _acl = await this.adapter.calculatePermissionsAsync(
+                            req._user,
+                            COMMANDS_PERMISSIONS as CommandsPermissions,
+                        );
+                    }
+                } else {
+                    _acl = this.adminAcl!;
+                }
+
+                const _arguments: any[] = [
+                    // this object simulates the socket
+                    { _acl },
+                ];
 
                 let error = '';
                 args.forEach(name => {

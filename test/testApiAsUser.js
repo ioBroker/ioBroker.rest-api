@@ -281,7 +281,7 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('Test RESTful API as User: toggle - must toggle number value to 100', async () => {
                 let response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/toggle`);
-                console.log(`toggle/system.adapter.${harness.adapterName}.upload => ` + JSON.stringify(response.data));
+                console.log(`toggle/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`);
 
                 let obj = response.data;
                 expect(obj).to.be.ok;
@@ -290,18 +290,18 @@ tests.integration(path.join(__dirname, '..'), {
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/plain`);
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.upload => ` + JSON.stringify(response.data),
+                    `v1/state/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`,
                 );
 
                 expect(response.data).equal(-2);
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test?value=49`);
                 console.log(
-                    `set/system.adapter.${harness.adapterName}.upload?value=49 => ` + JSON.stringify(response.data),
+                    `set/system.adapter.${harness.adapterName}.upload?value=49 => ${JSON.stringify(response.data)}`,
                 );
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test?toggle`);
-                console.log(`toggle/system.adapter.${harness.adapterName}.upload => ` + JSON.stringify(response.data));
+                console.log(`toggle/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`);
 
                 obj = response.data;
                 expect(obj).to.be.ok;
@@ -310,7 +310,7 @@ tests.integration(path.join(__dirname, '..'), {
 
                 response = await axios(`http://127.0.0.1:${PORT}/v1/state/javascript.0.test/plain`);
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.upload => ` + JSON.stringify(response.data),
+                    `v1/state/system.adapter.${harness.adapterName}.upload => ${JSON.stringify(response.data)}`,
                 );
 
                 expect(response.data).equal(-49);

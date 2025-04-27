@@ -16,6 +16,7 @@ const node_path_1 = __importDefault(require("node:path"));
 const multer_1 = __importDefault(require("multer"));
 const adapter_core_1 = require("@iobroker/adapter-core");
 const socket_classes_1 = require("@iobroker/socket-classes");
+const socketCommands_1 = require("@iobroker/socket-classes/dist/lib/socketCommands");
 const common_1 = require("./common");
 const node_zlib_1 = require("node:zlib");
 const pattern2RegEx = adapter_core_1.commonTools.pattern2RegEx;
@@ -221,6 +222,7 @@ class SwaggerUI {
     gcInterval = null;
     commands;
     defaultUser;
+    adminAcl;
     constructor(server, webSettings, adapter, instanceSettings, app) {
         this.app = app;
         this.adapter = adapter;
@@ -258,7 +260,10 @@ class SwaggerUI {
             this.app.use((0, cors_1.default)());
         }
         this.adapter._addTimeout = this._addTimeout;
-        this.readyPromise = new Promise(resolve => this.init(resolve));
+        const aclPromise = this.adapter
+            .calculatePermissionsAsync('system.user.admin', socketCommands_1.COMMANDS_PERMISSIONS)
+            .then((_acl) => (this.adminAcl = _acl));
+        this.readyPromise = new Promise(resolve => aclPromise.then(() => this.init(resolve)));
     }
     ready() {
         return this.readyPromise;
@@ -477,10 +482,23 @@ class SwaggerUI {
                     });
                     return;
                 }
-                const _acl = {
-                    user: req._user,
-                };
-                const _arguments = [{ _acl }];
+                // We must calculate _acl here, because socket-classes does not check it if a user is already defined
+                let _acl;
+                if (req._user) {
+                    if (req._user === 'system.user.admin') {
+                        _acl = this.adminAcl;
+                    }
+                    else {
+                        _acl = await this.adapter.calculatePermissionsAsync(req._user, socketCommands_1.COMMANDS_PERMISSIONS);
+                    }
+                }
+                else {
+                    _acl = this.adminAcl;
+                }
+                const _arguments = [
+                    // this object simulates the socket
+                    { _acl },
+                ];
                 let error = '';
                 args.forEach(name => {
                     if (name !== 'callback') {

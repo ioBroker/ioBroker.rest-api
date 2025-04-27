@@ -239,7 +239,7 @@ export function updateState(req: RequestExt, res: Response): void {
             }
 
             findState(req._adapter, oId[0], req._user, async (error, id, originId) => {
-                if (error && error.message && error.message.includes('permissionError')) {
+                if (error?.message?.includes('permissionError')) {
                     // assume it is ID
                     id = oId[0];
                     error = null;

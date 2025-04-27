@@ -3,19 +3,6 @@
         "name": "rest-api",
         "version": "2.1.0",
         "news": {
-            "2.1.0": {
-                "en": "Added OAuth2 support\nUpdated packages\nReplaced icons with SVG",
-                "de": "OAuth2 Unterstützung hinzugefügt\nAktualisierte Pakete\nErsetzte Symbole mit SVG",
-                "ru": "Поддержка OAuth2\nОбновленные пакеты\nЗаменить иконки на SVG",
-                "pt": "Adicionado suporte OAuth2\nPacotes atualizados\nÍcones substituídos com SVG",
-                "nl": "OAuth2-ondersteuning toegevoegd\nBijgewerkte pakketten\nPictogrammen vervangen door SVG",
-                "fr": "Ajout du support OAuth2\nPaquets mis à jour\nRemplacer les icônes par SVG",
-                "it": "Aggiunto il supporto OAuth2\nPacchetti aggiornati\nIcone sostituite con SVG",
-                "es": "Apoyo adicional OAuth2\nPaquetes actualizados\nIconos reemplazados con SVG",
-                "pl": "Dodano wsparcie OAuth2\nAktualizacja pakietów\nZastąpione ikony za pomocą SVG",
-                "uk": "Додано підтримку OAuth2\nОновлені пакети\nЗамінені іконки з SVG",
-                "zh-cn": "添加 OAuth2 支持\n更新软件包\n替换为 SVG 的图标"
-            },
             "2.0.3": {
                 "en": "Changed response for the endpoint get states to the dictionary in swagger",
                 "de": "Geänderte Antwort für den Endpunkt erhalten Zustände zum Wörterbuch in Swagger",
@@ -41,19 +28,6 @@
                 "pl": "wysłany do '@ iobroker / webserver'\nPoprawione żądania dotyczące historii\nMinimalna wymagana node.js wersja jest 16",
                 "uk": "сайт: www.iobroker.com й\nВиправлені запити історії\nМінімальний необхідний вузол.js версія 16",
                 "zh-cn": "移植到 xqio 经纪人/网络服务器 `\n固定历史请求\n最低要求的节点.js版本为16"
-            },
-            "2.0.0": {
-                "en": "Fixed history requests\nMinimum required node.js version is 16",
-                "de": "Geschichtsanfragen behoben\nMinimum erforderlich node.js Version ist 16",
-                "ru": "Исправленные просьбы об истории\nМинимальная требуемая версия node.js - 16",
-                "pt": "Pedidos de histórico fixo\nA versão mínima necessária do node.js é 16",
-                "nl": "Vaste historische verzoeken\nMinimum vereiste node.js versie is 16",
-                "fr": "Demande d'historique fixe\nLa version minimum requise node.js est 16",
-                "it": "Risolte richieste di storia\nVersione minima richiesta node.js è 16",
-                "es": "Solicitudes de historia fija\nLa versión mínima requerida node.js es 16",
-                "pl": "Poprawione żądania dotyczące historii\nMinimalna wymagana node.js wersja jest 16",
-                "uk": "Виправлені запити історії\nМінімальний необхідний вузол.js версія 16",
-                "zh-cn": "固定历史请求\n最低要求的节点.js版本为16"
             },
             "1.1.0": {
                 "en": "Converting of the setState values to the according type\nImplemented file operations",
@@ -150,6 +124,11 @@
             "license": "Apache-2.0"
         },
         "tier": 3,
+        "globalDependencies": [
+            {
+                "admin": ">=6.0.0"
+            }
+        ],
         "dependencies": [
             {
                 "js-controller": ">=5.0.19"
