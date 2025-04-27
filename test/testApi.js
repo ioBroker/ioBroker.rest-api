@@ -80,13 +80,16 @@ tests.integration(path.join(__dirname, '..'), {
             });
 
             it('Test REST API: get - must return state', async () => {
-                await createVariables(harness, true);
+                // write state, so it has "from" attribute
+                await axios.get(
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean?value=true`,
+                );
 
                 const response = await axios.get(
                     `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean`,
                 );
                 const obj = response.data;
-                // console.log(`get/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`);
+                console.log(`get/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`);
                 //
                 // {
                 //   "val": true,
@@ -101,7 +104,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(obj.val).to.be.true;
                 expect(obj.ack).to.be.false;
                 expect(obj.ts).to.be.ok;
-                expect(obj.from).to.equal('system.adapter.rest-api.0');
+                expect(obj.from).to.equal(`system.adapter.${harness.adapterName}.0`);
             }).timeout(TESTS_TIMEOUT);
 
             it('Test REST API: get - must return state with info', async () => {
