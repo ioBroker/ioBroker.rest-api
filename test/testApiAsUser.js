@@ -138,11 +138,11 @@ tests.integration(path.join(__dirname, '..'), {
             it('Test RESTful API as User: get - must return value', async () => {
                 let response;
                 response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive?withInfo=true`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean?withInfo=true`,
                 );
 
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`,
+                    `v1/state/javascript.0.boolean => ${JSON.stringify(response.data)}`,
                 );
                 const obj = response.data;
                 //{
@@ -166,23 +166,23 @@ tests.integration(path.join(__dirname, '..'), {
 
                 expect(obj).to.be.ok;
                 expect(obj.val).to.be.true;
-                expect(obj.ack).to.be.true;
+                expect(obj.ack).to.be.false;
                 expect(obj.ts).to.be.ok;
                 expect(obj.from).to.equal(`system.adapter.${harness.adapterName}.0`);
                 expect(obj.type).to.equal('state');
-                expect(obj.id).to.equal(`system.adapter.${harness.adapterName}.0.alive`);
+                expect(obj.id).to.equal(`javascript.0.boolean`);
                 expect(obj.common).to.be.ok;
                 expect(obj.native).to.be.ok;
-                expect(obj.common.name).to.equal(`${harness.adapterName}.0 alive`);
-                expect(obj.common.role).to.equal('indicator.state');
+                expect(obj.common.name).to.equal('test');
+                expect(obj.common.role).to.equal('switch');
             }).timeout(TESTS_TIMEOUT);
 
             it('Test RESTful API as User: must return plain value', async () => {
                 const response = await axios(
-                    `http://127.0.0.1:${PORT}/v1/state/system.adapter.${harness.adapterName}.0.alive/plain`,
+                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.boolean/plain`,
                 );
                 console.log(
-                    `v1/state/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`,
+                    `v1/state/javascript.0.boolean => ${JSON.stringify(response.data)}`,
                 );
 
                 expect(response.data).equal(true);
