@@ -81,10 +81,10 @@ export function sendTo(req: RequestExt, res: Response): void {
                 req._adapter.sendTo(instance, message, data);
                 res.json({ result: 'sent' });
             } else {
-                let timer: NodeJS.Timeout | null = null;
+                let timer: ioBroker.Timeout | undefined = null;
                 let answerDone = false;
                 if (timeout) {
-                    timer = setTimeout(() => {
+                    timer = req._adapter.setTimeout(() => {
                         timer = null;
                         if (!answerDone) {
                             answerDone = true;
@@ -95,7 +95,7 @@ export function sendTo(req: RequestExt, res: Response): void {
 
                 req._adapter.sendTo(instance, message, data, (result: any): void => {
                     if (timer) {
-                        clearTimeout(timer);
+                        req._adapter.clearTimeout(timer);
                     }
                     if (!answerDone) {
                         answerDone = true;

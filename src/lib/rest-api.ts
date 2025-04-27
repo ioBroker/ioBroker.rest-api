@@ -229,7 +229,7 @@ interface TaskStore {
     queue?: { ts: number; data: string }[];
     promise?: {
         resolve: ((result?: string) => void) | undefined;
-        timer: NodeJS.Timeout | undefined;
+        timer: ioBroker.Timeout | undefined;
     };
 }
 
@@ -247,7 +247,7 @@ interface TaskStore {
  * @returns object instance
  */
 export default class SwaggerUI {
-    private _waitFor: { id: string; val: ioBroker.State; res: Response; timeout: number; timer?: NodeJS.Timeout }[] =
+    private _waitFor: { id: string; val: ioBroker.State; res: Response; timeout: number; timer?: ioBroker.Timeout }[] =
         [];
     private readonly app: Express;
     private readonly readyPromise: Promise<void>;
@@ -490,7 +490,7 @@ export default class SwaggerUI {
             void new Promise<void | string>(resolve => {
                 item.promise = {
                     resolve,
-                    timer: setTimeout(
+                    timer: this.adapter.setTimeout(
                         () => {
                             if (item.promise) {
                                 // could never happen
@@ -504,7 +504,7 @@ export default class SwaggerUI {
             }).then(data => {
                 if (item.promise) {
                     if (item.promise.timer) {
-                        clearTimeout(item.promise.timer);
+                        this.adapter.clearTimeout(item.promise.timer);
                         item.promise.timer = undefined;
                     }
                     item.promise.resolve = undefined;
@@ -521,7 +521,7 @@ export default class SwaggerUI {
                 }
                 if (item.promise) {
                     if (item.promise.timer) {
-                        clearTimeout(item.promise.timer);
+                        this.adapter.clearTimeout(item.promise.timer);
                         item.promise.timer = undefined;
                     }
                     item.promise.resolve = undefined;
@@ -1230,7 +1230,7 @@ export default class SwaggerUI {
                     }
 
                     if (task.timer) {
-                        clearTimeout(task.timer);
+                        this.adapter.clearTimeout(task.timer);
                         task.timer = undefined;
                     }
 
@@ -1296,7 +1296,7 @@ export default class SwaggerUI {
         res: Response;
         timeout: number;
     }): Promise<void> => {
-        const task: { id: string; val: ioBroker.State; res: Response; timeout: number; timer?: NodeJS.Timeout } = toAdd;
+        const task: { id: string; val: ioBroker.State; res: Response; timeout: number; timer?: ioBroker.Timeout } = toAdd;
         this._waitFor.push(task);
 
         // if not already subscribed
@@ -1304,7 +1304,7 @@ export default class SwaggerUI {
             await this.adapter.subscribeForeignStatesAsync(task.id);
         }
 
-        task.timer = setTimeout(
+        task.timer = this.adapter.setTimeout(
             _task => {
                 // remove this task from the list
                 const pos = this._waitFor.indexOf(_task);
