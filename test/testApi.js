@@ -76,15 +76,13 @@ tests.integration(path.join(__dirname, '..'), {
                 });
                 // Start the adapter and wait until it has started
                 await harness.startAdapterAndWait(true);
+                await createVariables(harness, true);
             });
 
             it('Test REST API: get - must return state', async () => {
                 await createVariables(harness, true);
-                let response = await axios.get(
-                    `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean?value=true`,
-                );
 
-                response = await axios.get(
+                const response = await axios.get(
                     `http://127.0.0.1:${PORT}/v1/state/javascript.0.test-boolean`,
                 );
                 const obj = response.data;
