@@ -49,7 +49,11 @@ async function _updateState(
                 user: req._user,
                 limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
             });
-            res.json({ ...(val as ioBroker.State), id });
+            if (typeof val === 'object') {
+                res.json({ ...(val as ioBroker.State), id });
+            } else {
+                res.json({ val, id });
+            }
         } else {
             await req._adapter._addTimeout!({ id, val: val as ioBroker.State, res, timeout });
             if (typeof val !== 'object') {
