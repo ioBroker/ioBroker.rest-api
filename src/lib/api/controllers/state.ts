@@ -16,6 +16,7 @@ async function _updateState(
     id: string,
     timeout: number,
     val: ioBroker.StateValue | ioBroker.State,
+    ack?: boolean,
 ): Promise<void> {
     if (val && typeof val !== 'object') {
         if (val === 'true' || val === 'false') {
@@ -45,10 +46,17 @@ async function _updateState(
 
     try {
         if (!timeout) {
-            await req._adapter.setForeignStateAsync(id, val, {
-                user: req._user,
-                limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
-            });
+            if (typeof val !== 'object') {
+                await req._adapter.setForeignStateAsync(id, val, !!ack, {
+                    user: req._user,
+                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                });
+            } else {
+                await req._adapter.setForeignStateAsync(id, val, {
+                    user: req._user,
+                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                });
+            }
             if (typeof val === 'object') {
                 res.json({ ...(val as ioBroker.State), id });
             } else {
@@ -56,8 +64,9 @@ async function _updateState(
             }
         } else {
             await req._adapter._addTimeout!({ id, val: val as ioBroker.State, res, timeout });
+
             if (typeof val !== 'object') {
-                await req._adapter.setForeignStateAsync(id, val, false, {
+                await req._adapter.setForeignStateAsync(id, val, !!ack, {
                     user: req._user,
                     limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
                 });
@@ -186,7 +195,7 @@ function _toggleState(req: RequestExt, res: Response, oId: string): void {
                         val = !state.val;
                     }
 
-                    if (obj && obj.common) {
+                    if (obj?.common) {
                         if (obj.common.type === 'boolean') {
                             state.val = state.val === 'true' || state.val === true;
                         } else if (obj.common.type === 'number') {
@@ -294,7 +303,14 @@ export function readState(req: RequestExt, res: Response): void {
                         return;
                     }
                     if (req.query.value !== undefined) {
-                        await _updateState(req, res, id, timeout, req.query.value as string);
+                        await _updateState(
+                            req,
+                            res,
+                            id,
+                            timeout,
+                            req.query.value as string,
+                            req.query.ack !== undefined ? req.query.ack === 'true' : undefined,
+                        );
                         return;
                     }
                     if (req.query.toggle !== undefined) {

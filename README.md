@@ -109,8 +109,6 @@ You cannot send POST request to commands via GUI.
 - `getForeignStates(pattern)` - same as getStates
 - `getState(id)` - get state value by ID
 - `setState(id, state)` - set state value with JSON object (e.g. `{"val": 1, "ack": true}`)
-- `getBinaryState(id)` - get binary state by ID
-- `setBinaryState(id, base64)` - set binary state by ID
 
 ### Objects
 - `getObject(id)` - get object by ID

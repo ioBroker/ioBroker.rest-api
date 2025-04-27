@@ -407,7 +407,7 @@ class SwaggerUI {
             void new Promise(resolve => {
                 item.promise = {
                     resolve,
-                    timer: setTimeout(() => {
+                    timer: this.adapter.setTimeout(() => {
                         if (item.promise) {
                             // could never happen
                             item.promise.timer = undefined;
@@ -418,7 +418,7 @@ class SwaggerUI {
             }).then(data => {
                 if (item.promise) {
                     if (item.promise.timer) {
-                        clearTimeout(item.promise.timer);
+                        this.adapter.clearTimeout(item.promise.timer);
                         item.promise.timer = undefined;
                     }
                     item.promise.resolve = undefined;
@@ -435,7 +435,7 @@ class SwaggerUI {
                 }
                 if (item.promise) {
                     if (item.promise.timer) {
-                        clearTimeout(item.promise.timer);
+                        this.adapter.clearTimeout(item.promise.timer);
                         item.promise.timer = undefined;
                     }
                     item.promise.resolve = undefined;
@@ -498,8 +498,8 @@ class SwaggerUI {
                                 }
                             }
                         }
-                        if (name === 'update' && params[name] === undefined) {
-                            params[name] = false;
+                        if (name === 'update' && params.update === undefined) {
+                            params.update = false;
                         }
                         if (params[name] === 'true') {
                             params[name] = true;
@@ -514,23 +514,37 @@ class SwaggerUI {
                 if (command === 'setState' || command === 'setForeignState') {
                     // read an object
                     try {
-                        const obj = await this.adapter.getForeignObjectAsync(_arguments[1], { user: req._user });
-                        const stateObj = obj;
+                        const stateObj = (await this.adapter.getForeignObjectAsync(_arguments[1], { user: req._user }));
                         if (stateObj?.common?.type) {
-                            if (stateObj.common.type === 'number') {
-                                _arguments[2] = parseFloat(_arguments[2]);
+                            if (typeof _arguments[2] === 'string' &&
+                                _arguments[2].trim().startsWith('{') &&
+                                _arguments[2].trim().endsWith('}')) {
+                                try {
+                                    _arguments[2] = JSON.parse(_arguments[2]);
+                                }
+                                catch {
+                                    this.adapter.log.warn(`Cannot parse JSON: ${_arguments[2]}`);
+                                }
                             }
-                            else if (stateObj.common.type === 'boolean') {
-                                _arguments[2] =
-                                    _arguments[2] === 'true' ||
-                                        _arguments[2] === true ||
-                                        _arguments[2] === 1 ||
-                                        _arguments[2] === '1' ||
-                                        _arguments[2] === 'on' ||
-                                        _arguments[2] === 'ON';
-                            }
-                            else if (stateObj.common.type === 'string') {
-                                _arguments[2] = _arguments[2].toString();
+                            if (typeof _arguments[2] !== 'object') {
+                                if (stateObj.common.type === 'number') {
+                                    _arguments[2] = parseFloat(_arguments[2]);
+                                }
+                                else if (stateObj.common.type === 'boolean') {
+                                    _arguments[2] =
+                                        _arguments[2] === 'true' ||
+                                            _arguments[2] === true ||
+                                            _arguments[2] === 1 ||
+                                            _arguments[2] === '1' ||
+                                            _arguments[2] === 'on' ||
+                                            _arguments[2] === 'ON';
+                                }
+                                else if (stateObj.common.type === 'string') {
+                                    _arguments[2] = _arguments[2].toString();
+                                }
+                                if (params.ack === 'true') {
+                                    _arguments[2] = { val: _arguments[2], ack: true };
+                                }
                             }
                         }
                     }
@@ -1079,7 +1093,7 @@ class SwaggerUI {
                         this.adapter.unsubscribeForeignStates(id);
                     }
                     if (task.timer) {
-                        clearTimeout(task.timer);
+                        this.adapter.clearTimeout(task.timer);
                         task.timer = undefined;
                     }
                     setImmediate((_task, _val) => {
@@ -1133,7 +1147,7 @@ class SwaggerUI {
         if (!Object.keys(this.subscribes).find(url => this.subscribes[url].state.find(t => t.id === task.id))) {
             await this.adapter.subscribeForeignStatesAsync(task.id);
         }
-        task.timer = setTimeout(_task => {
+        task.timer = this.adapter.setTimeout(_task => {
             // remove this task from the list
             const pos = this._waitFor.indexOf(_task);
             if (pos !== -1) {

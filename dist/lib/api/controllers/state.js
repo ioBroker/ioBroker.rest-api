@@ -19,7 +19,7 @@ function getIDs(oids) {
         .map(t => t.trim())
         .filter(t => t);
 }
-async function _updateState(req, res, id, timeout, val) {
+async function _updateState(req, res, id, timeout, val, ack) {
     if (val && typeof val !== 'object') {
         if (val === 'true' || val === 'false') {
             const obj = await req._adapter.getForeignObjectAsync(id, {
@@ -49,10 +49,18 @@ async function _updateState(req, res, id, timeout, val) {
     }
     try {
         if (!timeout) {
-            await req._adapter.setForeignStateAsync(id, val, {
-                user: req._user,
-                limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
-            });
+            if (typeof val !== 'object') {
+                await req._adapter.setForeignStateAsync(id, val, !!ack, {
+                    user: req._user,
+                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                });
+            }
+            else {
+                await req._adapter.setForeignStateAsync(id, val, {
+                    user: req._user,
+                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                });
+            }
             if (typeof val === 'object') {
                 res.json({ ...val, id });
             }
@@ -63,7 +71,7 @@ async function _updateState(req, res, id, timeout, val) {
         else {
             await req._adapter._addTimeout({ id, val: val, res, timeout });
             if (typeof val !== 'object') {
-                await req._adapter.setForeignStateAsync(id, val, false, {
+                await req._adapter.setForeignStateAsync(id, val, !!ack, {
                     user: req._user,
                     limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
                 });
@@ -203,7 +211,7 @@ function _toggleState(req, res, oId) {
                     else {
                         val = !state.val;
                     }
-                    if (obj && obj.common) {
+                    if (obj?.common) {
                         if (obj.common.type === 'boolean') {
                             state.val = state.val === 'true' || state.val === true;
                         }
@@ -302,7 +310,7 @@ function readState(req, res) {
                         return;
                     }
                     if (req.query.value !== undefined) {
-                        await _updateState(req, res, id, timeout, req.query.value);
+                        await _updateState(req, res, id, timeout, req.query.value, req.query.ack !== undefined ? req.query.ack === 'true' : undefined);
                         return;
                     }
                     if (req.query.toggle !== undefined) {
@@ -328,6 +336,9 @@ function readState(req, res) {
                         catch (error) {
                             req._adapter.log.warn(`Error by reading of object "${id}": ${error}`);
                         }
+                    }
+                    else {
+                        vObj.id = id;
                     }
                     if (!result) {
                         result = vObj;

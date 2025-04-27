@@ -598,8 +598,8 @@ export default class SwaggerUI {
                             }
                         }
 
-                        if (name === 'update' && params[name] === undefined) {
-                            params[name] = false;
+                        if (name === 'update' && params.update === undefined) {
+                            params.update = false;
                         }
 
                         if (params[name] === 'true') {
@@ -615,21 +615,40 @@ export default class SwaggerUI {
                 if (command === 'setState' || command === 'setForeignState') {
                     // read an object
                     try {
-                        const obj = await this.adapter.getForeignObjectAsync(_arguments[1], { user: req._user });
-                        const stateObj = obj as ioBroker.StateObject;
+                        const stateObj: ioBroker.StateObject | null | undefined =
+                            (await this.adapter.getForeignObjectAsync(_arguments[1], { user: req._user })) as
+                                | ioBroker.StateObject
+                                | null
+                                | undefined;
                         if (stateObj?.common?.type) {
-                            if (stateObj.common.type === 'number') {
-                                _arguments[2] = parseFloat(_arguments[2]);
-                            } else if (stateObj.common.type === 'boolean') {
-                                _arguments[2] =
-                                    _arguments[2] === 'true' ||
-                                    _arguments[2] === true ||
-                                    _arguments[2] === 1 ||
-                                    _arguments[2] === '1' ||
-                                    _arguments[2] === 'on' ||
-                                    _arguments[2] === 'ON';
-                            } else if (stateObj.common.type === 'string') {
-                                _arguments[2] = _arguments[2].toString();
+                            if (
+                                typeof _arguments[2] === 'string' &&
+                                _arguments[2].trim().startsWith('{') &&
+                                _arguments[2].trim().endsWith('}')
+                            ) {
+                                try {
+                                    _arguments[2] = JSON.parse(_arguments[2]);
+                                } catch {
+                                    this.adapter.log.warn(`Cannot parse JSON: ${_arguments[2]}`);
+                                }
+                            }
+                            if (typeof _arguments[2] !== 'object') {
+                                if (stateObj.common.type === 'number') {
+                                    _arguments[2] = parseFloat(_arguments[2]);
+                                } else if (stateObj.common.type === 'boolean') {
+                                    _arguments[2] =
+                                        _arguments[2] === 'true' ||
+                                        _arguments[2] === true ||
+                                        _arguments[2] === 1 ||
+                                        _arguments[2] === '1' ||
+                                        _arguments[2] === 'on' ||
+                                        _arguments[2] === 'ON';
+                                } else if (stateObj.common.type === 'string') {
+                                    _arguments[2] = _arguments[2].toString();
+                                }
+                                if (params.ack === 'true') {
+                                    _arguments[2] = { val: _arguments[2], ack: true };
+                                }
                             }
                         }
                     } catch (error) {
@@ -1296,7 +1315,8 @@ export default class SwaggerUI {
         res: Response;
         timeout: number;
     }): Promise<void> => {
-        const task: { id: string; val: ioBroker.State; res: Response; timeout: number; timer?: ioBroker.Timeout } = toAdd;
+        const task: { id: string; val: ioBroker.State; res: Response; timeout: number; timer?: ioBroker.Timeout } =
+            toAdd;
         this._waitFor.push(task);
 
         // if not already subscribed

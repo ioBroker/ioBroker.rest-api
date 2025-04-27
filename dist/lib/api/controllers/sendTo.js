@@ -93,7 +93,7 @@ function sendTo(req, res) {
                 let timer = null;
                 let answerDone = false;
                 if (timeout) {
-                    timer = setTimeout(() => {
+                    timer = req._adapter.setTimeout(() => {
                         timer = null;
                         if (!answerDone) {
                             answerDone = true;
@@ -103,7 +103,7 @@ function sendTo(req, res) {
                 }
                 req._adapter.sendTo(instance, message, data, (result) => {
                     if (timer) {
-                        clearTimeout(timer);
+                        req._adapter.clearTimeout(timer);
                     }
                     if (!answerDone) {
                         answerDone = true;
