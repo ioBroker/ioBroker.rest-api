@@ -25,7 +25,7 @@
     "@iobroker/adapter-core": "^3.2.3",
     "@iobroker/socket-classes": "^2.2.18",
     "@iobroker/webserver": "^1.2.8",
-    "@iobroker/ws-server": "^4.3.7",
+    "@iobroker/ws-server": "^4.3.9",
     "@iobroker/js-controller-common-db": "^7.0.7",
     "axios": "^1.9.0",
     "body-parser": "^2.2.0",
