@@ -210,8 +210,7 @@ function generateList() {
                     required = false;
                 }
 
-                let text = `
-               - name: "${arg.replace(/\[\w+]/, '')}"            
+                let text = `               - name: "${arg.replace(/\[\w+]/, '')}"
                  in: "query"
                  description: "${description}"
                  type: "${type}"
@@ -242,12 +241,12 @@ ${parameters.join('\n')}`;
                 200:
                     description: "successful operation"`;
 
-              if (group) {
-                  yamlGroups[group].push(yamlText);
-              } else {
-                  yamlGroups.other.push(yamlText);
-              }
-          });
+            if (group) {
+                yamlGroups[group].push(yamlText);
+            } else {
+                yamlGroups.other.push(yamlText);
+            }
+        });
 
     const allTextes = [];
 
@@ -324,7 +323,6 @@ function copyYaml() {
 
     copyFileSync(`${__dirname}/src/lib/config/default.yaml`, `${__dirname}/dist/lib/config/default.yaml`);
     copyFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`, `${__dirname}/dist/lib/api/swagger/swagger.yaml`);
-
 }
 
 if (process.argv.includes('--generate-list')) {

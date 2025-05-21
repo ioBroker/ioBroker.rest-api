@@ -105,7 +105,7 @@ You cannot send POST request to commands via GUI.
 
 <!-- START -->
 ### States
-- `getStates(pattern)` - get the list of states for a pattern (e.g. for system.adapter.admin.0.*). GUI can have problems by visualization of answer.
+- `getStates(pattern)` - get the list of states for pattern (e.g. for system.adapter.admin.0.*). GUI can have problems by visualization of answer.
 - `getForeignStates(pattern)` - same as getStates
 - `getState(id)` - get state value by ID
 - `setState(id, state)` - set state value with JSON object (e.g. `{"val": 1, "ack": true}`)
@@ -132,7 +132,7 @@ You cannot send POST request to commands via GUI.
 - `readDir(adapter, dirName, options)` - read content of folder
 - `chmodFile(adapter, fileName, options)` - change file mode. E.g. adapter=vis.0, fileName=main/*, options = `{"mode": 0x644}`
 - `chownFile(adapter, fileName, options)` - change file owner. E.g. adapter=vis.0, fileName=main/*, options = `{"owner": "newOwner", "ownerGroup": "newgroup"}`
-- `fileExists(adapter, fileName)` - check if a file exists
+- `fileExists(adapter, fileName)` - check if file exists
 
 ### Admins
 - `getHostByIp(ip)` - read host information by IP. e.g. by localhost
@@ -153,11 +153,11 @@ You cannot send POST request to commands via GUI.
 - `getCompactHosts()` - get short information about hosts
 - `addUser(user, pass)` - add new user
 - `delUser(user)` - delete user
-- `addGroup(group, desc, acl)` - create a new group
+- `addGroup(group, desc, acl)` - create new group
 - `delGroup(group)` - delete group
 - `changePassword(user, pass)` - change user password
-- `getAllObjects()` - read all objects as a list. GUI can have problems by visualization of answer.
-- `extendObject(id, obj)` - modify an object by ID with JSON. (.e.g. `{"common":{"enabled": true}}`) 
+- `getAllObjects()` - read all objects as list. GUI can have problems by visualization of answer.
+- `extendObject(id, obj)` - modify object by ID with JSON. (.e.g. `{"common":{"enabled": true}}`) 
 - `getForeignObjects(pattern, type)` - same as getObjects
 - `delObjects(id, options)` - delete objects by pattern
 
@@ -166,14 +166,14 @@ You cannot send POST request to commands via GUI.
 - `log(text, level[info])` - no answer - add log entry to ioBroker log
 - `checkFeatureSupported(feature)` - check if feature is supported by js-controller.
 - `getHistory(id, options)` - read history. See for options: https://github.com/ioBroker/ioBroker.history/blob/master/docs/en/README.md#access-values-from-javascript-adapter
-- `httpGet(url)` - read URL from server. You can set binary=true to get answer as a file
+- `httpGet(url)` - read URL from server. You can set binary=true to get answer as file
 - `sendTo(adapterInstance, command, message)` - send command to instance. E.g. adapterInstance=history.0, command=getHistory, message=`{"id": "system.adapter.admin.0.memRss","options": {"aggregate": "onchange", "addId": true}}`
 - `listPermissions()` - read static information with function permissions
 - `getUserPermissions()` - read object with user permissions
 - `getVersion()` - read adapter name and version
 - `getAdapterName()` - read adapter name (always rest-api)
 - `clientSubscribe(targetInstance, messageType, data)`
-- `getAdapterInstances(adapterName)` - get objects of a type "instance". You can define optionally adapterName
+- `getAdapterInstances(adapterName)` - get objects of type "instance". You can define optionally adapterName
 
 <!-- END -->
 
