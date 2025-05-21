@@ -184,7 +184,7 @@ You cannot send POST request to commands via GUI.
 
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 3.0.1 (2025-05-21)
 * (@GermanBluefox) Corrected the web extension
 
 ### 3.0.0 (2025-04-27)

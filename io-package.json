@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "news": {
+      "3.0.1": {
+        "en": "Corrected the web extension",
+        "de": "Korrektur der Web-Erweiterung",
+        "ru": "Исправлено расширение сайта",
+        "pt": "Corrigido a extensão web",
+        "nl": "De webextensie gecorrigeerd",
+        "fr": "Correction de l'extension web",
+        "it": "Corretto l'estensione web",
+        "es": "Corregido la extensión web",
+        "pl": "Poprawiono rozszerzenie sieci Web",
+        "uk": "Виправлено розширення веб",
+        "zh-cn": "更正网络扩展名"
+      },
       "3.0.0": {
         "en": "Rewritten in TypeScript\nRemoved binary states",
         "de": "Neu geschrieben in TypeScript\nEntfernte binäre Zustände",
