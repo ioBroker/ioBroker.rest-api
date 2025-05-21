@@ -169,9 +169,8 @@ function generateList() {
                 args = args.map(name => {
                     if (common.DEFAULT_VALUES[func].hasOwnProperty(name)) {
                         return `${name}[${common.DEFAULT_VALUES[func][name]}]`;
-                    } else {
-                        return name;
                     }
+                    return name;
                 });
             }
 
@@ -212,14 +211,14 @@ function generateList() {
                 }
 
                 let text = `
-        - name: "${arg.replace(/\[\w+]/, '')}"            
-          in: "query"
-          description: "${description}"
-          type: "${type}"
-          required: ${required}`;
+               - name: "${arg.replace(/\[\w+]/, '')}"            
+                 in: "query"
+                 description: "${description}"
+                 type: "${type}"
+                 required: ${required}`;
                 if (arg === 'feature') {
                     text += `
-          enum: [ALIAS, ALIAS_SEPARATE_READ_WRITE_ID, ADAPTER_GETPORT_BIND, ADAPTER_DEL_OBJECT_RECURSIVE, ADAPTER_SET_OBJECT_SETS_DEFAULT_VALUE, ADAPTER_AUTO_DECRYPT_NATIVE, PLUGINS, CONTROLLER_NPM_AUTO_REBUILD, CONTROLLER_READWRITE_BASE_SETTINGS, CONTROLLER_MULTI_REPO, CONTROLLER_LICENSE_MANAGER, DEL_INSTANCE_CUSTOM]`;
+                 enum: [ALIAS, ALIAS_SEPARATE_READ_WRITE_ID, ADAPTER_GETPORT_BIND, ADAPTER_DEL_OBJECT_RECURSIVE, ADAPTER_SET_OBJECT_SETS_DEFAULT_VALUE, ADAPTER_AUTO_DECRYPT_NATIVE, PLUGINS, CONTROLLER_NPM_AUTO_REBUILD, CONTROLLER_READWRITE_BASE_SETTINGS, CONTROLLER_MULTI_REPO, CONTROLLER_LICENSE_MANAGER, DEL_INSTANCE_CUSTOM]`;
                 }
 
                 parameters.push(text);
@@ -228,33 +227,33 @@ function generateList() {
             let paramsText = '';
             if (parameters.length) {
                 paramsText = `
-      parameters:
+            parameters:
 ${parameters.join('\n')}`;
             }
 
-            const yamlText = `  /command/${func}:
-    get:
-      tags:
-        - "commands"
-      summary: "${description[func] || ''}"
-      produces:
-        - "application/json"${paramsText}        
-      responses:
-        200:
-          description: "successful operation"`;
+            const yamlText = `    /command/${func}:
+        get:
+            tags:
+                - "commands"
+            summary: "${description[func] || ''}"
+            produces:
+                - "application/json"${paramsText}        
+            responses:
+                200:
+                    description: "successful operation"`;
 
-            if (group) {
-                yamlGroups[group].push(yamlText);
-            } else {
-                yamlGroups.other.push(yamlText);
-            }
-        });
+              if (group) {
+                  yamlGroups[group].push(yamlText);
+              } else {
+                  yamlGroups.other.push(yamlText);
+              }
+          });
 
     const allTextes = [];
 
     Object.keys(groups).forEach(group => {
         allTextes.push(`### ${group[0].toUpperCase()}${group.substring(1)}s`);
-        groups[group].forEach(line => allTextes.push('- ' + line));
+        groups[group].forEach(line => allTextes.push(`- ${line}`));
         allTextes.push('');
     });
 
@@ -282,9 +281,13 @@ ${parameters.join('\n')}`;
     const yamlTextes = [];
 
     Object.keys(yamlGroups).forEach(group => {
-        group === 'admin' && yamlTextes.push('# admin commands start');
+        if (group === 'admin') {
+            yamlTextes.push('# admin commands start');
+        }
         yamlGroups[group].forEach(line => yamlTextes.push(line));
-        group === 'admin' && yamlTextes.push('# admin commands end');
+        if (group === 'admin') {
+            yamlTextes.push('# admin commands end');
+        }
     });
 
     file = readFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`).toString('utf8').split('\n');
