@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3",
-    "@iobroker/socket-classes": "^2.2.18",
+    "@iobroker/socket-classes": "^2.2.19",
     "@iobroker/webserver": "^1.2.8",
     "@iobroker/ws-server": "^4.3.9",
     "@iobroker/js-controller-common-db": "^7.0.7",
