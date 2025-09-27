@@ -1,5 +1,3 @@
-// @ts-expect-error no types
-import SwaggerRunner from 'swagger-node-runner-fork';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import bodyParser from 'body-parser';
@@ -867,19 +865,66 @@ export default class SwaggerUI {
             });
         }
 
-        SwaggerRunner.create(_options, (err: Error | undefined | null, swaggerRunner: Swagger): void => {
-            if (this.config.webInstance) {
-                this.adapter.setForeignState(`${this.namespace}.info.extension`, true, true);
-            }
-            if (err) {
-                throw err;
-            }
+        // Minimal manual binding of swagger paths (replacement for swagger-node-runner-fork)
+        try {
+            const paths = swaggerDocument.paths || {};
+            const controllerCache: Record<string, any> = {};
+            const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
+            Object.keys(paths).forEach(swaggerPath => {
+                const pathItem: any = paths[swaggerPath];
+                METHODS.forEach(method => {
+                    const op = pathItem[method];
+                    if (!op) return;
+                    const controllerName = op['x-swagger-router-controller'] || pathItem['x-swagger-router-controller'];
+                    const operationId = op.operationId;
+                    if (!controllerName || !operationId) return;
+                    if (!controllerCache[controllerName]) {
+                        try {
+                            controllerCache[controllerName] = require(path.join(__dirname, 'api', 'controllers', `${controllerName}.js`));
+                        } catch (e) {
+                            this.adapter.log.error(`Cannot load controller '${controllerName}': ${e}`);
+                            return;
+                        }
+                    }
+                    const handler = controllerCache[controllerName][operationId];
+                    if (typeof handler !== 'function') {
+                        this.adapter.log.warn(`Handler '${operationId}' missing in controller '${controllerName}'`);
+                        return;
+                    }
+                    // collect path params (merge path & op parameters)
+                    const params: { in: string; name: string }[] = [];
+                    if (Array.isArray(pathItem.parameters)) {
+                        pathItem.parameters.forEach((p: any) => p?.in === 'path' && params.push({ in: p.in, name: p.name }));
+                    }
+                    if (Array.isArray(op.parameters)) {
+                        op.parameters.forEach((p: any) => {
+                            if (p?.in === 'path' && !params.find(pp => pp.name === p.name)) params.push({ in: p.in, name: p.name });
+                        });
+                    }
+                    const expressPath = swaggerPath.replace(/\{([^}]+)}/g, ':$1');
+                    const fullPath = `${this.routerPrefix}v1${expressPath.startsWith('/') ? '' : '/'}${expressPath}`.replace(/\/+/, '/');
+                    (this.app as any)[method](fullPath, (req: Request, res: Response) => {
+                        this.adapter.log.silly?.(`Register route hit: [${method.toUpperCase()}] ${fullPath}`);
+                        (req as RequestExt).swagger = { operation: { parameters: params } } as Swagger;
+                        try {
+                            handler(req, res);
+                        } catch (e) {
+                            this.adapter.log.error(`Error in handler ${operationId}: ${e}`);
+                            res.status(500).json({ error: 'internal error' });
+                        }
+                    });
+                    this.adapter.log.debug(`Bound route ${method.toUpperCase()} ${fullPath} -> ${controllerName}.${operationId}`);
+                });
+            });
+        } catch (e) {
+            this.adapter.log.error(`Failed to bind swagger routes: ${e}`);
+        }
 
-            // install middleware
-            swaggerRunner.expressMiddleware().register(this.app);
+        if (this.config.webInstance) {
+            this.adapter.setForeignState(`${this.namespace}.info.extension`, true, true); // ignore await
+        }
 
-            readyCallback();
-        });
+        readyCallback();
     }
 
     private unzipFile(fileName: string, data: Buffer, res: Response): void {
@@ -1411,3 +1456,4 @@ export default class SwaggerUI {
         void this.readyPromise.then(() => cb?.());
     }
 }
+
