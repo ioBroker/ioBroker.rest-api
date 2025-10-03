@@ -549,7 +549,7 @@ export function getStatesSubscribes(req: RequestExt, res: Response): void {
                 }
                 res.json({ states: result });
             } catch (error) {
-                errorResponse(req, res, error, { pattern, url: req.body.url });
+                errorResponse(req, res, error, { pattern, url: req.body?.url });
             }
         }
     });
