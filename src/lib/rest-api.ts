@@ -902,7 +902,7 @@ export default class SwaggerUI {
                         });
                     }
                     const expressPath = swaggerPath.replace(/\{([^}]+)}/g, ':$1');
-                    const fullPath = `${this.routerPrefix}v1${expressPath.startsWith('/') ? '' : '/'}${expressPath}`.replace(/\/+/, '/');
+                    const fullPath = `${this.routerPrefix}v1${expressPath.startsWith('/') ? '' : '/'}${expressPath}`.replace(/\/+/g, '/');
                     (this.app as any)[method](fullPath, (req: Request, res: Response) => {
                         this.adapter.log.silly?.(`Register route hit: [${method.toUpperCase()}] ${fullPath}`);
                         (req as RequestExt).swagger = { operation: { parameters: params } } as Swagger;
