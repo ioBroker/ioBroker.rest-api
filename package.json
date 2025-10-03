@@ -27,13 +27,12 @@
     "@iobroker/webserver": "^1.2.8",
     "@iobroker/ws-server": "^4.3.9",
     "@iobroker/js-controller-common-db": "^7.0.7",
-    "axios": "^1.9.0",
+    "axios": "^1.12.2",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "multer": "^2.0.2",
-    "swagger-node-runner-fork": "^0.8.0",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
@@ -50,11 +49,10 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.22",
     "@types/multer": "^1.4.12",
-    "@types/node": "^22.15.29",
-    "@types/swagger-node-runner": "^0.6.6",
+    "@types/node": "^24.6.2",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/yamljs": "^0.2.34",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.rest-api/issues"

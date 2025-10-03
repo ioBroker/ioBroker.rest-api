@@ -88,7 +88,7 @@ export function subscribeState(req: RequestExt, res: Response): void {
             res.status(403).json({ error: error });
         } else {
             const params = parseUrl<{ stateId: string }>(req.url, req.swagger, req._adapter.WEB_EXTENSION_PREFIX);
-            let url = req.body.url;
+            let url = req.body?.url;
             if ((req.query && req.query.method === 'polling') || (req.body && req.body.method === 'polling')) {
                 url = req.query.sid || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
             }
@@ -527,10 +527,11 @@ export function getStatesSubscribes(req: RequestExt, res: Response): void {
         if (error) {
             errorResponse(req, res, error);
         } else {
-            let url = req.body.url;
+            let url = req.body?.url;
             if ((req.query && req.query.method === 'polling') || (req.body && req.body.method === 'polling')) {
                 url = req.query.sid || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
             }
+            const pattern: string = (req.query?.pattern as string | undefined) ?? '*';
 
             if (!url) {
                 res.status(422).json({
@@ -541,14 +542,14 @@ export function getStatesSubscribes(req: RequestExt, res: Response): void {
             }
 
             try {
-                const result = req._swaggerObject.getSubscribes(url, req.body.pattern, 'state');
+                const result = req._swaggerObject.getSubscribes(url, pattern, 'state');
                 if (result === null) {
                     res.status(404).json({ error: 'URL or session not found' });
                     return;
                 }
                 res.json({ states: result });
             } catch (error) {
-                errorResponse(req, res, error, { pattern: req.body.pattern, url: req.body.url });
+                errorResponse(req, res, error, { pattern, url: req.body?.url });
             }
         }
     });
