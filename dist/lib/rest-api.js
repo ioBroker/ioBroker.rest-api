@@ -3,8 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// @ts-expect-error no types
-const swagger_node_runner_fork_1 = __importDefault(require("swagger-node-runner-fork"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const yamljs_1 = __importDefault(require("yamljs"));
 const body_parser_1 = __importDefault(require("body-parser"));
@@ -755,17 +753,70 @@ class SwaggerUI {
                 }
             });
         }
-        swagger_node_runner_fork_1.default.create(_options, (err, swaggerRunner) => {
-            if (this.config.webInstance) {
-                this.adapter.setForeignState(`${this.namespace}.info.extension`, true, true);
-            }
-            if (err) {
-                throw err;
-            }
-            // install middleware
-            swaggerRunner.expressMiddleware().register(this.app);
-            readyCallback();
-        });
+        // Minimal manual binding of swagger paths (replacement for swagger-node-runner-fork)
+        try {
+            const paths = swaggerDocument.paths || {};
+            const controllerCache = {};
+            const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
+            Object.keys(paths).forEach(swaggerPath => {
+                const pathItem = paths[swaggerPath];
+                METHODS.forEach(method => {
+                    const op = pathItem[method];
+                    if (!op)
+                        return;
+                    const controllerName = op['x-swagger-router-controller'] || pathItem['x-swagger-router-controller'];
+                    const operationId = op.operationId;
+                    if (!controllerName || !operationId)
+                        return;
+                    if (!controllerCache[controllerName]) {
+                        try {
+                            controllerCache[controllerName] = require(node_path_1.default.join(__dirname, 'api', 'controllers', `${controllerName}.js`));
+                        }
+                        catch (e) {
+                            this.adapter.log.error(`Cannot load controller '${controllerName}': ${e}`);
+                            return;
+                        }
+                    }
+                    const handler = controllerCache[controllerName][operationId];
+                    if (typeof handler !== 'function') {
+                        this.adapter.log.warn(`Handler '${operationId}' missing in controller '${controllerName}'`);
+                        return;
+                    }
+                    // collect path params (merge path & op parameters)
+                    const params = [];
+                    if (Array.isArray(pathItem.parameters)) {
+                        pathItem.parameters.forEach((p) => p?.in === 'path' && params.push({ in: p.in, name: p.name }));
+                    }
+                    if (Array.isArray(op.parameters)) {
+                        op.parameters.forEach((p) => {
+                            if (p?.in === 'path' && !params.find(pp => pp.name === p.name))
+                                params.push({ in: p.in, name: p.name });
+                        });
+                    }
+                    const expressPath = swaggerPath.replace(/\{([^}]+)}/g, ':$1');
+                    const fullPath = `${this.routerPrefix}v1${expressPath.startsWith('/') ? '' : '/'}${expressPath}`.replace(/\/+/, '/');
+                    this.app[method](fullPath, (req, res) => {
+                        this.adapter.log.silly?.(`Register route hit: [${method.toUpperCase()}] ${fullPath}`);
+                        req.swagger = { operation: { parameters: params } };
+                        try {
+                            handler(req, res);
+                        }
+                        catch (e) {
+                            this.adapter.log.error(`Error in handler ${operationId}: ${e}`);
+                            res.status(500).json({ error: 'internal error' });
+                        }
+                    });
+                    this.adapter.log.debug(`Bound route ${method.toUpperCase()} ${fullPath} -> ${controllerName}.${operationId}`);
+                });
+            });
+        }
+        catch (e) {
+            this.adapter.log.error(`Failed to bind swagger routes: ${e}`);
+        }
+        if (this.config.webInstance) {
+            this.adapter.setForeignState(`${this.namespace}.info.extension`, true, true); // ignore await
+        }
+        readyCallback();
     }
     unzipFile(fileName, data, res) {
         // extract the file
