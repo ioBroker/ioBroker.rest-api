@@ -794,7 +794,7 @@ class SwaggerUI {
                         });
                     }
                     const expressPath = swaggerPath.replace(/\{([^}]+)}/g, ':$1');
-                    const fullPath = `${this.routerPrefix}v1${expressPath.startsWith('/') ? '' : '/'}${expressPath}`.replace(/\/+/, '/');
+                    const fullPath = `${this.routerPrefix}v1${expressPath.startsWith('/') ? '' : '/'}${expressPath}`.replace(/\/+/g, '/');
                     this.app[method](fullPath, (req, res) => {
                         this.adapter.log.silly?.(`Register route hit: [${method.toUpperCase()}] ${fullPath}`);
                         req.swagger = { operation: { parameters: params } };
