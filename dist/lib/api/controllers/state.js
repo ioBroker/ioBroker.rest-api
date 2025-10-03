@@ -538,7 +538,7 @@ function getStatesSubscribes(req, res) {
                 res.json({ states: result });
             }
             catch (error) {
-                (0, common_1.errorResponse)(req, res, error, { pattern, url: req.body.url });
+                (0, common_1.errorResponse)(req, res, error, { pattern, url: req.body?.url });
             }
         }
     });

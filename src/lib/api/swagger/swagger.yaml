@@ -399,7 +399,7 @@ paths:
                 200:
                     description: 'successful operation'
                     schema:
-                        $ref: '#/definitions/Object'
+                        $ref: '#/definitions/IoBrokerObject'
                 404:
                     description: 'Object not found'
                 400:
@@ -425,12 +425,12 @@ paths:
                   description: 'Object'
                   required: true
                   schema:
-                      $ref: '#/definitions/Object'
+                      $ref: '#/definitions/IoBrokerObject'
             responses:
                 200:
                     description: 'successful operation'
                     schema:
-                        $ref: '#/definitions/Object'
+                        $ref: '#/definitions/IoBrokerObject'
                 400:
                     description: 'Invalid object ID supplied'
                 409:
@@ -458,12 +458,12 @@ paths:
                   description: 'Object'
                   required: true
                   schema:
-                      $ref: '#/definitions/Object'
+                      $ref: '#/definitions/IoBrokerObject'
             responses:
                 200:
                     description: 'successful operation'
                     schema:
-                        $ref: '#/definitions/Object'
+                        $ref: '#/definitions/IoBrokerObject'
                 400:
                     description: 'Invalid object ID supplied'
                 404:
@@ -519,7 +519,7 @@ paths:
                 200:
                     description: 'successful operation'
                     schema:
-                        $ref: '#/definitions/Object'
+                        $ref: '#/definitions/IoBrokerObject'
                 404:
                     description: 'Object not found'
                 400:
@@ -2256,7 +2256,7 @@ definitions:
     #Type:
     #  type: "string"
     #  enum: [state, channel, device, enum, instance, adapter, host, chart, script, folder]
-    Object:
+    IoBrokerObject:
         type: 'object'
         properties:
             _id:
@@ -2275,7 +2275,7 @@ definitions:
     ObjectArray:
         type: 'object'
         additionalProperties:
-            $ref: '#/definitions/Object'
+            $ref: '#/definitions/IoBrokerObject'
     UrlHook:
         type: 'object'
         properties:
