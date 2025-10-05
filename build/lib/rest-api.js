@@ -336,7 +336,7 @@ class SwaggerUI {
             res.send(node_fs_1.default.readFileSync(`${__dirname}/../img/favicon.ico`));
         });
         // authenticate
-        this.app.use(`${this.routerPrefix}v1/*`, (req, res, next) => {
+        this.app.use(`${this.routerPrefix}v1/:param`, (req, res, next) => {
             this.isAuthenticated(req, res, () => {
                 req._adapter = this.adapter;
                 req._swaggerObject = this;
@@ -446,7 +446,7 @@ class SwaggerUI {
                 }
             });
         });
-        this.app.use(`${this.routerPrefix}v1/command/*`, async (_req, res) => {
+        this.app.use(`${this.routerPrefix}v1/command/:command`, async (_req, res) => {
             const req = _req;
             if (this.adapter.config.noCommands) {
                 res.status(404).json({ error: `Commands are disabled` });
@@ -622,7 +622,7 @@ class SwaggerUI {
                 res.status(404).json({ error: `Command ${command} not found` });
             }
         });
-        this.app.get(`${this.routerPrefix}log/*`, (req, res) => {
+        this.app.get(`${this.routerPrefix}log/:logFile`, (req, res) => {
             let parts = [];
             try {
                 parts = decodeURIComponent(req.url).split('/');
@@ -744,7 +744,7 @@ class SwaggerUI {
             }
         });
         // parse binary files
-        this.app.post(`${this.routerPrefix}v1/file/*`, (0, multer_1.default)().fields([{ name: 'file', maxCount: 1 }]), (req, res, next) => next());
+        this.app.post(`${this.routerPrefix}v1/file/:file`, (0, multer_1.default)().fields([{ name: 'file', maxCount: 1 }]), (req, res, next) => next());
         // read default history
         if (!this.config.dataSource) {
             void this.adapter.getForeignObjectAsync('system.config').then(obj => {

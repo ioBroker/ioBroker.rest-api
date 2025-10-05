@@ -1,5 +1,5 @@
 const { readFileSync, writeFileSync, copyFileSync, existsSync, mkdirSync } = require('node:fs');
-const common = require('./dist/lib/common');
+const common = require('./build/lib/common');
 const pkg = require('./package.json');
 
 const isFile = name => {
@@ -318,11 +318,11 @@ function updateYamlVersion() {
 }
 
 function copyYaml() {
-    !existsSync(`${__dirname}/dist/lib/config`) && mkdirSync(`${__dirname}/dist/lib/config`);
-    !existsSync(`${__dirname}/dist/lib/api/swagger`) && mkdirSync(`${__dirname}/dist/lib/api/swagger`);
+    !existsSync(`${__dirname}/build/lib/config`) && mkdirSync(`${__dirname}/build/lib/config`);
+    !existsSync(`${__dirname}/build/lib/api/swagger`) && mkdirSync(`${__dirname}/build/lib/api/swagger`);
 
-    copyFileSync(`${__dirname}/src/lib/config/default.yaml`, `${__dirname}/dist/lib/config/default.yaml`);
-    copyFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`, `${__dirname}/dist/lib/api/swagger/swagger.yaml`);
+    copyFileSync(`${__dirname}/src/lib/config/default.yaml`, `${__dirname}/build/lib/config/default.yaml`);
+    copyFileSync(`${__dirname}/src/lib/api/swagger/swagger.yaml`, `${__dirname}/build/lib/api/swagger/swagger.yaml`);
 }
 
 if (process.argv.includes('--generate-list')) {
