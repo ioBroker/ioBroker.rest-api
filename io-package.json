@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "3.0.1",
+    "version": "3.1.0",
     "news": {
+      "3.1.0": {
+        "en": "Fix running as web extension, own implementation of unmaintained swagger-node-runner-fork, \nremove 18 and add node 24 to tests\nmultiple null error fixes and wrong swagger schema #151\nupdated packages",
+        "de": "Reparieren Sie als Web-Erweiterung, eigene Implementierung von nicht gespeicherten Swagger-Node-runner-fork,\n18 entfernen und knoten 24 zu tests hinzufügen\nmultiple null fehlerbehebungen und falsches swagger-schema #151\naktualisierte pakete",
+        "ru": "Исправить работу в качестве веб-расширения, собственной реализации неподдерживаемого swagger-node-runner-fork,\nудалить 18 и добавить узел 24 в тесты\nнесколько исправлений нулевых ошибок и неправильная схема #151\nобновленные пакеты",
+        "pt": "Corrigir a execução como extensão da Web, implementação própria de swagger-node-runner-fork sem manutenção,\nremover 18 e adicionar o nó 24 aos testes\nmúltiplas correções de erro nulo e esquema de arrogância errado #151\npacotes atualizados",
+        "nl": "Repareren als web extensie, eigen implementatie van onbeheerde swagger-node-runner-vork,\nverwijderen 18 en toevoegen node 24 aan tests\nmeerdere null fout fixes en verkeerde swagger schema #151\nbijgewerkte pakketten",
+        "fr": "Correction en cours d'exécution comme extension web, propre implémentation de swagger-node-runner-fork non maintenu,\nsupprimer 18 et ajouter le noeud 24 aux essais\nplusieurs corrections d'erreur null et mauvais schéma swagger #151\npaquets mis à jour",
+        "it": "Correre in esecuzione come estensione web, propria implementazione di swagger-node-runner-fork non mantenuto,\nrimuovere 18 e aggiungere nodo 24 ai test\nmolteplici correzioni di errore nulle e schema di swagger sbagliato #151\npacchetti aggiornati",
+        "es": "Arreglar el funcionamiento como extensión web, propia implementación de swagger-node-runner-fork,\nquitar 18 y añadir nodo 24 a las pruebas\nmúltiples correcciones de error null y el esquema de swagger equivocado #151\npaquetes actualizados",
+        "pl": "Fix działa jako rozszerzenie sieci web, własne implementacja niezachowane swagger- node- runner- widelec,\nusunąć 18 i dodać węzeł 24 do testów\nwielokrotne poprawki błędów null i błędne schematy swagger # 151\nzaktualizowane pakiety",
+        "uk": "Виправлення запуску як веб-навігація, власна реалізація незбережених лебідок-нод-навантажувача,\nвидалити 18 і додати вузол 24 для тестування\nкілька null fixes і невірно swagger schema #151\nоновлені пакети",
+        "zh-cn": "修复作为网络扩展运行, 自身执行未维护的swagger-node-runner-fork,\n删除 18 个,并在测试中添加节点 24\n多个无效错误修正和错错的 swagger 方案 # 151\n更新软件包"
+      },
       "3.0.1": {
         "en": "Corrected the web extension",
         "de": "Korrektur der Web-Erweiterung",
@@ -80,19 +93,6 @@
         "pl": "Prepare for future js-controller version",
         "uk": "Підготовка до майбутніх версій js-controller",
         "zh-cn": "今后防污版本的编制"
-      },
-      "1.0.4": {
-        "en": "Check if the port is occupied only on defined interface",
-        "de": "Überprüfen Sie, ob der Port nur auf definierter Schnittstelle besetzt ist",
-        "ru": "Проверьте, занят ли порт только на определенном интерфейсе",
-        "pt": "Verifique se a porta está ocupada apenas na interface definida",
-        "nl": "Controleer of de haven alleen bezet is op definitieve interface",
-        "fr": "Vérifiez si le port n'est occupé que sur l'interface définie",
-        "it": "Controllare se la porta è occupata solo su interfaccia definita",
-        "es": "Compruebe si el puerto está ocupado sólo en la interfaz definida",
-        "pl": "Jeśli port jest zajęty tylko na określonym interfejsie",
-        "uk": "Перевірте, чи порт зайнятий лише на визначеному інтерфейсі",
-        "zh-cn": "如果港口只在界定的界线上被占有,则该港口将被扣押。"
       }
     },
     "titleLang": {
