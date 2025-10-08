@@ -72,7 +72,7 @@ This adapter supports a subscribing on data changes via long polling.
 Example for browser could be found here: [demoNodeClient.js](examples/demoBrowserClient.html)  
 
 ## Web extension
-This adapter can run as a web extension. In this case, the path is available under `http://ipaddress:8082/rest`
+This adapter can run as a web extension. In this case, the path is available under `http://ipaddress:8082/rest-api/`
 
 ## Notice
 - `POST` is always for creating a resource (does not matter if it was duplicated)
