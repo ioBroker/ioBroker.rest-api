@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "news": {
+      "3.1.1": {
+        "en": "corrected web extension path",
+        "de": "korrigierter bahnverlängerungspfad",
+        "ru": "исправленный путь веб-расширения",
+        "pt": "caminho de extensão web corrigido",
+        "nl": "gecorrigeerd web extensie pad",
+        "fr": "chemin d'extension web corrigé",
+        "it": "percorso di estensione web corretto",
+        "es": "ruta de extensión web corregida",
+        "pl": "poprawiona ścieżka rozszerzenia sieci web",
+        "uk": "виправлено шлях розширення веб",
+        "zh-cn": "更正的网络扩展路径"
+      },
       "3.1.0": {
         "en": "Fix running as web extension, own implementation of unmaintained swagger-node-runner-fork, \nremove 18 and add node 24 to tests\nmultiple null error fixes and wrong swagger schema #151\nupdated packages",
         "de": "Reparieren Sie als Web-Erweiterung, eigene Implementierung von nicht gespeicherten Swagger-Node-runner-fork,\n18 entfernen und knoten 24 zu tests hinzufügen\nmultiple null fehlerbehebungen und falsches swagger-schema #151\naktualisierte pakete",
@@ -80,19 +93,6 @@
         "pl": "Przetłumaczył wartości zbioru zgodnie z typem\nImplementacja",
         "uk": "Перетворення значень setState до за типом\nРеалізовані операції файлів",
         "zh-cn": "避免按类型划分国家数值\n执行档案业务"
-      },
-      "1.0.5": {
-        "en": "Prepare for future js-controller versions",
-        "de": "Bereiten Sie sich auf zukünftige js-Controller-Versionen",
-        "ru": "Подготовьтесь к будущим версиям js-controller",
-        "pt": "Prepare-se para futuras versões js-controller",
-        "nl": "Bereid je voor op toekomstige Js-controller versie",
-        "fr": "Préparez-vous pour les versions futures de js-controller",
-        "it": "Prepararsi per le future versioni js-controller",
-        "es": "Prepararse para futuras versiones js-controller",
-        "pl": "Prepare for future js-controller version",
-        "uk": "Підготовка до майбутніх версій js-controller",
-        "zh-cn": "今后防污版本的编制"
       }
     },
     "titleLang": {
