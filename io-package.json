@@ -131,7 +131,7 @@
     "loglevel": "info",
     "icon": "rest-api.svg",
     "compact": true,
-    "webExtension": "dist/lib/rest-api.js",
+    "webExtension": "build/lib/rest-api.js",
     "readme": "https://github.com/ioBroker/ioBroker.rest-api/blob/master/README.md",
     "keywords": [
       "web",
