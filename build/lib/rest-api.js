@@ -762,14 +762,17 @@ class SwaggerUI {
                 const pathItem = paths[swaggerPath];
                 METHODS.forEach(method => {
                     const op = pathItem[method];
-                    if (!op)
+                    if (!op) {
                         return;
+                    }
                     const controllerName = op['x-swagger-router-controller'] || pathItem['x-swagger-router-controller'];
                     const operationId = op.operationId;
-                    if (!controllerName || !operationId)
+                    if (!controllerName || !operationId) {
                         return;
+                    }
                     if (!controllerCache[controllerName]) {
                         try {
+                            // eslint-disable-next-line @typescript-eslint/no-require-imports
                             controllerCache[controllerName] = require(node_path_1.default.join(__dirname, 'api', 'controllers', `${controllerName}.js`));
                         }
                         catch (e) {
@@ -789,8 +792,9 @@ class SwaggerUI {
                     }
                     if (Array.isArray(op.parameters)) {
                         op.parameters.forEach((p) => {
-                            if (p?.in === 'path' && !params.find(pp => pp.name === p.name))
+                            if (p?.in === 'path' && !params.find(pp => pp.name === p.name)) {
                                 params.push({ in: p.in, name: p.name });
+                            }
                         });
                     }
                     const expressPath = swaggerPath.replace(/\{([^}]+)}/g, ':$1');

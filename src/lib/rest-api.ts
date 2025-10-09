@@ -16,7 +16,7 @@ import { getParamNames, DEFAULT_VALUES } from './common';
 import type { RequestExt, RestApiAdapter, RestApiAdapterConfig, SubscribeMethod, Swagger } from './types';
 import type { Express, NextFunction, Response, Request } from 'express';
 import { gunzipSync } from 'node:zlib';
-import { CommandsPermissions } from '@iobroker/types/build/types';
+import type { CommandsPermissions } from '@iobroker/types/build/types';
 
 const pattern2RegEx = commonTools.pattern2RegEx;
 
@@ -874,13 +874,20 @@ export default class SwaggerUI {
                 const pathItem: any = paths[swaggerPath];
                 METHODS.forEach(method => {
                     const op = pathItem[method];
-                    if (!op) return;
+                    if (!op) {
+                        return;
+                    }
                     const controllerName = op['x-swagger-router-controller'] || pathItem['x-swagger-router-controller'];
                     const operationId = op.operationId;
-                    if (!controllerName || !operationId) return;
+                    if (!controllerName || !operationId) {
+                        return;
+                    }
                     if (!controllerCache[controllerName]) {
                         try {
-                            controllerCache[controllerName] = require(path.join(__dirname, 'api', 'controllers', `${controllerName}.js`));
+                            // eslint-disable-next-line @typescript-eslint/no-require-imports
+                            controllerCache[controllerName] = require(
+                                path.join(__dirname, 'api', 'controllers', `${controllerName}.js`),
+                            );
                         } catch (e) {
                             this.adapter.log.error(`Cannot load controller '${controllerName}': ${e}`);
                             return;
@@ -894,15 +901,23 @@ export default class SwaggerUI {
                     // collect path params (merge path & op parameters)
                     const params: { in: string; name: string }[] = [];
                     if (Array.isArray(pathItem.parameters)) {
-                        pathItem.parameters.forEach((p: any) => p?.in === 'path' && params.push({ in: p.in, name: p.name }));
+                        pathItem.parameters.forEach(
+                            (p: any) => p?.in === 'path' && params.push({ in: p.in, name: p.name }),
+                        );
                     }
                     if (Array.isArray(op.parameters)) {
                         op.parameters.forEach((p: any) => {
-                            if (p?.in === 'path' && !params.find(pp => pp.name === p.name)) params.push({ in: p.in, name: p.name });
+                            if (p?.in === 'path' && !params.find(pp => pp.name === p.name)) {
+                                params.push({ in: p.in, name: p.name });
+                            }
                         });
                     }
                     const expressPath = swaggerPath.replace(/\{([^}]+)}/g, ':$1');
-                    const fullPath = `${this.routerPrefix}v1${expressPath.startsWith('/') ? '' : '/'}${expressPath}`.replace(/\/+/g, '/');
+                    const fullPath =
+                        `${this.routerPrefix}v1${expressPath.startsWith('/') ? '' : '/'}${expressPath}`.replace(
+                            /\/+/g,
+                            '/',
+                        );
                     (this.app as any)[method](fullPath, (req: Request, res: Response) => {
                         this.adapter.log.silly?.(`Register route hit: [${method.toUpperCase()}] ${fullPath}`);
                         (req as RequestExt).swagger = { operation: { parameters: params } } as Swagger;
@@ -913,7 +928,9 @@ export default class SwaggerUI {
                             res.status(500).json({ error: 'internal error' });
                         }
                     });
-                    this.adapter.log.debug(`Bound route ${method.toUpperCase()} ${fullPath} -> ${controllerName}.${operationId}`);
+                    this.adapter.log.debug(
+                        `Bound route ${method.toUpperCase()} ${fullPath} -> ${controllerName}.${operationId}`,
+                    );
                 });
             });
         } catch (e) {
@@ -1456,4 +1473,3 @@ export default class SwaggerUI {
         void this.readyPromise.then(() => cb?.());
     }
 }
-
