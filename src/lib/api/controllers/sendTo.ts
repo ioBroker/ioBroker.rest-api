@@ -69,7 +69,7 @@ export function sendTo(req: RequestExt, res: Response): void {
             let state;
             try {
                 state = await req._adapter.getForeignStateAsync(`system.adapter.${instance}.alive`);
-                if (!state || !state.val) {
+                if (!state?.val) {
                     res.status(500).json({ error: 'instance is not online', instance });
                     return;
                 }
