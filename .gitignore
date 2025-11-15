@@ -6,3 +6,5 @@ package-lock.json
 /lib/api/swagger/swaggerEdited.yaml
 
 .dev-server
+#ignore .commitinfo created by ioBroker release script
+.commitinfo
