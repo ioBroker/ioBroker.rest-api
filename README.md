@@ -259,4 +259,4 @@ You cannot send POST request to commands via GUI.
 ## License
 Apache 2.0
 
-Copyright (c) 2017-2025 bluefox <dogafox@gmail.com>
+Copyright (c) 2017-2026 bluefox <dogafox@gmail.com>
