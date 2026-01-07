@@ -28,7 +28,7 @@
     "@iobroker/ws-server": "^4.3.9",
     "@iobroker/js-controller-common-db": "^7.0.7",
     "axios": "^1.12.2",
-    "body-parser": "^2.2.1",
+    "body-parser": "^2.2.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^5.1.0",
