@@ -183,7 +183,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### 3.1.2 (2026-01-19)
+### **WORK IN PROGRESS**
 * (@GermanBluefox) Cought a seldom race condition on the connection close
 
 ### 3.1.1 (2025-10-09)
