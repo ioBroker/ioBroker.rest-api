@@ -28,5 +28,8 @@
   "Warning!": "Avvertimento!",
   "all": "tutti",
   "none": "nessuna",
-  "place here": "posiziona i file qui"
+  "place here": "posiziona i file qui",
+  "Reverse Proxy Path": "Reverse Proxy Path",
+  "Do not allow commands execution": "Do not allow commands execution",
+  "Do not allow admin commands execution": "Do not allow admin commands execution"
 }
