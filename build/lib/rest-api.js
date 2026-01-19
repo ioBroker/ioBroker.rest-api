@@ -317,9 +317,25 @@ class SwaggerUI {
                 node_fs_1.default.writeFileSync(_options.swaggerFile, file);
             }
         }
+        else if (this.config.reversePath) {
+            // Handle reverse proxy path
+            let file = node_fs_1.default.readFileSync(_options.swaggerFile).toString('utf8');
+            const normalizedReversePath = this.config.reversePath.trim().replace(/^\/+|\/+$/g, '');
+            const basePath = normalizedReversePath ? `/${normalizedReversePath}/v1` : '/v1';
+            file = file.replace('basePath: "/v1"', `basePath: "${basePath}"`);
+            _options.swaggerFile = `${__dirname}/api/swagger/swagger_reverse_proxy.yaml`;
+            if (!node_fs_1.default.existsSync(_options.swaggerFile) ||
+                node_fs_1.default.readFileSync(_options.swaggerFile).toString('utf8') !== file) {
+                node_fs_1.default.writeFileSync(_options.swaggerFile, file);
+            }
+        }
         const swaggerDocument = yamljs_1.default.load(_options.swaggerFile);
         if (this.extension) {
             swaggerDocument.basePath = `/${WEB_EXTENSION_PREFIX}v1`;
+        }
+        else if (this.config.reversePath) {
+            const normalizedReversePath = this.config.reversePath.trim().replace(/^\/+|\/+$/g, '');
+            swaggerDocument.basePath = normalizedReversePath ? `/${normalizedReversePath}/v1` : '/v1';
         }
         const that = this;
         if (!this.config.noUI) {

@@ -154,6 +154,15 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 3
+                },
+                "reversePath": {
+                    "newLine": true,
+                    "type": "text",
+                    "label": "Reverse Proxy Path",
+                    "help": "Base path when running behind a reverse proxy (e.g., /rest-api)",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3
                 }
             }
         },
