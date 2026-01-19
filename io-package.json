@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "3.1.1",
+    "version": "3.1.2",
     "news": {
+      "3.1.2": {
+        "en": "Cought a seldom race condition on the connection close",
+        "de": "Husten eine seltene Rasse Zustand auf der Verbindung schließen",
+        "ru": "Редкое условие гонки на связи близко",
+        "pt": "Obteve uma condição raramente raça na conexão perto",
+        "nl": "Kreeg een zelden race voorwaarde op de verbinding sluiten",
+        "fr": "Acheté une condition rarement de course sur la connexion fermer",
+        "it": "Comprato una condizione di gara rado sul collegamento vicino",
+        "es": "Traje una condición de carrera raramente en la conexión",
+        "pl": "Kupowałem rzadko wyścig warunek na połączenie blisko",
+        "uk": "Посунути умову забігу на з'єднанні",
+        "zh-cn": "在连接关闭时, 很少遇到比赛条件"
+      },
       "3.1.1": {
         "en": "corrected web extension path",
         "de": "korrigierter bahnverlängerungspfad",
@@ -80,19 +93,6 @@
         "pl": "wysłany do '@ iobroker / webserver'\nPoprawione żądania dotyczące historii\nMinimalna wymagana node.js wersja jest 16",
         "uk": "сайт: www.iobroker.com й\nВиправлені запити історії\nМінімальний необхідний вузол.js версія 16",
         "zh-cn": "移植到 xqio 经纪人/网络服务器 `\n固定历史请求\n最低要求的节点.js版本为16"
-      },
-      "1.1.0": {
-        "en": "Converting of the setState values to the according type\nImplemented file operations",
-        "de": "Umrechnung der setState-Werte in den entsprechenden Typ\nImplementierung von Dateioperationen",
-        "ru": "Преобразование значений setState в согласно типу\nРеализованные файловые операции",
-        "pt": "Convertendo dos valores setState para o tipo de acordo\nOperações de arquivo implementadas",
-        "nl": "Omkeren van de setstate waarden naar het type\nGeïmplementeerde bestand operaties",
-        "fr": "Conversion des valeurs déterminées de l'état dans le type suivant\nOpérations de fichiers mises en œuvre",
-        "it": "Convertizione dei valori setState secondo il tipo\nOperazioni di file implementate",
-        "es": "Convertir los valores establecidos en el tipo\nOperaciones de archivo aplicadas",
-        "pl": "Przetłumaczył wartości zbioru zgodnie z typem\nImplementacja",
-        "uk": "Перетворення значень setState до за типом\nРеалізовані операції файлів",
-        "zh-cn": "避免按类型划分国家数值\n执行档案业务"
       }
     },
     "titleLang": {
