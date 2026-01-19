@@ -182,8 +182,10 @@ You cannot send POST request to commands via GUI.
 	### **WORK IN PROGRESS**
 -->
 
-
 ## Changelog
+### **WORK IN PROGRESS**
+* (@GermanBluefox) Cought a seldom race condition on the connection close
+
 ### 3.1.1 (2025-10-09)
 * (@GermanBluefox) corrected web extension path
 

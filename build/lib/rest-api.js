@@ -376,7 +376,7 @@ class SwaggerUI {
                 }
                 return res.end('_');
             }
-            else if (!item) {
+            if (!item) {
                 this.subscribes[urlHash] = {
                     state: [],
                     object: [],
@@ -428,9 +428,11 @@ class SwaggerUI {
                     item.promise = undefined;
                 }
                 else {
-                    throw new Error('Not possible');
+                    this.adapter.log.warn(`[${item?.urlHook}]Connection was aborted`);
                 }
-                res.end(data);
+                if (!res.writableEnded) {
+                    res.end(data);
+                }
             });
             req.on('error', error => {
                 if (!error.message.includes('aborted')) {

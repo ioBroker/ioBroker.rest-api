@@ -34,13 +34,15 @@ function checkPermissions(adapter, user, requiredRights, callback) {
     });
 }
 function findState(adapter, idOrName, user, type, callback) {
+    let cb;
     if (typeof type === 'function') {
-        callback = type;
+        cb = type;
         type = null;
     }
-    adapter.findForeignObject(idOrName, type, 
-    // @ts-expect-error fixed in js-controller
-    { user, checked: true, limitToOwnerRights: adapter.config.onlyAllowWhenUserIsOwner }, callback);
+    else {
+        cb = callback;
+    }
+    adapter.findForeignObject(idOrName, type, { user, checked: true, limitToOwnerRights: adapter.config.onlyAllowWhenUserIsOwner }, cb);
 }
 function getState(adapter, idOrName, user, type, callback) {
     if (typeof type === 'function') {

@@ -460,7 +460,8 @@ export default class SwaggerUI {
                     item.timeout = 60000;
                 }
                 return res.end('_');
-            } else if (!item) {
+            }
+            if (!item) {
                 this.subscribes[urlHash] = {
                     state: [],
                     object: [],
@@ -515,9 +516,11 @@ export default class SwaggerUI {
                     item.promise.resolve = undefined;
                     item.promise = undefined;
                 } else {
-                    throw new Error('Not possible');
+                    this.adapter.log.warn(`[${item?.urlHook}]Connection was aborted`);
                 }
-                res.end(data);
+                if (!res.writableEnded) {
+                    res.end(data);
+                }
             });
 
             req.on('error', error => {

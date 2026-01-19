@@ -44,16 +44,18 @@ export function findState(
     type: ioBroker.CommonType | ((err?: Error | null, id?: string, name?: ioBroker.StringOrTranslated) => void) | null,
     callback?: (err?: Error | null, id?: string, name?: ioBroker.StringOrTranslated) => void,
 ): void {
+    let cb: (err?: Error | null, id?: string, name?: ioBroker.StringOrTranslated) => void;
     if (typeof type === 'function') {
-        callback = type;
+        cb = type;
         type = null;
+    } else {
+        cb = callback!;
     }
     adapter.findForeignObject(
         idOrName,
         type,
-        // @ts-expect-error fixed in js-controller
         { user, checked: true, limitToOwnerRights: adapter.config.onlyAllowWhenUserIsOwner },
-        callback,
+        cb,
     );
 }
 
