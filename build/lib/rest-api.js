@@ -308,34 +308,32 @@ class SwaggerUI {
             }
         }
         // create swagger.yaml copy with changed basePath
+        let customBasePath;
+        let customSwaggerFile;
         if (this.extension) {
-            let file = node_fs_1.default.readFileSync(_options.swaggerFile).toString('utf8');
-            file = file.replace('basePath: "/v1"', `basePath: "/${WEB_EXTENSION_PREFIX}v1"`);
-            _options.swaggerFile = `${__dirname}/api/swagger/swagger_extension.yaml`;
-            if (!node_fs_1.default.existsSync(_options.swaggerFile) ||
-                node_fs_1.default.readFileSync(_options.swaggerFile).toString('utf8') !== file) {
-                node_fs_1.default.writeFileSync(_options.swaggerFile, file);
-            }
+            customBasePath = `/${WEB_EXTENSION_PREFIX}v1`;
+            customSwaggerFile = `${__dirname}/api/swagger/swagger_extension.yaml`;
         }
         else if (this.config.reversePath) {
             // Handle reverse proxy path
-            let file = node_fs_1.default.readFileSync(_options.swaggerFile).toString('utf8');
             const normalizedReversePath = this.config.reversePath.trim().replace(/^\/+|\/+$/g, '');
-            const basePath = normalizedReversePath ? `/${normalizedReversePath}/v1` : '/v1';
-            file = file.replace('basePath: "/v1"', `basePath: "${basePath}"`);
-            _options.swaggerFile = `${__dirname}/api/swagger/swagger_reverse_proxy.yaml`;
-            if (!node_fs_1.default.existsSync(_options.swaggerFile) ||
-                node_fs_1.default.readFileSync(_options.swaggerFile).toString('utf8') !== file) {
-                node_fs_1.default.writeFileSync(_options.swaggerFile, file);
+            customBasePath = normalizedReversePath ? `/${normalizedReversePath}/v1` : '/v1';
+            customSwaggerFile = `${__dirname}/api/swagger/swagger_reverse_proxy.yaml`;
+        }
+        if (customBasePath && customSwaggerFile) {
+            const originalFile = node_fs_1.default.readFileSync(_options.swaggerFile).toString('utf8');
+            const swaggerDoc = yamljs_1.default.parse(originalFile);
+            swaggerDoc.basePath = customBasePath;
+            const modifiedFile = yamljs_1.default.stringify(swaggerDoc);
+            if (!node_fs_1.default.existsSync(customSwaggerFile) ||
+                node_fs_1.default.readFileSync(customSwaggerFile).toString('utf8') !== modifiedFile) {
+                node_fs_1.default.writeFileSync(customSwaggerFile, modifiedFile);
             }
+            _options.swaggerFile = customSwaggerFile;
         }
         const swaggerDocument = yamljs_1.default.load(_options.swaggerFile);
-        if (this.extension) {
-            swaggerDocument.basePath = `/${WEB_EXTENSION_PREFIX}v1`;
-        }
-        else if (this.config.reversePath) {
-            const normalizedReversePath = this.config.reversePath.trim().replace(/^\/+|\/+$/g, '');
-            swaggerDocument.basePath = normalizedReversePath ? `/${normalizedReversePath}/v1` : '/v1';
+        if (customBasePath) {
+            swaggerDocument.basePath = customBasePath;
         }
         const that = this;
         if (!this.config.noUI) {
