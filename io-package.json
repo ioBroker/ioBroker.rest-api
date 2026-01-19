@@ -194,7 +194,8 @@
     "noUI": false,
     "dataSource": "",
     "noCommands": false,
-    "noAdminCommands": false
+    "noAdminCommands": false,
+    "reversePath": ""
   },
   "instanceObjects": [
     {

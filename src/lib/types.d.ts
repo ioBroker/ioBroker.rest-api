@@ -31,6 +31,7 @@ export interface RestApiAdapterConfig {
     dataSource: string;
     noCommands: boolean;
     noAdminCommands: boolean;
+    reversePath: string;
     leConfig?: boolean;
     certificates?: ioBroker.Certificates;
     language?: ioBroker.Languages;

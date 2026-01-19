@@ -381,23 +381,37 @@ export default class SwaggerUI {
         }
 
         // create swagger.yaml copy with changed basePath
-        if (this.extension) {
-            let file = fs.readFileSync(_options.swaggerFile).toString('utf8');
-            file = file.replace('basePath: "/v1"', `basePath: "/${WEB_EXTENSION_PREFIX}v1"`);
+        let customBasePath: string | undefined;
+        let customSwaggerFile: string | undefined;
 
-            _options.swaggerFile = `${__dirname}/api/swagger/swagger_extension.yaml`;
+        if (this.extension) {
+            customBasePath = `/${WEB_EXTENSION_PREFIX}v1`;
+            customSwaggerFile = `${__dirname}/api/swagger/swagger_extension.yaml`;
+        } else if (this.config.reversePath) {
+            // Handle reverse proxy path
+            const normalizedReversePath = this.config.reversePath.trim().replace(/^\/+|\/+$/g, '');
+            customBasePath = normalizedReversePath ? `/${normalizedReversePath}/v1` : '/v1';
+            customSwaggerFile = `${__dirname}/api/swagger/swagger_reverse_proxy.yaml`;
+        }
+
+        if (customBasePath && customSwaggerFile) {
+            const originalFile = fs.readFileSync(_options.swaggerFile).toString('utf8');
+            const swaggerDoc = YAML.parse(originalFile);
+            swaggerDoc.basePath = customBasePath;
+            const modifiedFile = YAML.stringify(swaggerDoc);
 
             if (
-                !fs.existsSync(_options.swaggerFile) ||
-                fs.readFileSync(_options.swaggerFile).toString('utf8') !== file
+                !fs.existsSync(customSwaggerFile) ||
+                fs.readFileSync(customSwaggerFile).toString('utf8') !== modifiedFile
             ) {
-                fs.writeFileSync(_options.swaggerFile, file);
+                fs.writeFileSync(customSwaggerFile, modifiedFile);
             }
+            _options.swaggerFile = customSwaggerFile;
         }
 
         const swaggerDocument = YAML.load(_options.swaggerFile);
-        if (this.extension) {
-            swaggerDocument.basePath = `/${WEB_EXTENSION_PREFIX}v1`;
+        if (customBasePath) {
+            swaggerDocument.basePath = customBasePath;
         }
         const that = this;
 

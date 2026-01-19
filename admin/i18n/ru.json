@@ -28,5 +28,8 @@
   "Warning!": "Предупреждение!",
   "all": "все",
   "none": "none",
-  "place here": "разместите файлы здесь"
+  "place here": "разместите файлы здесь",
+  "Reverse Proxy Path": "Reverse Proxy Path",
+  "Do not allow commands execution": "Do not allow commands execution",
+  "Do not allow admin commands execution": "Do not allow admin commands execution"
 }

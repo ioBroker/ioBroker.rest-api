@@ -28,5 +28,8 @@
   "Warning!": "警告！",
   "all": "所有",
   "none": "无",
-  "place here": "将文件拖拽到这里"
+  "place here": "将文件拖拽到这里",
+  "Reverse Proxy Path": "Reverse Proxy Path",
+  "Do not allow commands execution": "Do not allow commands execution",
+  "Do not allow admin commands execution": "Do not allow admin commands execution"
 }

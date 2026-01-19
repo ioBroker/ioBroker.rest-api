@@ -74,6 +74,22 @@ Example for browser could be found here: [demoNodeClient.js](examples/demoBrowse
 ## Web extension
 This adapter can run as a web extension. In this case, the path is available under `http://ipaddress:8082/rest-api/`
 
+## Reverse Proxy Configuration
+If you are running the adapter behind a reverse proxy (e.g., nginx, Apache) with a custom path, you can configure the `Reverse Proxy Path` setting in the adapter configuration.
+
+For example, if your reverse proxy forwards requests from `https://yourdomain.com/rest-api/` to your ioBroker instance, set the `Reverse Proxy Path` to `/rest-api`. This ensures that the Swagger UI generates correct API URLs.
+
+Example nginx configuration:
+```nginx
+location /rest-api/ {
+    proxy_pass http://iobroker-host:8093/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+```
+
+Then set `Reverse Proxy Path` to `/rest-api` in the adapter settings.
+
 ## Notice
 - `POST` is always for creating a resource (does not matter if it was duplicated)
 - `PUT` is for checking if resource exists then update, else create new resource
