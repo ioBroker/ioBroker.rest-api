@@ -90,7 +90,7 @@ export function getHistory(req: RequestExt, res: Response): void {
 }
 
 export function postHistory(req: RequestExt, res: Response): void {
-    checkPermissions(req._adapter, req._user, req.body.options, async error => {
+    checkPermissions(req._adapter, req._user, [{ type: 'other', operation: 'sendto' }], async error => {
         if (error) {
             errorResponse(req, res, error);
         } else {
@@ -222,7 +222,7 @@ export function addHistoryByGet(req: RequestExt, res: Response): void {
 }
 
 export function addHistoryByPost(req: RequestExt, res: Response): void {
-    checkPermissions(req._adapter, req._user, req.body.options, async error => {
+    checkPermissions(req._adapter, req._user, [{ type: 'other', operation: 'sendto' }], async error => {
         if (error) {
             errorResponse(req, res, error);
         } else {

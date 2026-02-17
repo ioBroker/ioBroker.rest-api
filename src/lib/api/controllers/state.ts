@@ -483,11 +483,16 @@ export function subscribeStates(req: RequestExt, res: Response): void {
                 return;
             }
             try {
-                await req._swaggerObject.registerSubscribe(url, req.body.pattern, 'state', req._user, {
+                const error = await req._swaggerObject.registerSubscribe(url, req.body.pattern, 'state', req._user, {
                     method: req.body.method,
                     onchange: req.body.onchange === 'true',
                     delta: req.body.delta !== undefined ? parseFloat(req.body.delta) : undefined,
                 });
+                if (error) {
+                    errorResponse(req, res, error, { pattern: req.body.pattern, url: req.body.url });
+                } else {
+                    res.status(200).json({ result: 'OK' });
+                }
             } catch (error) {
                 errorResponse(req, res, error, { pattern: req.body.pattern, url: req.body.url });
             }

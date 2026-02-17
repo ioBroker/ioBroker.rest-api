@@ -85,7 +85,7 @@ function escapeHtml(string: string): string {
 
     let escape;
     let html = '';
-    let index = 0;
+    let index: number;
     let lastIndex = 0;
 
     for (index = match.index; index < str.length; index++) {
@@ -405,17 +405,17 @@ export default class SwaggerUI {
         const that = this;
 
         if (!this.config.noUI) {
-            this.app.get(`${this.routerPrefix}api-docs/swagger.json`, (req, res) => res.json(swaggerDocument));
+            this.app.get(`${this.routerPrefix}api-docs/swagger.json`, (_req, res) => res.json(swaggerDocument));
 
             const options = {
                 customCss: '.swagger-ui .topbar { background-color: #4dabf5; }',
             };
             // show WEB CSS and so on
             this.app.use(`${this.routerPrefix}api-doc/`, swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
-            this.app.get(this.routerPrefix, (req, res) => res.redirect(`${this.routerPrefix}api-doc/`));
+            this.app.get(this.routerPrefix, (_req, res) => res.redirect(`${this.routerPrefix}api-doc/`));
         }
 
-        this.app.get('/favicon.ico', (req, res) => {
+        this.app.get('/favicon.ico', (_req, res) => {
             res.set('Content-Type', 'image/x-icon');
             res.send(fs.readFileSync(`${__dirname}/../build/img/favicon.ico`));
         });
@@ -859,7 +859,7 @@ export default class SwaggerUI {
         this.app.post(
             `${this.routerPrefix}v1/file/:file`,
             multer().fields([{ name: 'file', maxCount: 1 }]),
-            (req, res, next) => next(),
+            (_req, _res, next) => next(),
         );
 
         // read default history
@@ -1111,7 +1111,7 @@ export default class SwaggerUI {
         }
     }
 
-    private _executeGC = (): void => {
+    private _executeGC = async (): Promise<void> => {
         const hashes = Object.keys(this.subscribes).filter(urlHash => this.subscribes[urlHash].polling);
 
         if (!hashes.length) {
@@ -1121,7 +1121,10 @@ export default class SwaggerUI {
             }
         } else {
             const now = Date.now();
-            hashes.forEach(async urlHash => {
+            for (const urlHash of hashes) {
+                if (!this.subscribes[urlHash]) {
+                    continue;
+                }
                 // kill all subscriptions after 2 minutes
                 if (now - this.subscribes[urlHash].ts > (this.subscribes[urlHash].timeout || 30000) * 1.5) {
                     if (this.subscribes[urlHash].promise) {
@@ -1150,7 +1153,7 @@ export default class SwaggerUI {
 
                     delete this.subscribes[urlHash];
                 }
-            });
+            }
         }
     };
 
@@ -1254,7 +1257,7 @@ export default class SwaggerUI {
         }
     };
 
-    getSubscribes = (urlHook: string, id_: string, type: 'state' | 'object'): string[] | null => {
+    getSubscribes = (urlHook: string, _id: string, type: 'state' | 'object'): string[] | null => {
         const urlHash = crypto.createHash('md5').update(urlHook).digest('hex');
         if (this.subscribes[urlHash]) {
             return this.subscribes[urlHash][type].map(item => item.id);
@@ -1324,7 +1327,7 @@ export default class SwaggerUI {
         }
     };
 
-    public stateChange = (id: string, state: ioBroker.State | null | undefined): void => {
+    public stateChange = async (id: string, state: ioBroker.State | null | undefined): Promise<void> => {
         if (state?.ack) {
             for (let t = this._waitFor.length - 1; t >= 0; t--) {
                 if (this._waitFor[t].id === id) {
@@ -1354,8 +1357,11 @@ export default class SwaggerUI {
             }
         }
 
-        Object.keys(this.subscribes).forEach(urlHash => {
-            this.subscribes[urlHash].state.forEach(async item => {
+        for (const urlHash of Object.keys(this.subscribes)) {
+            if (!this.subscribes[urlHash]) {
+                continue;
+            }
+            for (const item of this.subscribes[urlHash].state) {
                 // check if id
                 if ((!item.regEx && item.id === id) || item.regEx?.test(id)) {
                     if (
@@ -1369,12 +1375,12 @@ export default class SwaggerUI {
                         this.adapter.log.debug(
                             `State change for "${id}" ignored as delta (${item.val} - ${state.val}) is less than ${item.delta}`,
                         );
-                        return;
+                        continue;
                     }
                     if (state && item.onchange && !item.delta && item.val === state.val) {
                         // ignore
                         this.adapter.log.debug(`State change for "${id}" ignored as does not changed (${state.val})`);
-                        return;
+                        continue;
                     }
                     if (state && state.val !== null && (item.delta || item.onchange)) {
                         // remember last value
@@ -1383,19 +1389,22 @@ export default class SwaggerUI {
 
                     await this.reportChange(this.subscribes[urlHash], { id, state });
                 }
-            });
-        });
+            }
+        }
     };
 
-    public objectChange = (id: string, obj: ioBroker.Object | null | undefined): void => {
-        Object.keys(this.subscribes).forEach(urlHash => {
-            this.subscribes[urlHash].object.forEach(async item => {
+    public objectChange = async (id: string, obj: ioBroker.Object | null | undefined): Promise<void> => {
+        for (const urlHash of Object.keys(this.subscribes)) {
+            if (!this.subscribes[urlHash]) {
+                continue;
+            }
+            for (const item of this.subscribes[urlHash].object) {
                 // check if id
                 if ((!item.regEx && item.id === id) || item.regEx?.test(id)) {
                     await this.reportChange(this.subscribes[urlHash], { id, obj });
                 }
-            });
-        });
+            }
+        }
     };
 
     // wait for ack=true

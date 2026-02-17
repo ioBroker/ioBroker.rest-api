@@ -193,7 +193,7 @@ export function subscribeObject(req: RequestExt, res: Response): void {
             }
 
             try {
-                const obj = await req._adapter.getForeignObjectAsync(params.stateId, {
+                const obj = await req._adapter.getForeignObjectAsync(params.objectId, {
                     user: req._user,
                     limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
                 });
@@ -207,11 +207,11 @@ export function subscribeObject(req: RequestExt, res: Response): void {
                         req._user,
                         (req.query && req.query.method) || (req.body && req.body.method),
                     );
-                    const obj = await req._adapter.getForeignStateAsync(params.objectId, {
+                    const currentObj = await req._adapter.getForeignObjectAsync(params.objectId, {
                         user: req._user,
                         limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
                     });
-                    res.status(200).json(obj);
+                    res.status(200).json(currentObj);
                 }
             } catch (error) {
                 req._adapter.log.warn(`Cannot read ${params.objectId}: ${error}`);
@@ -275,7 +275,18 @@ export function subscribeObjects(req: RequestExt, res: Response): void {
                 return;
             }
             try {
-                await req._swaggerObject.registerSubscribe(url, req.body.pattern, 'object', req._user, req.body.method);
+                const error = await req._swaggerObject.registerSubscribe(
+                    url,
+                    req.body.pattern,
+                    'object',
+                    req._user,
+                    req.body.method,
+                );
+                if (error) {
+                    errorResponse(req, res, error, { pattern: req.body.pattern, url: req.body.url });
+                } else {
+                    res.status(200).json({ result: 'OK' });
+                }
             } catch (error) {
                 errorResponse(req, res, error, { pattern: req.body.pattern, url: req.body.url });
             }

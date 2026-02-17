@@ -183,6 +183,9 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (@GermanBluefox) Corrected some minor issues
+
 ### 4.0.0 (2026-02-17)
 * (@GermanBluefox) Packages were updated
 * (@GermanBluefox) Drop Node.js 18 support
