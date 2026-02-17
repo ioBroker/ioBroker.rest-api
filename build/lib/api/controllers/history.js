@@ -87,7 +87,7 @@ function getHistory(req, res) {
     });
 }
 function postHistory(req, res) {
-    (0, common_1.checkPermissions)(req._adapter, req._user, req.body.options, async (error) => {
+    (0, common_1.checkPermissions)(req._adapter, req._user, [{ type: 'other', operation: 'sendto' }], async (error) => {
         if (error) {
             (0, common_1.errorResponse)(req, res, error);
         }
@@ -209,7 +209,7 @@ function addHistoryByGet(req, res) {
     });
 }
 function addHistoryByPost(req, res) {
-    (0, common_1.checkPermissions)(req._adapter, req._user, req.body.options, async (error) => {
+    (0, common_1.checkPermissions)(req._adapter, req._user, [{ type: 'other', operation: 'sendto' }], async (error) => {
         if (error) {
             (0, common_1.errorResponse)(req, res, error);
         }

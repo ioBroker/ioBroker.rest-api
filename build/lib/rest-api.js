@@ -72,7 +72,7 @@ function escapeHtml(string) {
     }
     let escape;
     let html = '';
-    let index = 0;
+    let index;
     let lastIndex = 0;
     for (index = match.index; index < str.length; index++) {
         switch (str.charCodeAt(index)) {
@@ -323,15 +323,15 @@ class SwaggerUI {
         }
         const that = this;
         if (!this.config.noUI) {
-            this.app.get(`${this.routerPrefix}api-docs/swagger.json`, (req, res) => res.json(swaggerDocument));
+            this.app.get(`${this.routerPrefix}api-docs/swagger.json`, (_req, res) => res.json(swaggerDocument));
             const options = {
                 customCss: '.swagger-ui .topbar { background-color: #4dabf5; }',
             };
             // show WEB CSS and so on
             this.app.use(`${this.routerPrefix}api-doc/`, swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument, options));
-            this.app.get(this.routerPrefix, (req, res) => res.redirect(`${this.routerPrefix}api-doc/`));
+            this.app.get(this.routerPrefix, (_req, res) => res.redirect(`${this.routerPrefix}api-doc/`));
         }
-        this.app.get('/favicon.ico', (req, res) => {
+        this.app.get('/favicon.ico', (_req, res) => {
             res.set('Content-Type', 'image/x-icon');
             res.send(node_fs_1.default.readFileSync(`${__dirname}/../build/img/favicon.ico`));
         });
@@ -746,7 +746,7 @@ class SwaggerUI {
             }
         });
         // parse binary files
-        this.app.post(`${this.routerPrefix}v1/file/:file`, (0, multer_1.default)().fields([{ name: 'file', maxCount: 1 }]), (req, res, next) => next());
+        this.app.post(`${this.routerPrefix}v1/file/:file`, (0, multer_1.default)().fields([{ name: 'file', maxCount: 1 }]), (_req, _res, next) => next());
         // read default history
         if (!this.config.dataSource) {
             void this.adapter.getForeignObjectAsync('system.config').then(obj => {
@@ -974,7 +974,7 @@ class SwaggerUI {
             }
         }
     }
-    _executeGC = () => {
+    _executeGC = async () => {
         const hashes = Object.keys(this.subscribes).filter(urlHash => this.subscribes[urlHash].polling);
         if (!hashes.length) {
             if (this.gcInterval) {
@@ -984,7 +984,10 @@ class SwaggerUI {
         }
         else {
             const now = Date.now();
-            hashes.forEach(async (urlHash) => {
+            for (const urlHash of hashes) {
+                if (!this.subscribes[urlHash]) {
+                    continue;
+                }
                 // kill all subscriptions after 2 minutes
                 if (now - this.subscribes[urlHash].ts > (this.subscribes[urlHash].timeout || 30000) * 1.5) {
                     if (this.subscribes[urlHash].promise) {
@@ -1007,7 +1010,7 @@ class SwaggerUI {
                     this.adapter.log.debug(`[${this.subscribes[urlHash].urlHook}] Destroy connection due inactivity`);
                     delete this.subscribes[urlHash];
                 }
-            });
+            }
         }
     };
     startGC() {
@@ -1093,7 +1096,7 @@ class SwaggerUI {
             this.adapter.log.warn('No check interval set! The connections are valid forever.');
         }
     };
-    getSubscribes = (urlHook, id_, type) => {
+    getSubscribes = (urlHook, _id, type) => {
         const urlHash = node_crypto_1.default.createHash('md5').update(urlHook).digest('hex');
         if (this.subscribes[urlHash]) {
             return this.subscribes[urlHash][type].map(item => item.id);
@@ -1158,7 +1161,7 @@ class SwaggerUI {
             }
         }
     };
-    stateChange = (id, state) => {
+    stateChange = async (id, state) => {
         if (state?.ack) {
             for (let t = this._waitFor.length - 1; t >= 0; t--) {
                 if (this._waitFor[t].id === id) {
@@ -1177,8 +1180,11 @@ class SwaggerUI {
                 }
             }
         }
-        Object.keys(this.subscribes).forEach(urlHash => {
-            this.subscribes[urlHash].state.forEach(async (item) => {
+        for (const urlHash of Object.keys(this.subscribes)) {
+            if (!this.subscribes[urlHash]) {
+                continue;
+            }
+            for (const item of this.subscribes[urlHash].state) {
                 // check if id
                 if ((!item.regEx && item.id === id) || item.regEx?.test(id)) {
                     if (state &&
@@ -1188,12 +1194,12 @@ class SwaggerUI {
                         Math.abs(item.val - state.val) < item.delta) {
                         // ignore
                         this.adapter.log.debug(`State change for "${id}" ignored as delta (${item.val} - ${state.val}) is less than ${item.delta}`);
-                        return;
+                        continue;
                     }
                     if (state && item.onchange && !item.delta && item.val === state.val) {
                         // ignore
                         this.adapter.log.debug(`State change for "${id}" ignored as does not changed (${state.val})`);
-                        return;
+                        continue;
                     }
                     if (state && state.val !== null && (item.delta || item.onchange)) {
                         // remember last value
@@ -1201,18 +1207,21 @@ class SwaggerUI {
                     }
                     await this.reportChange(this.subscribes[urlHash], { id, state });
                 }
-            });
-        });
+            }
+        }
     };
-    objectChange = (id, obj) => {
-        Object.keys(this.subscribes).forEach(urlHash => {
-            this.subscribes[urlHash].object.forEach(async (item) => {
+    objectChange = async (id, obj) => {
+        for (const urlHash of Object.keys(this.subscribes)) {
+            if (!this.subscribes[urlHash]) {
+                continue;
+            }
+            for (const item of this.subscribes[urlHash].object) {
                 // check if id
                 if ((!item.regEx && item.id === id) || item.regEx?.test(id)) {
                     await this.reportChange(this.subscribes[urlHash], { id, obj });
                 }
-            });
-        });
+            }
+        }
     };
     // wait for ack=true
     _addTimeout = async (toAdd) => {

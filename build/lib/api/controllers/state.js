@@ -472,11 +472,17 @@ function subscribeStates(req, res) {
                 return;
             }
             try {
-                await req._swaggerObject.registerSubscribe(url, req.body.pattern, 'state', req._user, {
+                const error = await req._swaggerObject.registerSubscribe(url, req.body.pattern, 'state', req._user, {
                     method: req.body.method,
                     onchange: req.body.onchange === 'true',
                     delta: req.body.delta !== undefined ? parseFloat(req.body.delta) : undefined,
                 });
+                if (error) {
+                    (0, common_1.errorResponse)(req, res, error, { pattern: req.body.pattern, url: req.body.url });
+                }
+                else {
+                    res.status(200).json({ result: 'OK' });
+                }
             }
             catch (error) {
                 (0, common_1.errorResponse)(req, res, error, { pattern: req.body.pattern, url: req.body.url });

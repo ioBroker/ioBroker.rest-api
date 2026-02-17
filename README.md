@@ -183,7 +183,7 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.0.1 (2026-02-17)
 * (@GermanBluefox) Corrected some minor issues
 
 ### 4.0.0 (2026-02-17)
