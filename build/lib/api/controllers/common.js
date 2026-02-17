@@ -15,7 +15,7 @@ function checkPermissions(adapter, user, requiredRights, callback) {
                 // If permission required
                 if (requiredRights[0].type) {
                     const aclType = acl[requiredRights[0].type];
-                    if (aclType && aclType[requiredRights[0].operation]) {
+                    if (aclType?.[requiredRights[0].operation]) {
                         callback(null);
                         return;
                     }

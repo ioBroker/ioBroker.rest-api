@@ -15,7 +15,7 @@ import type { Express, NextFunction, Response, Request } from 'express';
 
 import { commonTools } from '@iobroker/adapter-core';
 import { SocketCommandsAdmin as CommandsAdmin, SocketCommands as CommandsCommon } from '@iobroker/socket-classes';
-import { COMMANDS_PERMISSIONS } from '@iobroker/socket-classes/dist/lib/socketCommands';
+import { COMMANDS_PERMISSIONS } from '@iobroker/socket-classes/build/lib/socketCommands';
 import type { CommandsPermissions } from '@iobroker/types/build/types';
 
 import { getParamNames, DEFAULT_VALUES } from './common';
