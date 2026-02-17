@@ -1,22 +1,25 @@
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
-import bodyParser from 'body-parser';
 import type { Server as HttpServer } from 'node:http';
 import type { Server as HttpsServer } from 'node:https';
 import crypto from 'node:crypto';
-import axios from 'axios';
-import cors from 'cors';
 import fs from 'node:fs';
 import path from 'node:path';
+import { gunzipSync } from 'node:zlib';
+
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import bodyParser from 'body-parser';
+import axios from 'axios';
+import cors from 'cors';
 import multer from 'multer';
+import type { Express, NextFunction, Response, Request } from 'express';
+
 import { commonTools } from '@iobroker/adapter-core';
 import { SocketCommandsAdmin as CommandsAdmin, SocketCommands as CommandsCommon } from '@iobroker/socket-classes';
 import { COMMANDS_PERMISSIONS } from '@iobroker/socket-classes/dist/lib/socketCommands';
+import type { CommandsPermissions } from '@iobroker/types/build/types';
+
 import { getParamNames, DEFAULT_VALUES } from './common';
 import type { RequestExt, RestApiAdapter, RestApiAdapterConfig, SubscribeMethod, Swagger } from './types';
-import type { Express, NextFunction, Response, Request } from 'express';
-import { gunzipSync } from 'node:zlib';
-import type { CommandsPermissions } from '@iobroker/types/build/types';
 
 const pattern2RegEx = commonTools.pattern2RegEx;
 
@@ -414,7 +417,7 @@ export default class SwaggerUI {
 
         this.app.get('/favicon.ico', (req, res) => {
             res.set('Content-Type', 'image/x-icon');
-            res.send(fs.readFileSync(`${__dirname}/../img/favicon.ico`));
+            res.send(fs.readFileSync(`${__dirname}/../build/img/favicon.ico`));
         });
 
         // authenticate

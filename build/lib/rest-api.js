@@ -3,20 +3,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const node_crypto_1 = __importDefault(require("node:crypto"));
+const node_fs_1 = __importDefault(require("node:fs"));
+const node_path_1 = __importDefault(require("node:path"));
+const node_zlib_1 = require("node:zlib");
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const yamljs_1 = __importDefault(require("yamljs"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const node_crypto_1 = __importDefault(require("node:crypto"));
 const axios_1 = __importDefault(require("axios"));
 const cors_1 = __importDefault(require("cors"));
-const node_fs_1 = __importDefault(require("node:fs"));
-const node_path_1 = __importDefault(require("node:path"));
 const multer_1 = __importDefault(require("multer"));
 const adapter_core_1 = require("@iobroker/adapter-core");
 const socket_classes_1 = require("@iobroker/socket-classes");
 const socketCommands_1 = require("@iobroker/socket-classes/dist/lib/socketCommands");
 const common_1 = require("./common");
-const node_zlib_1 = require("node:zlib");
 const pattern2RegEx = adapter_core_1.commonTools.pattern2RegEx;
 process.env.SUPPRESS_NO_CONFIG_WARNING = 'true';
 const WEB_EXTENSION_PREFIX = 'rest-api/';
@@ -333,7 +333,7 @@ class SwaggerUI {
         }
         this.app.get('/favicon.ico', (req, res) => {
             res.set('Content-Type', 'image/x-icon');
-            res.send(node_fs_1.default.readFileSync(`${__dirname}/../img/favicon.ico`));
+            res.send(node_fs_1.default.readFileSync(`${__dirname}/../build/img/favicon.ico`));
         });
         // authenticate
         this.app.use(`${this.routerPrefix}v1/:param`, (req, res, next) => {

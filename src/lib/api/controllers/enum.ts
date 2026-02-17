@@ -34,7 +34,7 @@ export function readEnums(req: RequestExt, res: Response): void {
                     user: req._user,
                     limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
                 });
-                if (enums && enums.result) {
+                if (enums?.result) {
                     res.json(
                         Object.keys(enums.result)
                             .filter(id => id.split('.').length > 2)

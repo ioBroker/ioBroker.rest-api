@@ -37,7 +37,7 @@ function readEnums(req, res) {
                     user: req._user,
                     limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
                 });
-                if (enums && enums.result) {
+                if (enums?.result) {
                     res.json(Object.keys(enums.result)
                         .filter(id => id.split('.').length > 2)
                         .map(id => ({

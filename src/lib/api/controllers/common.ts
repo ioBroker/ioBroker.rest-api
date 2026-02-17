@@ -18,7 +18,7 @@ export function checkPermissions(
                 // If permission required
                 if (requiredRights[0].type) {
                     const aclType = acl[requiredRights[0].type];
-                    if (aclType && (aclType as any)[requiredRights[0].operation]) {
+                    if ((aclType as any)?.[requiredRights[0].operation]) {
                         callback(null);
                         return;
                     }
