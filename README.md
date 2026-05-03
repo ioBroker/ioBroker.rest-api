@@ -265,6 +265,8 @@ You cannot send POST request to commands via GUI.
 ### 0.1.0 (2017-09-14)
 * (bluefox) initial commit
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 Apache 2.0
 
