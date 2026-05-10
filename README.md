@@ -183,6 +183,9 @@ You cannot send POST request to commands via GUI.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 4.0.1 (2026-02-17)
 * (@GermanBluefox) Corrected some minor issues
 
