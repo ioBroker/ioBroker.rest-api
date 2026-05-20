@@ -411,7 +411,11 @@ export default class SwaggerUI {
                 customCss: '.swagger-ui .topbar { background-color: #4dabf5; }',
             };
             // show WEB CSS and so on
-            this.app.use(`${this.routerPrefix}api-doc/`, swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
+            this.app.use(
+                `${this.routerPrefix}api-doc/`,
+                ...(swaggerUi.serve as unknown as any[]),
+                swaggerUi.setup(swaggerDocument, options) as any,
+            );
             this.app.get(this.routerPrefix, (_req, res) => res.redirect(`${this.routerPrefix}api-doc/`));
         }
 

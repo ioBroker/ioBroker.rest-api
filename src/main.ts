@@ -93,7 +93,7 @@ class RestApiAdapter extends Adapter {
 
                 if (this.config.auth) {
                     // Install OAuth2 handler
-                    this.webServer.app.use(cookieParser());
+                    this.webServer.app.use(cookieParser() as any);
                     this.webServer.app.use(bodyParser.urlencoded({ extended: true }));
                     this.webServer.app.use(bodyParser.json());
 

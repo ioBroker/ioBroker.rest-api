@@ -328,7 +328,7 @@ class SwaggerUI {
                 customCss: '.swagger-ui .topbar { background-color: #4dabf5; }',
             };
             // show WEB CSS and so on
-            this.app.use(`${this.routerPrefix}api-doc/`, swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument, options));
+            this.app.use(`${this.routerPrefix}api-doc/`, ...swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument, options));
             this.app.get(this.routerPrefix, (_req, res) => res.redirect(`${this.routerPrefix}api-doc/`));
         }
         this.app.get('/favicon.ico', (_req, res) => {

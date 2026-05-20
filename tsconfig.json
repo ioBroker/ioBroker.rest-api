@@ -32,6 +32,7 @@
 
         // Consider targeting es2019 or higher if you only support Node.js 12+
         "target": "es2022",
+        "rootDir": "./src",
 
         "sourceMap": true,
         "inlineSourceMap": false,
