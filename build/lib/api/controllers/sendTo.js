@@ -12,6 +12,7 @@ function sendTo(req, res) {
             const params = (0, common_1.parseUrl)(req.url, req.swagger, req._adapter.WEB_EXTENSION_PREFIX);
             let message = req.query.message;
             let noResponseStr = req.query.noResponse;
+            let responseContentType = req.query.responseContentType || '';
             let timeout = req.query.timeout;
             let data = req.query.data;
             if (req.body?.message) {
@@ -23,6 +24,9 @@ function sendTo(req, res) {
             timeout = parseInt(timeout, 10) || 10000;
             if (req.body?.noResponse !== undefined) {
                 noResponseStr = req.body.noResponse;
+            }
+            if (req.body?.responseContentType !== undefined) {
+                responseContentType = req.body.responseContentType;
             }
             const noResponse = noResponseStr === 'true';
             if (req.body?.data !== undefined) {
@@ -42,7 +46,7 @@ function sendTo(req, res) {
                     else if (data === 'false') {
                         data = false;
                     }
-                    else if (isFinite(data)) {
+                    else if (data.trim() && isFinite(data)) {
                         data = parseFloat(data);
                     }
                     else if (data.startsWith('{') && data.endsWith('}')) {
@@ -107,7 +111,22 @@ function sendTo(req, res) {
                     }
                     if (!answerDone) {
                         answerDone = true;
-                        res.json(result);
+                        if (responseContentType) {
+                            if (result?.error) {
+                                res.status(501).json({ error: result.error });
+                            }
+                            else if (result?.result !== undefined) {
+                                res.setHeader('Content-Type', responseContentType);
+                                res.send(result.result);
+                            }
+                            else {
+                                res.setHeader('Content-Type', responseContentType);
+                                res.send(result);
+                            }
+                        }
+                        else {
+                            res.json(result);
+                        }
                     }
                 });
             }

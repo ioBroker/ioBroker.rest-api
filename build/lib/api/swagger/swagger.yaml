@@ -908,6 +908,11 @@ paths:
                   description: 'Timeout for answer'
                   required: false
                   type: 'number'
+                - in: 'query'
+                  name: 'responseContentType'
+                  description: 'Optional content type of response. If not set, the default is application/json'
+                  required: false
+                  type: 'string'
             responses:
                 200:
                     description: 'Answer from instance if received'
@@ -1089,7 +1094,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1105,7 +1110,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1121,7 +1126,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1142,7 +1147,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1158,7 +1163,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1179,7 +1184,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1195,7 +1200,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1211,7 +1216,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1237,7 +1242,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1258,7 +1263,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1279,7 +1284,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: false        
+                 required: false
             responses:
                 200:
                     description: "successful operation"
@@ -1300,7 +1305,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1321,7 +1326,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1352,7 +1357,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: false        
+                 required: false
             responses:
                 200:
                     description: "successful operation"
@@ -1373,7 +1378,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1394,7 +1399,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1415,7 +1420,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1441,7 +1446,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1467,7 +1472,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1488,7 +1493,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1514,7 +1519,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: false        
+                 required: false
             responses:
                 200:
                     description: "successful operation"
@@ -1540,7 +1545,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1566,7 +1571,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1587,7 +1592,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1604,7 +1609,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1620,7 +1625,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1636,7 +1641,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1652,7 +1657,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "boolean"
-                 required: false        
+                 required: false
             responses:
                 200:
                     description: "successful operation"
@@ -1662,7 +1667,7 @@ paths:
                 - "commands"
             summary: "read adapter namespace (always rest-api.0)"
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -1678,7 +1683,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1694,7 +1699,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1710,7 +1715,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: false        
+                 required: false
             responses:
                 200:
                     description: "successful operation"
@@ -1731,7 +1736,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1741,7 +1746,7 @@ paths:
                 - "commands"
             summary: "read list of instances with short information"
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -1751,7 +1756,7 @@ paths:
                 - "commands"
             summary: "read list of installed adapters with short information"
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -1767,7 +1772,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1777,7 +1782,7 @@ paths:
                 - "commands"
             summary: "read short system config"
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -1787,7 +1792,7 @@ paths:
                 - "commands"
             summary: ""
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -1803,7 +1808,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1813,7 +1818,7 @@ paths:
                 - "commands"
             summary: "get short information about hosts"
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -1834,7 +1839,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1850,7 +1855,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1876,7 +1881,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1892,7 +1897,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1913,7 +1918,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1923,7 +1928,7 @@ paths:
                 - "commands"
             summary: "read all objects as list. GUI can have problems by visualization of answer."
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -1944,7 +1949,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1965,7 +1970,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -1986,7 +1991,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: false        
+                 required: false
             responses:
                 200:
                     description: "successful operation"
@@ -2003,7 +2008,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -2024,7 +2029,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: false        
+                 required: false
             responses:
                 200:
                     description: "successful operation"
@@ -2041,7 +2046,7 @@ paths:
                  description: ""
                  type: "string"
                  required: true
-                 enum: [ALIAS, ALIAS_SEPARATE_READ_WRITE_ID, ADAPTER_GETPORT_BIND, ADAPTER_DEL_OBJECT_RECURSIVE, ADAPTER_SET_OBJECT_SETS_DEFAULT_VALUE, ADAPTER_AUTO_DECRYPT_NATIVE, PLUGINS, CONTROLLER_NPM_AUTO_REBUILD, CONTROLLER_READWRITE_BASE_SETTINGS, CONTROLLER_MULTI_REPO, CONTROLLER_LICENSE_MANAGER, DEL_INSTANCE_CUSTOM]        
+                 enum: [ALIAS, ALIAS_SEPARATE_READ_WRITE_ID, ADAPTER_GETPORT_BIND, ADAPTER_DEL_OBJECT_RECURSIVE, ADAPTER_SET_OBJECT_SETS_DEFAULT_VALUE, ADAPTER_AUTO_DECRYPT_NATIVE, PLUGINS, CONTROLLER_NPM_AUTO_REBUILD, CONTROLLER_READWRITE_BASE_SETTINGS, CONTROLLER_MULTI_REPO, CONTROLLER_LICENSE_MANAGER, DEL_INSTANCE_CUSTOM]
             responses:
                 200:
                     description: "successful operation"
@@ -2062,7 +2067,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: false        
+                 required: false
             responses:
                 200:
                     description: "successful operation"
@@ -2078,7 +2083,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -2104,7 +2109,7 @@ paths:
                  in: "query"
                  description: "JSON object"
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -2114,7 +2119,7 @@ paths:
                 - "commands"
             summary: "read static information with function permissions"
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -2124,7 +2129,7 @@ paths:
                 - "commands"
             summary: "read object with user permissions"
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -2134,7 +2139,7 @@ paths:
                 - "commands"
             summary: "read adapter name and version"
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -2144,7 +2149,7 @@ paths:
                 - "commands"
             summary: "read adapter name (always rest-api)"
             produces:
-                - "application/json"        
+                - "application/json"
             responses:
                 200:
                     description: "successful operation"
@@ -2170,7 +2175,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: true        
+                 required: true
             responses:
                 200:
                     description: "successful operation"
@@ -2186,7 +2191,7 @@ paths:
                  in: "query"
                  description: ""
                  type: "string"
-                 required: false        
+                 required: false
             responses:
                 200:
                     description: "successful operation"
@@ -2492,6 +2497,9 @@ definitions:
             noAnswer:
                 type: 'boolean'
                 description: 'If wait for answer'
+            responseContentType:
+                type: 'string'
+                description: 'Content type for response. E.g. application/json or text/plain.'
             timeout:
                 type: 'number'
                 description: 'Timeout for answer'

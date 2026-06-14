@@ -63,9 +63,9 @@ function writeFile(req, res) {
         }
         else {
             const params = (0, common_1.parseUrl)(req.url, req.swagger, req._adapter.WEB_EXTENSION_PREFIX);
-            if (req.files?.file[0].buffer) {
+            if (req.files?.file?.[0]?.buffer) {
                 try {
-                    await req._adapter.writeFileAsync(params.objectId, params.fileName, req.files?.file[0].buffer, {
+                    await req._adapter.writeFileAsync(params.objectId, params.fileName, req.files.file[0].buffer, {
                         user: req._user,
                         limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
                     });

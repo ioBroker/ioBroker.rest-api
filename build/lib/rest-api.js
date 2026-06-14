@@ -34,7 +34,9 @@ function parseQuery(_url) {
         const arr = url.substring(pos + 1).split('&');
         url = url.substring(0, pos);
         for (let i = 0; i < arr.length; i++) {
-            const parts = arr[i].split('=');
+            // split only on the first '=' so values containing '=' (e.g. base64 padding) are not truncated
+            const eqPos = arr[i].indexOf('=');
+            const parts = eqPos === -1 ? [arr[i]] : [arr[i].substring(0, eqPos), arr[i].substring(eqPos + 1)];
             try {
                 values[parts[0].trim()] =
                     parts[1] === undefined ? null : decodeURIComponent(`${parts[1]}`.replace(/\+/g, '%20'));
@@ -47,17 +49,6 @@ function parseQuery(_url) {
         // Default value for wait
         if (values.timeout === null) {
             values.timeout = 2000;
-        }
-    }
-    const parts = url.split('/');
-    // Analyse system.adapter.socketio.0.uptime,system.adapter.history.0.memRss?value=78&timeout=300
-    if (parts[2]) {
-        const oId = parts[2].split(',');
-        for (let j = oId.length - 1; j >= 0; j--) {
-            oId[j] = oId[j].trim();
-            if (!oId[j]) {
-                oId.splice(j, 1);
-            }
         }
     }
     return values;
@@ -397,7 +388,7 @@ class SwaggerUI {
                 for (let d = item.queue.length - 1; d >= 0; d--) {
                     if (now - item.queue[d].ts > 3000) {
                         that.adapter.log.debug(`[${item.urlHook}] Data update was too old and ignored`);
-                        item.queue.splice(0, d);
+                        item.queue.splice(0, d + 1);
                         break;
                     }
                 }
@@ -745,8 +736,8 @@ class SwaggerUI {
                 res.status(404).send(`File ${escapeHtml(filename)} not found`);
             }
         });
-        // parse binary files
-        this.app.post(`${this.routerPrefix}v1/file/:file`, (0, multer_1.default)().fields([{ name: 'file', maxCount: 1 }]), (_req, _res, next) => next());
+        // parse binary files (must match the writeFile route `/v1/file/{objectId}/{fileName}`)
+        this.app.post(`${this.routerPrefix}v1/file/:objectId/:fileName`, (0, multer_1.default)().fields([{ name: 'file', maxCount: 1 }]), (_req, _res, next) => next());
         // read default history
         if (!this.config.dataSource) {
             void this.adapter.getForeignObjectAsync('system.config').then(obj => {
@@ -936,7 +927,7 @@ class SwaggerUI {
                 for (let d = item.queue.length - 1; d >= 0; d--) {
                     if (now - item.queue[d].ts > 3000) {
                         this.adapter.log.debug(`[${item.urlHook}] Data update skipped, as no handler (${d + 1})`);
-                        item.queue.splice(0, d);
+                        item.queue.splice(0, d + 1);
                         break;
                     }
                 }

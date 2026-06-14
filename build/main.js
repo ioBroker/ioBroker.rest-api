@@ -98,6 +98,8 @@ class RestApiAdapter extends adapter_core_1.Adapter {
             process.exit(1);
         }
         if (this.webServer.server) {
+            // wait until all REST routes are bound before accepting connections
+            await this.webServer.api?.ready();
             let serverListening = false;
             let serverPort = this.config.port;
             this.webServer.server.on('error', e => {

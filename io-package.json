@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "news": {
+      "4.0.2": {
+        "en": "Packages were updated\nAllowed to define the response content type by sendTo queries\nCorrected some minor issues",
+        "de": "Pakete wurden aktualisiert\nErlaubt, den Antwortinhaltstyp durch sendTo-Abfragen zu definieren\nKorrigiert einige kleinere Probleme",
+        "ru": "Пакеты были обновлены\nРазрешено определять тип контента ответа по запросам sendTo\nИсправлены некоторые незначительные вопросы",
+        "pt": "Os pacotes foram atualizados\nPermite definir o tipo de conteúdo de resposta por sendTo questions\nCorrigidos alguns problemas menores",
+        "nl": "Pakketten werden bijgewerkt\nToegestaan om het antwoordinhoudstype te definiëren door sendTo queries\nEnkele kleine kwesties gecorrigeerd",
+        "fr": "Les paquets ont été mis à jour\nPermet de définir le type de contenu de réponse par les requêtes sendTo\nCorrection de quelques problèmes mineurs",
+        "it": "I pacchetti sono stati aggiornati\nPermesso di definire il tipo di contenuto di risposta da sendTo query\nCorretto alcuni problemi minori",
+        "es": "Se actualizaron los paquetes\nPermitido definir el tipo de contenido de respuesta por sendTo consultas\nCorrección de algunas cuestiones menores",
+        "pl": "Pakiety zostały zaktualizowane\nDozwolone zdefiniowanie typu treści odpowiedzi według zapytań sendTo\nNaprawiono kilka drobnych problemów",
+        "uk": "Пакети оновлено\nДля визначення типу вмісту відповіді на запити\nВиправлено деякі незначні питання",
+        "zh-cn": "软件包已更新\n允许通过发送定义响应内容类型\n纠正了一些小问题"
+      },
       "4.0.1": {
         "en": "Corrected some minor issues",
         "de": "Einige kleinere Probleme behoben",
@@ -80,19 +93,6 @@
         "pl": "Poprawiono rozszerzenie sieci Web",
         "uk": "Виправлено розширення веб",
         "zh-cn": "更正网络扩展名"
-      },
-      "3.0.0": {
-        "en": "Rewritten in TypeScript\nRemoved binary states",
-        "de": "Neu geschrieben in TypeScript\nEntfernte binäre Zustände",
-        "ru": "Переписано в TypeScript\nУдаленные бинарные состояния",
-        "pt": "Reescrito em TypeScript\nEstados binários removidos",
-        "nl": "Herschreven in TypeScript\nBinaire toestanden verwijderd",
-        "fr": "Réécrit dans TypeScript\nÉtats binaires supprimés",
-        "it": "Rescritto in TypeScript\nStati binari rimossi",
-        "es": "Reescrito en TipoScript\nEstados binarios eliminados",
-        "pl": "Przepisane w TypeScript\nUsunięte stany binarne",
-        "uk": "Записатися в TypeScript\nВилучені бінарні штати",
-        "zh-cn": "在类型脚本中重写\n删除二进制状态"
       }
     },
     "titleLang": {

@@ -20,7 +20,7 @@ function readObject(req, res) {
             const params = (0, common_1.parseUrl)(req.url, req.swagger, req._adapter.WEB_EXTENSION_PREFIX);
             void req._adapter.getForeignObject(params.objectId, { user: req._user, limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner }, (error, obj) => {
                 if (error) {
-                    (0, common_1.errorResponse)(req, res, error?.toString(), { objectId: req.query.objectId });
+                    (0, common_1.errorResponse)(req, res, error?.toString(), { objectId: params.objectId });
                 }
                 else {
                     if (!obj) {
