@@ -67,9 +67,9 @@ export function writeFile(req: RequestExt, res: Response): void {
                 req.swagger,
                 req._adapter.WEB_EXTENSION_PREFIX,
             );
-            if (req.files?.file[0].buffer) {
+            if (req.files?.file?.[0]?.buffer) {
                 try {
-                    await req._adapter.writeFileAsync(params.objectId, params.fileName, req.files?.file[0].buffer, {
+                    await req._adapter.writeFileAsync(params.objectId, params.fileName, req.files.file[0].buffer, {
                         user: req._user,
                         limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
                     });

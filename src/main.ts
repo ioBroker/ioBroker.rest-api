@@ -114,6 +114,9 @@ class RestApiAdapter extends Adapter {
         }
 
         if (this.webServer.server) {
+            // wait until all REST routes are bound before accepting connections
+            await this.webServer.api?.ready();
+
             let serverListening = false;
             let serverPort = this.config.port;
 

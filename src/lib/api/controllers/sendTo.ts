@@ -40,7 +40,7 @@ export function sendTo(req: RequestExt, res: Response): void {
                         data = true;
                     } else if (data === 'false') {
                         data = false;
-                    } else if (isFinite(data)) {
+                    } else if (data.trim() && isFinite(data)) {
                         data = parseFloat(data);
                     } else if (data.startsWith('{') && data.endsWith('}')) {
                         try {

@@ -13,7 +13,7 @@ export function readObject(req: RequestExt, res: Response): void {
                 { user: req._user, limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner },
                 (error, obj) => {
                     if (error) {
-                        errorResponse(req, res, error?.toString(), { objectId: req.query.objectId });
+                        errorResponse(req, res, error?.toString(), { objectId: params.objectId });
                     } else {
                         if (!obj) {
                             res.status(404).json({ error: 'object not found' });
