@@ -10,6 +10,7 @@ export function sendTo(req: RequestExt, res: Response): void {
             const params = parseUrl<{ instance: string }>(req.url, req.swagger, req._adapter.WEB_EXTENSION_PREFIX);
             let message = req.query.message as string;
             let noResponseStr = req.query.noResponse as string;
+            let responseContentType = (req.query.responseContentType as string) || '';
             let timeout: string | number = req.query.timeout as string;
             let data: any = req.query.data as string;
             if (req.body?.message) {
@@ -21,6 +22,9 @@ export function sendTo(req: RequestExt, res: Response): void {
             timeout = parseInt(timeout as string, 10) || 10000;
             if (req.body?.noResponse !== undefined) {
                 noResponseStr = req.body.noResponse;
+            }
+            if (req.body?.responseContentType !== undefined) {
+                responseContentType = req.body.responseContentType;
             }
             const noResponse = noResponseStr === 'true';
 
@@ -99,7 +103,19 @@ export function sendTo(req: RequestExt, res: Response): void {
                     }
                     if (!answerDone) {
                         answerDone = true;
-                        res.json(result);
+                        if (responseContentType) {
+                            if (result?.error) {
+                                res.status(501).json({ error: result.error });
+                            } else if (result?.result !== undefined) {
+                                res.setHeader('Content-Type', responseContentType);
+                                res.send(result.result);
+                            } else {
+                                res.setHeader('Content-Type', responseContentType);
+                                res.send(result);
+                            }
+                        } else {
+                            res.json(result);
+                        }
                     }
                 });
             }

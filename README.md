@@ -185,6 +185,7 @@ You cannot send a POST request to commands via GUI.
 ## Changelog
 ### **WORK IN PROGRESS**
 * (@GermanBluefox) Packages were updated
+* (@GermanBluefox) Allowed to define the response content type by sendTo queries
 
 ### 4.0.1 (2026-02-17)
 * (@GermanBluefox) Corrected some minor issues
