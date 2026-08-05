@@ -22,7 +22,7 @@
     "url": "https://github.com/ioBroker/ioBroker.rest-api"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.4.1",
+    "@iobroker/adapter-core": "^3.4.3",
     "@iobroker/socket-classes": "^2.3.4",
     "@iobroker/webserver": "^1.4.0",
     "@iobroker/ws-server": "^4.4.1",
