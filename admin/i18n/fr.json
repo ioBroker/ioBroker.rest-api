@@ -34,5 +34,7 @@
   "Do not allow admin commands execution": "Ne pas autoriser l'exécution des commandes d'administration",
   "Do not allow commands execution": "Ne pas autoriser l'exécution des commandes",
   "http2": "Utiliser HTTP/2",
-  "http2_hint": "Toutes les requêtes d’un client, y compris le long polling, partagent une seule connexion. Les clients sans HTTP/2 basculent automatiquement sur HTTP/1.1"
+  "http2_hint": "Toutes les requêtes d’un client, y compris le long polling, partagent une seule connexion. Les clients sans HTTP/2 basculent automatiquement sur HTTP/1.1",
+  "Reverse proxy path": "Chemin du proxy inverse",
+  "reverse_path_help": "Préfixe de chemin si l'adaptateur fonctionne derrière un proxy inverse, p. ex. \"/rest-api\". Utilisé par Swagger UI pour construire les URL des requêtes."
 }

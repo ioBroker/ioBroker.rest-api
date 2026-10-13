@@ -163,6 +163,16 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 3
+                },
+                "reversePath": {
+                    "newLine": true,
+                    "type": "text",
+                    "label": "Reverse proxy path",
+                    "help": "reverse_path_help",
+                    "placeholder": "/rest-api",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3
                 }
             }
         },

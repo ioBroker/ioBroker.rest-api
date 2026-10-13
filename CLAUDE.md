@@ -45,7 +45,7 @@ There are **two distinct families of routes**, dispatched differently:
 
 Edits inside those markers will be overwritten by `npm run update-list` / `build:all`. To change a command's description, edit the `description` map in `tasks.js`, not the generated output. `tasks.js` also runs `--update-yaml-version` (syncs swagger version to `package.json`) and `--copy-yaml` (copies `swagger.yaml` and `config/default.yaml` into `build/`).
 
-At runtime, `config.noCommands` / `config.noAdminCommands` cause `init()` to strip the corresponding marker sections and write a `swaggerEdited.yaml`; web-extension mode rewrites `basePath` into `swagger_extension.yaml`.
+At runtime, `config.noCommands` / `config.noAdminCommands` cause `init()` to strip the corresponding marker sections and write a `swaggerEdited.yaml`. The swagger `basePath` is set in memory to `[/<reversePath>]<routerPrefix>v1` (only affects Swagger UI request URLs, not Express routing).
 
 ### Subscriptions
 

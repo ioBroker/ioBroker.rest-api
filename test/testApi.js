@@ -72,12 +72,24 @@ tests.integration(path.join(__dirname, '..'), {
                     native: {
                         bind: '127.0.0.1',
                         port: PORT,
+                        reversePath: '/proxy/',
                     },
                 });
                 // Start the adapter and wait until it has started
                 await harness.startAdapterAndWait(true);
                 await createVariables(harness, true);
             });
+
+            it('Test REST API: reverse proxy path - must be used by Swagger UI only', async () => {
+                const response = await axios.get(`http://127.0.0.1:${PORT}/api-docs/swagger.json`);
+                expect(response.data.basePath).to.equal('/proxy/v1');
+
+                const redirect = await axios.get(`http://127.0.0.1:${PORT}/`, {
+                    maxRedirects: 0,
+                    validateStatus: status => status === 302,
+                });
+                expect(redirect.headers.location).to.equal('/proxy/api-doc/');
+            }).timeout(TESTS_TIMEOUT);
 
             it('Test REST API: get - must return state', async () => {
                 // write state, so it has "from" attribute

@@ -34,5 +34,7 @@
   "Do not allow admin commands execution": "不允许执行管理命令",
   "Do not allow commands execution": "不允许执行命令",
   "http2": "使用 HTTP/2",
-  "http2_hint": "客户端的所有请求（包括长轮询）共用一个连接。不支持 HTTP/2 的客户端会自动回退到 HTTP/1.1"
+  "http2_hint": "客户端的所有请求（包括长轮询）共用一个连接。不支持 HTTP/2 的客户端会自动回退到 HTTP/1.1",
+  "Reverse proxy path": "反向代理路径",
+  "reverse_path_help": "如果适配器运行在反向代理之后，则为路径前缀，例如 \"/rest-api\"。Swagger UI 使用它来构建请求 URL。"
 }

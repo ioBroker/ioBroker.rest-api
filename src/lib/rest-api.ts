@@ -371,25 +371,13 @@ export default class SwaggerUI {
             }
         }
 
-        // create swagger.yaml copy with changed basePath
-        if (this.extension) {
-            let file = fs.readFileSync(_options.swaggerFile).toString('utf8');
-            file = file.replace('basePath: "/v1"', `basePath: "/${WEB_EXTENSION_PREFIX}v1"`);
-
-            _options.swaggerFile = `${__dirname}/api/swagger/swagger_extension.yaml`;
-
-            if (
-                !fs.existsSync(_options.swaggerFile) ||
-                fs.readFileSync(_options.swaggerFile).toString('utf8') !== file
-            ) {
-                fs.writeFileSync(_options.swaggerFile, file);
-            }
-        }
+        // Path prefix added by a reverse proxy in front of this instance (e.g. "/rest-api"), normalized to "" or "/path"
+        const reversePath = (this.config.reversePath || '').trim().replace(/^\/+|\/+$/g, '');
+        const publicPrefix = `${reversePath ? `/${reversePath}` : ''}${this.routerPrefix}`;
 
         const swaggerDocument = YAML.load(_options.swaggerFile);
-        if (this.extension) {
-            swaggerDocument.basePath = `/${WEB_EXTENSION_PREFIX}v1`;
-        }
+        // basePath is only used by Swagger UI to build the request URLs. Express routes are bound via routerPrefix.
+        swaggerDocument.basePath = `${publicPrefix}v1`;
         const that = this;
 
         if (!this.config.noUI) {
@@ -404,7 +392,7 @@ export default class SwaggerUI {
                 ...(swaggerUi.serve as unknown as any[]),
                 swaggerUi.setup(swaggerDocument, options) as any,
             );
-            this.app.get(this.routerPrefix, (_req, res) => res.redirect(`${this.routerPrefix}api-doc/`));
+            this.app.get(this.routerPrefix, (_req, res) => res.redirect(`${publicPrefix}api-doc/`));
         }
 
         this.app.get('/favicon.ico', (_req, res) => {

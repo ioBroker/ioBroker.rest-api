@@ -34,5 +34,7 @@
   "Do not allow admin commands execution": "Non consentire l'esecuzione dei comandi di amministrazione",
   "Do not allow commands execution": "Non consentire l'esecuzione dei comandi",
   "http2": "Usa HTTP/2",
-  "http2_hint": "Tutte le richieste di un client, incluso il long polling, condividono un’unica connessione. I client senza HTTP/2 passano automaticamente a HTTP/1.1"
+  "http2_hint": "Tutte le richieste di un client, incluso il long polling, condividono un’unica connessione. I client senza HTTP/2 passano automaticamente a HTTP/1.1",
+  "Reverse proxy path": "Percorso del reverse proxy",
+  "reverse_path_help": "Prefisso del percorso se l'adattatore è dietro un reverse proxy, ad es. \"/rest-api\". Usato da Swagger UI per costruire gli URL delle richieste."
 }

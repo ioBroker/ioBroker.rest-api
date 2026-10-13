@@ -75,6 +75,19 @@ Example for the browser could be found here: [demoNodeClient.js](examples/demoBr
 ## Web extension
 This adapter can run as a web extension. In this case, the path is available under `http://ipaddress:8082/rest-api/`
 
+## Reverse proxy
+If the adapter runs behind a reverse proxy under a sub-path, set this path in the instance settings (`Reverse proxy path`, e.g. `/rest-api`).
+Swagger UI then sends its requests to `/rest-api/v1/...` instead of `/v1/...`.
+The proxy must strip the prefix before forwarding the request, e.g. for nginx:
+
+```nginx
+location /rest-api/ {
+    proxy_pass http://iobroker-host:8093/;
+}
+```
+
+If the adapter runs as a web extension, the path is prepended to `/rest-api/` of the web adapter.
+
 ## Notice
 - `POST` is always for creating a resource (does not matter if it was duplicated)
 - `PUT` is for checking if resource exists then update, else create new resource
@@ -184,6 +197,9 @@ You cannot send a POST request to commands via GUI.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Added option `Reverse proxy path` to make Swagger UI work behind a reverse proxy
+
 ### 4.0.4 (2026-10-13)
 - (@GermanBluefox) Updated packages
 - (@GermanBluefox) Added option to use HTTP/2 on a secure connection (enabled by default, falls back to HTTP/1.1)

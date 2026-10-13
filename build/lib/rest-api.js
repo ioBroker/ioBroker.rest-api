@@ -297,20 +297,12 @@ class SwaggerUI {
                 node_fs_1.default.writeFileSync(_options.swaggerFile, newText);
             }
         }
-        // create swagger.yaml copy with changed basePath
-        if (this.extension) {
-            let file = node_fs_1.default.readFileSync(_options.swaggerFile).toString('utf8');
-            file = file.replace('basePath: "/v1"', `basePath: "/${WEB_EXTENSION_PREFIX}v1"`);
-            _options.swaggerFile = `${__dirname}/api/swagger/swagger_extension.yaml`;
-            if (!node_fs_1.default.existsSync(_options.swaggerFile) ||
-                node_fs_1.default.readFileSync(_options.swaggerFile).toString('utf8') !== file) {
-                node_fs_1.default.writeFileSync(_options.swaggerFile, file);
-            }
-        }
+        // Path prefix added by a reverse proxy in front of this instance (e.g. "/rest-api"), normalized to "" or "/path"
+        const reversePath = (this.config.reversePath || '').trim().replace(/^\/+|\/+$/g, '');
+        const publicPrefix = `${reversePath ? `/${reversePath}` : ''}${this.routerPrefix}`;
         const swaggerDocument = yamljs_1.default.load(_options.swaggerFile);
-        if (this.extension) {
-            swaggerDocument.basePath = `/${WEB_EXTENSION_PREFIX}v1`;
-        }
+        // basePath is only used by Swagger UI to build the request URLs. Express routes are bound via routerPrefix.
+        swaggerDocument.basePath = `${publicPrefix}v1`;
         const that = this;
         if (!this.config.noUI) {
             this.app.get(`${this.routerPrefix}api-docs/swagger.json`, (_req, res) => res.json(swaggerDocument));
@@ -319,7 +311,7 @@ class SwaggerUI {
             };
             // show WEB CSS and so on
             this.app.use(`${this.routerPrefix}api-doc/`, ...swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument, options));
-            this.app.get(this.routerPrefix, (_req, res) => res.redirect(`${this.routerPrefix}api-doc/`));
+            this.app.get(this.routerPrefix, (_req, res) => res.redirect(`${publicPrefix}api-doc/`));
         }
         this.app.get('/favicon.ico', (_req, res) => {
             res.set('Content-Type', 'image/x-icon');

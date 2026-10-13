@@ -34,5 +34,7 @@
   "Do not allow admin commands execution": "Uitvoeren van admin-opdrachten niet toestaan",
   "Do not allow commands execution": "Uitvoeren van opdrachten niet toestaan",
   "http2": "HTTP/2 gebruiken",
-  "http2_hint": "Alle verzoeken van een client, inclusief long polling, delen één verbinding. Clients zonder HTTP/2 vallen automatisch terug op HTTP/1.1"
+  "http2_hint": "Alle verzoeken van een client, inclusief long polling, delen één verbinding. Clients zonder HTTP/2 vallen automatisch terug op HTTP/1.1",
+  "Reverse proxy path": "Reverse-proxypad",
+  "reverse_path_help": "Padvoorvoegsel als de adapter achter een reverse proxy draait, bijv. \"/rest-api\". Wordt door de Swagger UI gebruikt om de aanvraag-URL's op te bouwen."
 }

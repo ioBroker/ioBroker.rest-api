@@ -33,6 +33,8 @@ export interface RestApiAdapterConfig {
     dataSource: string;
     noCommands: boolean;
     noAdminCommands: boolean;
+    /** Path prefix of a reverse proxy in front of this instance, e.g. "/rest-api" */
+    reversePath?: string;
     leConfig?: boolean;
     certificates?: ioBroker.Certificates;
     language?: ioBroker.Languages;
