@@ -197,6 +197,9 @@ You cannot send a POST request to commands via GUI.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Fixed `413 Payload Too Large` for request bodies larger than 100kB when authentication is enabled
+
 ### 4.1.0 (2026-10-13)
 - (@GermanBluefox) Added option `Reverse proxy path` to make Swagger UI work behind a reverse proxy
 

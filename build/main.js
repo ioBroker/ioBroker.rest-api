@@ -79,8 +79,9 @@ class RestApiAdapter extends adapter_core_1.Adapter {
                 if (this.config.auth) {
                     // Install OAuth2 handler
                     this.webServer.app.use((0, cookie_parser_1.default)());
-                    this.webServer.app.use(body_parser_1.default.urlencoded({ extended: true }));
-                    this.webServer.app.use(body_parser_1.default.json());
+                    // Same limit as the REST parsers in rest-api.ts: whichever parser runs first consumes the body
+                    this.webServer.app.use(body_parser_1.default.urlencoded({ extended: true, limit: '100mb' }));
+                    this.webServer.app.use(body_parser_1.default.json({ limit: '100mb' }));
                     (0, webserver_1.createOAuth2Server)(this, {
                         app: this.webServer.app,
                         secure: this.config.secure,

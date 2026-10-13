@@ -35,6 +35,18 @@ tests.integration(path.join(__dirname, '..'), {
                     },
                 });
 
+                await harness.objects.setObjectAsync('javascript.0.test-big', {
+                    type: 'state',
+                    common: {
+                        name: 'test-big',
+                        type: 'string',
+                        role: 'json',
+                        read: true,
+                        write: true,
+                    },
+                    native: {},
+                });
+
                 // Start the adapter and wait until it has started
                 await harness.startAdapterAndWait(true);
             });
@@ -130,6 +142,26 @@ tests.integration(path.join(__dirname, '..'), {
                     `[GET/Authorization] /v1/state/system.adapter.${harness.adapterName}.0.alive => ${JSON.stringify(response.data)}`,
                 );
                 expect(response.status).to.be.equal(401);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API SSL: command setState - must accept body larger than 100kB', async () => {
+                // 1 MB payload: bigger than the default body-parser limit of 100kB (#227)
+                const val = 'x'.repeat(1024 * 1024);
+                const response = await axios.post(
+                    `https://127.0.0.1:${PORT}/v1/command/setState`,
+                    { id: 'javascript.0.test-big', state: { val, ack: false } },
+                    {
+                        headers: {
+                            Authorization: `Basic ${Buffer.from('admin:iobroker').toString('base64')}`,
+                        },
+                        validateStatus: () => true,
+                    },
+                );
+                console.log(`[POST] /v1/command/setState (1 MB) => ${response.status}`);
+                expect(response.status).to.be.equal(200);
+
+                const state = await harness.states.getStateAsync('javascript.0.test-big');
+                expect(state.val).to.be.equal(val);
             }).timeout(TESTS_TIMEOUT);
         });
     },
