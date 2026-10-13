@@ -379,6 +379,54 @@ tests.integration(path.join(__dirname, '..'), {
                 obj = response.data;
                 expect(obj.val).equal(55);
             }).timeout(TESTS_TIMEOUT);
+
+            it('Test RESTful API as User: bulk - must write only states with write permission', async () => {
+                // State is readable for everyone, but writable only for administrators
+                await harness.objects.setObjectAsync('javascript.0.foreign', {
+                    common: { name: 'foreign', type: 'number', role: 'level', def: 0 },
+                    native: {},
+                    type: 'state',
+                    acl: {
+                        object: 1638, // 666
+                        owner: 'system.user.admin',
+                        ownerGroup: 'system.group.administrator',
+                        state: 1636, // 664
+                    },
+                });
+                await harness.states.setStateAsync('javascript.0.foreign', 1);
+
+                const response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, [
+                    { id: 'javascript.0.test', val: '66' },
+                    { id: 'javascript.0.foreign', val: 2 },
+                    { id: 'javascript.0.boolean', val: 'false' },
+                ]);
+                console.log(`[PATCH] /v1/states => ${JSON.stringify(response.data)}`);
+                expect(response.status).equal(200);
+                expect(response.data).to.deep.equal([
+                    { id: 'javascript.0.test', val: 66, ack: false },
+                    { id: 'javascript.0.foreign', index: 1, error: 'permissionError' },
+                    { id: 'javascript.0.boolean', val: false, ack: false },
+                ]);
+
+                let state = await harness.states.getStateAsync('javascript.0.test');
+                expect(state.val).equal(66);
+                state = await harness.states.getStateAsync('javascript.0.foreign');
+                expect(state.val).equal(1);
+                state = await harness.states.getStateAsync('javascript.0.boolean');
+                expect(state.val).equal(false);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test RESTful API as User: bulk - must stop at missing write permission with stopOnError', async () => {
+                await harness.states.setStateAsync('javascript.0.test', 1);
+
+                const response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states?stopOnError=true`, [
+                    { id: 'javascript.0.foreign', val: 3 },
+                    { id: 'javascript.0.test', val: 77 },
+                ]);
+                expect(response.data).to.deep.equal([{ id: 'javascript.0.foreign', index: 0, error: 'permissionError' }]);
+                const state = await harness.states.getStateAsync('javascript.0.test');
+                expect(state.val).equal(1);
+            }).timeout(TESTS_TIMEOUT);
         });
     },
 });

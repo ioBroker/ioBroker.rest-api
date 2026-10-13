@@ -74,6 +74,7 @@
     "update-list": "node tasks --generate-list",
     "test:integration": "mocha --exit",
     "test:package": "mocha test/testPackage.js --exit",
+    "test:unit": "mocha test/testControllers.js --exit",
     "test": "npm run test:integration",
     "lint": "eslint -c eslint.config.mjs",
     "release": "release-script",

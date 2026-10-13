@@ -363,6 +363,77 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(states[`system.adapter.${harness.adapterName}.0.uptime`].val).to.be.least(0);
             }).timeout(TESTS_TIMEOUT);
 
+            it('Test REST API: enum - must return enum itself and sub-enums', async () => {
+                await harness.objects.setObjectAsync('enum.functions.testShutters', {
+                    common: { name: 'Shutters', members: ['javascript.0.test-number'] },
+                    native: {},
+                    type: 'enum',
+                });
+                await harness.objects.setObjectAsync('enum.functions.testShutters.boolean', {
+                    common: { name: 'Boolean', members: ['javascript.0.test-boolean'] },
+                    native: {},
+                    type: 'enum',
+                });
+
+                let response = await axios.get(`http://127.0.0.1:${PORT}/v1/enum/functions.testShutters.boolean`);
+                expect(response.data).to.deep.equal([
+                    {
+                        _id: 'enum.functions.testShutters.boolean',
+                        common: { name: 'Boolean', members: ['javascript.0.test-boolean'] },
+                    },
+                ]);
+
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/enum/functions.testShutters`);
+                expect(response.data.map(e => e._id)).to.deep.equal([
+                    'enum.functions.testShutters',
+                    'enum.functions.testShutters.boolean',
+                ]);
+
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/enum/functions`);
+                expect(response.data.find(e => e._id === 'enum.functions')).to.be.not.ok;
+                expect(response.data.find(e => e._id === 'enum.functions.testShutters.boolean')).to.be.ok;
+
+                response = await axios.get(`http://127.0.0.1:${PORT}/v1/enum/functions.notExisting`, {
+                    validateStatus: () => true,
+                });
+                expect(response.status).equal(404);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: enum - must not mix up enums with the same beginning', async () => {
+                await harness.objects.setObjectAsync('enum.functions.testLight', {
+                    common: { name: 'Light', members: [] },
+                    native: {},
+                    type: 'enum',
+                });
+                await harness.objects.setObjectAsync('enum.functions.testLighting', {
+                    common: { name: 'Lighting', members: [] },
+                    native: {},
+                    type: 'enum',
+                });
+
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/enum/functions.testLight`);
+                expect(response.data.map(e => e._id)).to.deep.equal(['enum.functions.testLight']);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: enum - must accept ID with "enum." prefix', async () => {
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/enum/enum.functions.testShutters.boolean`);
+                expect(response.data.map(e => e._id)).to.deep.equal(['enum.functions.testShutters.boolean']);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: enum - must answer 404 for unknown category', async () => {
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/enum/notExistingCategory`, {
+                    validateStatus: () => true,
+                });
+                expect(response.status).equal(404);
+                expect(response.data).to.deep.equal({ error: 'Enum not found', enumId: 'enum.notExistingCategory' });
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: enum - main enums must still be returned', async () => {
+                const response = await axios.get(`http://127.0.0.1:${PORT}/v1/enum`);
+                expect(response.status).equal(200);
+                expect(response.data['enum.functions']).to.be.ok;
+            }).timeout(TESTS_TIMEOUT);
+
             it('Test REST API: bulk - must set many states as array', async () => {
                 await createVariables(harness, false, 'a', 1);
 
@@ -429,6 +500,103 @@ tests.integration(path.join(__dirname, '..'), {
                     validateStatus: () => true,
                 });
                 expect(response.status).equal(422);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: bulk - must write the same state in the given order', async () => {
+                await createVariables(harness, null, null, 1);
+
+                const response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, [
+                    { id: 'javascript.0.test-number', val: 10 },
+                    { id: 'javascript.0.test-number', val: 20 },
+                    { id: 'javascript.0.test-number', val: 30 },
+                ]);
+                expect(response.data.map(r => r.val)).to.deep.equal([10, 20, 30]);
+                const state = await harness.states.getStateAsync('javascript.0.test-number');
+                expect(state.val).equal(30);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: bulk - must fire change events in the given order', async () => {
+                await createVariables(harness, false, 'a', 1);
+                const ids = ['javascript.0.test-string1', 'javascript.0.test-number', 'javascript.0.test-boolean'];
+
+                const events = [];
+                const onStateChange = (id, state) => ids.includes(id) && events.push(`${id}=${state?.val}`);
+                // the harness is subscribed to all states
+                harness.on('stateChange', onStateChange);
+
+                try {
+                    await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, [
+                        { id: ids[0], val: 'event' },
+                        { id: ids[1], val: 99 },
+                        { id: ids[2], val: true },
+                    ]);
+                    // wait till all events are delivered
+                    for (let i = 0; i < 50 && events.length < 3; i++) {
+                        await new Promise(resolve => setTimeout(resolve, 50));
+                    }
+                } finally {
+                    harness.removeListener('stateChange', onStateChange);
+                }
+
+                expect(events).to.deep.equal([`${ids[0]}=event`, `${ids[1]}=99`, `${ids[2]}=true`]);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: bulk - must store additional state attributes', async () => {
+                await createVariables(harness, null, null, 1);
+
+                await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, [
+                    { id: 'javascript.0.test-number', val: 5, ack: true, q: 0x40, c: 'NFC reader' },
+                ]);
+                const state = await harness.states.getStateAsync('javascript.0.test-number');
+                expect(state.val).equal(5);
+                expect(state.ack).to.be.true;
+                expect(state.q).equal(0x40);
+                expect(state.c).equal('NFC reader');
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: bulk - must find state by name', async () => {
+                await harness.objects.setObjectAsync('javascript.0.test-bulk-name', {
+                    common: { name: 'UniqueBulkTestName', type: 'number', role: 'value', def: 0 },
+                    native: {},
+                    type: 'state',
+                });
+
+                const response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, [
+                    { id: 'UniqueBulkTestName', val: '8' },
+                ]);
+                expect(response.data).to.deep.equal([{ id: 'javascript.0.test-bulk-name', val: 8, ack: false }]);
+                const state = await harness.states.getStateAsync('javascript.0.test-bulk-name');
+                expect(state.val).equal(8);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: bulk - must report unknown IDs and write the other states', async () => {
+                await createVariables(harness, null, 'a');
+
+                const response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, [
+                    { id: 'javascript.0.not-existing-bulk', val: 1 },
+                    { id: 'javascript.0.test-string1', val: 'written' },
+                ]);
+                expect(response.status).equal(200);
+                expect(response.data).to.deep.equal([
+                    { id: 'javascript.0.not-existing-bulk', index: 0, error: 'ID not found' },
+                    { id: 'javascript.0.test-string1', val: 'written', ack: false },
+                ]);
+                expect(await harness.states.getStateAsync('javascript.0.not-existing-bulk')).to.be.not.ok;
+                const state = await harness.states.getStateAsync('javascript.0.test-string1');
+                expect(state.val).equal('written');
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: bulk - must reject more than 1000 states', async () => {
+                await createVariables(harness, null, null, 1);
+
+                const body = Array.from({ length: 1001 }, (_, i) => ({ id: 'javascript.0.test-number', val: i + 2 }));
+                const response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, body, {
+                    validateStatus: () => true,
+                });
+                expect(response.status).equal(422);
+                expect(response.data.count).equal(1001);
+                const state = await harness.states.getStateAsync('javascript.0.test-number');
+                expect(state.val).equal(1);
             }).timeout(TESTS_TIMEOUT);
         });
     },

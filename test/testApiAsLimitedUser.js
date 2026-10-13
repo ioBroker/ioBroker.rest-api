@@ -219,6 +219,28 @@ tests.integration(path.join(__dirname, '..'), {
                 );
                 expect(response.data.error).to.be.equal('permissionError');
             });
+
+            it('Test RESTful API as Owner-User: bulk - must write only own states', async () => {
+                const response = await axios.patch(
+                    `http://127.0.0.1:${PORT}/v1/states`,
+                    [
+                        { id: `system.adapter.${harness.adapterName}.0.alive`, val: false },
+                        { id: 'javascript.0.test', val: 33 },
+                    ],
+                    { validateStatus: () => true },
+                );
+                console.log(`[PATCH] /v1/states => ${JSON.stringify(response.data)}`);
+                expect(response.status).equal(200);
+                expect(response.data).to.deep.equal([
+                    { id: `system.adapter.${harness.adapterName}.0.alive`, index: 0, error: 'permissionError' },
+                    { id: 'javascript.0.test', val: 33, ack: false },
+                ]);
+
+                const alive = await harness.states.getStateAsync(`system.adapter.${harness.adapterName}.0.alive`);
+                expect(alive.val).to.be.true;
+                const state = await harness.states.getStateAsync('javascript.0.test');
+                expect(state.val).equal(33);
+            });
         });
     },
 });
