@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "4.0.2",
+    "version": "4.0.3",
     "news": {
+      "4.0.3": {
+        "en": "Adapter requires node.js >= 22 now.\nReplaced `process.exit()` with `terminate()` for compact mode and added tests on Windows and macOS",
+        "de": "Adapter benötigt jetzt node.js >= 22.\n`process.exit () `durch `terminate ()` für Kompaktmodus ersetzt und Tests auf Windows und macOS",
+        "ru": "Теперь для адаптера требуется файл node.js >= 22.\nЗаменен `process.exit () `на `terminate ()` для компактного режима и добавлены тесты в Windows и macOS",
+        "pt": "O adaptador exige node.js >= 2.\nSubstituiu `process.exit () `por `terminate ()` no modo compacto e fez testes em Windows e macOS",
+        "nl": "Voor de adapter is nu node.js >= 22 nodig.\n`process.exit () `vervangen door `terminate ()` voor de compacte modus en tests toegevoegd op Windows en macOS",
+        "fr": "Adapter nécessite node.js >= 22.\nA remplacé « process.exit () » par « terminate () » en mode compact et a ajouté des tests sur Windows et macOS",
+        "it": "Adapter richiede node.js >= 2 ora.\nSostituito process.exit () con terminate () per la modalità compatta e test su Windows e macOS",
+        "es": "El adaptador necesita node.js >= 22 ahora.\nSustituyó `process.exit () `por `terminate ()` para el modo compacto y añadió pruebas en Windows y macOS",
+        "pl": "Adapter wymaga teraz node.js >= 22.\nZastąpiono `process.exit () `na `terminuj ()` w trybie kompaktowym i dodano testy w systemach Windows i macOS",
+        "uk": "Тепер адаптер вимагає node.js >= 22.\nЗамінено `process.exit () `на `terminate ()` для компактного режиму та додано тести на Windows та macOS",
+        "zh-cn": "适配器现在需要 node.js >= 22。\n将 process.exit () 替换为 `terminate () `以实现紧凑模式，并增加了在 Windows 和 macOS 上的测试"
+      },
       "4.0.2": {
         "en": "Packages were updated\nAllowed to define the response content type by sendTo queries\nCorrected some minor issues",
         "de": "Pakete wurden aktualisiert\nErlaubt, den Antwortinhaltstyp durch sendTo-Abfragen zu definieren\nKorrigiert einige kleinere Probleme",
@@ -80,19 +93,6 @@
         "pl": "Fix działa jako rozszerzenie sieci web, własne implementacja niezachowane swagger- node- runner- widelec,\nusunąć 18 i dodać węzeł 24 do testów\nwielokrotne poprawki błędów null i błędne schematy swagger # 151\nzaktualizowane pakiety",
         "uk": "Виправлення запуску як веб-навігація, власна реалізація незбережених лебідок-нод-навантажувача,\nвидалити 18 і додати вузол 24 для тестування\nкілька null fixes і невірно swagger schema #151\nоновлені пакети",
         "zh-cn": "修复作为网络扩展运行, 自身执行未维护的swagger-node-runner-fork,\n删除 18 个,并在测试中添加节点 24\n多个无效错误修正和错错的 swagger 方案 # 151\n更新软件包"
-      },
-      "3.0.1": {
-        "en": "Corrected the web extension",
-        "de": "Korrektur der Web-Erweiterung",
-        "ru": "Исправлено расширение сайта",
-        "pt": "Corrigido a extensão web",
-        "nl": "De webextensie gecorrigeerd",
-        "fr": "Correction de l'extension web",
-        "it": "Corretto l'estensione web",
-        "es": "Corregido la extensión web",
-        "pl": "Poprawiono rozszerzenie sieci Web",
-        "uk": "Виправлено розширення веб",
-        "zh-cn": "更正网络扩展名"
       }
     },
     "titleLang": {
