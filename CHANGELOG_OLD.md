@@ -1,4 +1,8 @@
 # Older changes
+## 4.0.0 (2026-02-17)
+* (@GermanBluefox) Packages were updated
+* (@GermanBluefox) Drop Node.js 18 support
+
 ## 3.1.3 (2026-01-19)
 * (@GermanBluefox) Caught a seldom race condition on the connection close
 

@@ -197,7 +197,7 @@ You cannot send a POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.1.0 (2026-10-13)
 - (@GermanBluefox) Added option `Reverse proxy path` to make Swagger UI work behind a reverse proxy
 
 ### 4.0.4 (2026-10-13)
@@ -216,10 +216,6 @@ You cannot send a POST request to commands via GUI.
 
 ### 4.0.1 (2026-02-17)
 * (@GermanBluefox) Corrected some minor issues
-
-### 4.0.0 (2026-02-17)
-* (@GermanBluefox) Packages were updated
-* (@GermanBluefox) Drop Node.js 18 support
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "4.0.4",
+    "version": "4.1.0",
     "news": {
+      "4.1.0": {
+        "en": "Added option `Reverse proxy path` to make Swagger UI work behind a reverse proxy",
+        "de": "Option `Reverse-Proxy-Pfad` hinzugefügt, damit Swagger UI läuft",
+        "ru": "Добавлена опция «Обратный путь к прокси-серверу», позволяющая пользовательскому интерфейсу Swagger работать за обратным прокси-сервером",
+        "pt": "Adicionada a opção `Reverse proxy path` para fazer o Swagger UI funcionar",
+        "nl": "Optie `Reverse proxy path` toegevoegd om Swagger UI achter een reverse proxy te laten werken",
+        "fr": "Ajout de l'option « Reverse Proxy Path » pour que Swagger UI fonctionne",
+        "it": "Aggiunta l'opzione «Reverse proxy path» per far funzionare Swagger UI",
+        "es": "Se ha añadido la opción «Ruta de proxy inversa» para que la interfaz de Swagger funcione",
+        "pl": "Dodano opcję „Odwróć ścieżkę proxy”, aby interfejs użytkownika Swagger działał za odwrotnym serwerem proxy",
+        "uk": "Додана опція `Зворотний шлях проксі`, щоб змусити інтерфейс Swagger працювати за зворотним проксі",
+        "zh-cn": "添加了 “反向代理路径” 选项，让 Swagger UI 在反向代理后面运行"
+      },
       "4.0.4": {
         "en": "Updated packages\nAdded option to use HTTP/2 on a secure connection (enabled by default, falls back to HTTP/1.1)\nReport the used port to js-controller",
         "de": "Neue Pakete\nOption für sichere HTTP/2 hinzugefügt (standardmäßig aktiviert, greift auf HTTP/1.1 zurück)\nVerwendeten Port an JS-Controller melden",
@@ -80,19 +93,6 @@
         "pl": "Kupowałem rzadko wyścig warunek na połączenie blisko",
         "uk": "Посунути умову забігу на з'єднанні",
         "zh-cn": "在连接关闭时, 很少遇到比赛条件"
-      },
-      "3.1.1": {
-        "en": "corrected web extension path",
-        "de": "korrigierter bahnverlängerungspfad",
-        "ru": "исправленный путь веб-расширения",
-        "pt": "caminho de extensão web corrigido",
-        "nl": "gecorrigeerd web extensie pad",
-        "fr": "chemin d'extension web corrigé",
-        "it": "percorso di estensione web corretto",
-        "es": "ruta de extensión web corregida",
-        "pl": "poprawiona ścieżka rozszerzenia sieci web",
-        "uk": "виправлено шлях розширення веб",
-        "zh-cn": "更正的网络扩展路径"
       }
     },
     "titleLang": {
