@@ -3,32 +3,6 @@
     "name": "rest-api",
     "version": "4.1.1",
     "news": {
-      "4.1.1": {
-        "en": "Fixed `413 Payload Too Large` for request bodies larger than 100kB when authentication is enabled",
-        "de": "`413 Payload Too Large` für Anfragetexte über 100 kB bei aktivierter Authentifizierung behoben",
-        "ru": "Исправлена ошибка «413 Payload Too Large» для тел запроса размером более 100 КБ при включенной аутентификации",
-        "pt": "Corrigido o `413 Payload Too Large` para pedidos maiores que 100kB quando a autenticação é ativada",
-        "nl": "„Payload „\" 413 te groot \"” opgelost voor verzoekinstanties groter dan 100 kB wanneer authenticatie is ingeschakeld”",
-        "fr": "Correction de « 413 Payload Too Large » pour les requêtes de plus de 100 Ko lorsque l'authentification est activée",
-        "it": "Risolto `413 Payload troppo large` per richieste superiori a 100 kB con autenticazione abilitata",
-        "es": "Se corrigió «413 Payload Too Large» para solicitudes de más de 100 KB con la autenticación habilitada",
-        "pl": "Naprawiono „413 Payload Too Large” dla obiektów żądań większych niż 100 kB, gdy uwierzytelnianie jest włączone",
-        "uk": "Виправлено `413 корисне навантаження занадто велики` для тіл запитів розміром більше 100kB, коли аутентифікація увімкнена",
-        "zh-cn": "修复了启用身份验证时大于 100kB 的请求正文的 “413 Payload Too Large” 问题"
-      },
-      "4.1.0": {
-        "en": "Added option `Reverse proxy path` to make Swagger UI work behind a reverse proxy",
-        "de": "Option `Reverse-Proxy-Pfad` hinzugefügt, damit Swagger UI läuft",
-        "ru": "Добавлена опция «Обратный путь к прокси-серверу», позволяющая пользовательскому интерфейсу Swagger работать за обратным прокси-сервером",
-        "pt": "Adicionada a opção `Reverse proxy path` para fazer o Swagger UI funcionar",
-        "nl": "Optie `Reverse proxy path` toegevoegd om Swagger UI achter een reverse proxy te laten werken",
-        "fr": "Ajout de l'option « Reverse Proxy Path » pour que Swagger UI fonctionne",
-        "it": "Aggiunta l'opzione «Reverse proxy path» per far funzionare Swagger UI",
-        "es": "Se ha añadido la opción «Ruta de proxy inversa» para que la interfaz de Swagger funcione",
-        "pl": "Dodano opcję „Odwróć ścieżkę proxy”, aby interfejs użytkownika Swagger działał za odwrotnym serwerem proxy",
-        "uk": "Додана опція `Зворотний шлях проксі`, щоб змусити інтерфейс Swagger працювати за зворотним проксі",
-        "zh-cn": "添加了 “反向代理路径” 选项，让 Swagger UI 在反向代理后面运行"
-      },
       "4.0.4": {
         "en": "Updated packages\nAdded option to use HTTP/2 on a secure connection (enabled by default, falls back to HTTP/1.1)\nReport the used port to js-controller",
         "de": "Neue Pakete\nOption für sichere HTTP/2 hinzugefügt (standardmäßig aktiviert, greift auf HTTP/1.1 zurück)\nVerwendeten Port an JS-Controller melden",

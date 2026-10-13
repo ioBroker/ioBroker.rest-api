@@ -222,11 +222,7 @@ You cannot send a POST request to commands via GUI.
 ## Changelog
 ### **WORK IN PROGRESS**
 - (@GermanBluefox) Added `PATCH /v1/states` to write many states with one request (bulk update)
-
-### 4.1.1 (2026-10-13)
 - (@GermanBluefox) Fixed `413 Payload Too Large` for request bodies larger than 100kB when authentication is enabled
-
-### 4.1.0 (2026-10-13)
 - (@GermanBluefox) Added option `Reverse proxy path` to make Swagger UI work behind a reverse proxy
 
 ### 4.0.4 (2026-10-13)
