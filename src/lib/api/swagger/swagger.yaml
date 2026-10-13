@@ -892,14 +892,17 @@ paths:
         get:
             tags:
                 - 'enum'
-            summary: 'Reads enums of specific type'
+            summary: 'Reads the enum and all its sub-enums'
+            description: >-
+                For a category like "functions" all enums of this category are returned.
+                For an enum like "functions.light" the enum itself is returned as the first entry, followed by all its sub-enums.
             operationId: 'readEnums'
             produces:
                 - 'application/json'
             parameters:
                 - name: 'enumId'
                   in: 'path'
-                  description: 'Enum ID in form "functions" or "room" without "enum."'
+                  description: 'Enum ID like "functions" or "functions.light" without "enum."'
                   type: 'string'
                   required: true
             responses:
@@ -908,7 +911,7 @@ paths:
                     schema:
                         $ref: '#/definitions/EnumResponse'
                 404:
-                    description: 'Category not found'
+                    description: 'Enum not found'
     /sendto/{instance}:
         x-swagger-router-controller: sendTo
         get:
