@@ -126,6 +126,7 @@
     ],
     "platform": "Javascript/Node.js",
     "mode": "daemon",
+    "declareUsedResources": true,
     "connectionType": "local",
     "dataSource": "push",
     "loglevel": "info",
