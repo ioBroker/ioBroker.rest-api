@@ -105,12 +105,13 @@ class RestApiAdapter extends Adapter {
                 }
             } catch (err) {
                 this.log.error(`Cannot create webserver: ${err}`);
-                this.terminate ? this.terminate(1) : process.exit(1);
+                this.terminate(1);
                 return;
             }
         } else {
             this.log.error('port missing');
-            process.exit(1);
+            this.terminate(1);
+            return;
         }
 
         if (this.webServer.server) {
@@ -131,7 +132,7 @@ class RestApiAdapter extends Adapter {
                     this.log.error(`Cannot start server on ${this.config.bind || '0.0.0.0'}:${serverPort}: ${e}`);
                 }
                 if (!serverListening) {
-                    this.terminate ? this.terminate(1) : process.exit(1);
+                    this.terminate(1);
                 }
             });
 
@@ -141,7 +142,8 @@ class RestApiAdapter extends Adapter {
                 port => {
                     if (port !== this.config.port) {
                         this.log.error(`port ${this.config.port} already in use`);
-                        process.exit(1);
+                        this.terminate(1);
+                        return;
                     }
                     serverPort = port;
 
@@ -164,7 +166,7 @@ class RestApiAdapter extends Adapter {
             console.log('Adapter runs as a part of web service');
             this.log.warn('Adapter runs as a part of web service');
             this.setForeignState(`system.adapter.${this.namespace}.alive`, false, true, () =>
-                setTimeout(() => process.exit(EXIT_CODES.ADAPTER_REQUESTED_TERMINATION), 1000),
+                setTimeout(() => this.terminate(EXIT_CODES.ADAPTER_REQUESTED_TERMINATION), 1000),
             );
         } else {
             if (this.config.secure) {

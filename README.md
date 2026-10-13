@@ -187,6 +187,8 @@ You cannot send a POST request to commands via GUI.
 
 ### **WORK IN PROGRESS**
 - (iobroker-bot) Adapter requires node.js >= 22 now.
+- (@GermanBluefox) Replaced `process.exit()` with `terminate()` for compact mode and added tests on Windows and macOS
+
 ### 4.0.2 (2026-06-14)
 * (@GermanBluefox) Packages were updated
 * (@GermanBluefox) Allowed to define the response content type by sendTo queries
@@ -277,6 +279,6 @@ You cannot send a POST request to commands via GUI.
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## License
-Apache 2.0
+Apache 2.0, see [LICENSE](LICENSE)
 
 Copyright (c) 2017-2026 bluefox <dogafox@gmail.com>

@@ -28,5 +28,9 @@
   "Warning!": "Waarschuwing!",
   "all": "allemaal",
   "none": "geen",
-  "place here": "plaats de bestanden hier"
+  "place here": "plaats de bestanden hier",
+  "Read about Let's Encrypt certificates": "Lees meer over Let's Encrypt-certificaten",
+  "Main settings": "Hoofdinstellingen",
+  "Do not allow admin commands execution": "Uitvoeren van admin-opdrachten niet toestaan",
+  "Do not allow commands execution": "Uitvoeren van opdrachten niet toestaan"
 }

@@ -89,13 +89,14 @@ class RestApiAdapter extends adapter_core_1.Adapter {
             }
             catch (err) {
                 this.log.error(`Cannot create webserver: ${err}`);
-                this.terminate ? this.terminate(1) : process.exit(1);
+                this.terminate(1);
                 return;
             }
         }
         else {
             this.log.error('port missing');
-            process.exit(1);
+            this.terminate(1);
+            return;
         }
         if (this.webServer.server) {
             // wait until all REST routes are bound before accepting connections
@@ -112,13 +113,14 @@ class RestApiAdapter extends adapter_core_1.Adapter {
                     this.log.error(`Cannot start server on ${this.config.bind || '0.0.0.0'}:${serverPort}: ${e}`);
                 }
                 if (!serverListening) {
-                    this.terminate ? this.terminate(1) : process.exit(1);
+                    this.terminate(1);
                 }
             });
             this.getPort(this.config.port, !this.config.bind || this.config.bind === '0.0.0.0' ? undefined : this.config.bind || undefined, port => {
                 if (port !== this.config.port) {
                     this.log.error(`port ${this.config.port} already in use`);
-                    process.exit(1);
+                    this.terminate(1);
+                    return;
                 }
                 serverPort = port;
                 this.webServer.server.listen(port, !this.config.bind || this.config.bind === '0.0.0.0' ? undefined : this.config.bind || undefined, async () => {
@@ -133,7 +135,7 @@ class RestApiAdapter extends adapter_core_1.Adapter {
         if (this.config.webInstance) {
             console.log('Adapter runs as a part of web service');
             this.log.warn('Adapter runs as a part of web service');
-            this.setForeignState(`system.adapter.${this.namespace}.alive`, false, true, () => setTimeout(() => process.exit(adapter_core_1.EXIT_CODES.ADAPTER_REQUESTED_TERMINATION), 1000));
+            this.setForeignState(`system.adapter.${this.namespace}.alive`, false, true, () => setTimeout(() => this.terminate(adapter_core_1.EXIT_CODES.ADAPTER_REQUESTED_TERMINATION), 1000));
         }
         else {
             if (this.config.secure) {

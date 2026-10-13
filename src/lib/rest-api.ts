@@ -23,8 +23,6 @@ import type { RequestExt, RestApiAdapter, RestApiAdapterConfig, SubscribeMethod,
 
 const pattern2RegEx = commonTools.pattern2RegEx;
 
-process.env.SUPPRESS_NO_CONFIG_WARNING = 'true';
-
 const WEB_EXTENSION_PREFIX = 'rest-api/';
 
 function parseQuery(_url: string): Record<string, any> {

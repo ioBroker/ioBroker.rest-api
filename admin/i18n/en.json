@@ -28,5 +28,9 @@
   "Warning!": "Warning!",
   "all": "all",
   "none": "none",
-  "place here": "place the files here"
+  "place here": "place the files here",
+  "Read about Let's Encrypt certificates": "Read about Let's Encrypt certificates",
+  "Main settings": "Main settings",
+  "Do not allow admin commands execution": "Do not allow admin commands execution",
+  "Do not allow commands execution": "Do not allow commands execution"
 }

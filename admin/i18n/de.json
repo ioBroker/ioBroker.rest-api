@@ -28,5 +28,9 @@
   "Warning!": "Warnung!",
   "all": "alle",
   "none": "keins",
-  "place here": "Dateien hier platzieren"
+  "place here": "Dateien hier platzieren",
+  "Read about Let's Encrypt certificates": "Mehr über Let's Encrypt-Zertifikate lesen",
+  "Main settings": "Haupteinstellungen",
+  "Do not allow admin commands execution": "Ausführung von Admin-Befehlen nicht erlauben",
+  "Do not allow commands execution": "Ausführung von Befehlen nicht erlauben"
 }

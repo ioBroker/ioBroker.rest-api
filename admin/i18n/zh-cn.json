@@ -28,5 +28,9 @@
   "Warning!": "警告！",
   "all": "所有",
   "none": "无",
-  "place here": "将文件拖拽到这里"
+  "place here": "将文件拖拽到这里",
+  "Read about Let's Encrypt certificates": "了解 Let's Encrypt 证书",
+  "Main settings": "主要设置",
+  "Do not allow admin commands execution": "不允许执行管理命令",
+  "Do not allow commands execution": "不允许执行命令"
 }

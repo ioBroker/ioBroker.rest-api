@@ -18,7 +18,6 @@ const socket_classes_1 = require("@iobroker/socket-classes");
 const socketCommands_1 = require("@iobroker/socket-classes/build/lib/socketCommands");
 const common_1 = require("./common");
 const pattern2RegEx = adapter_core_1.commonTools.pattern2RegEx;
-process.env.SUPPRESS_NO_CONFIG_WARNING = 'true';
 const WEB_EXTENSION_PREFIX = 'rest-api/';
 function parseQuery(_url) {
     let url;

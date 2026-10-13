@@ -28,5 +28,9 @@
   "Warning!": "Предупреждение!",
   "all": "все",
   "none": "none",
-  "place here": "разместите файлы здесь"
+  "place here": "разместите файлы здесь",
+  "Read about Let's Encrypt certificates": "Подробнее о сертификатах Let's Encrypt",
+  "Main settings": "Основные настройки",
+  "Do not allow admin commands execution": "Запретить выполнение команд администратора",
+  "Do not allow commands execution": "Запретить выполнение команд"
 }
