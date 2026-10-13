@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "4.1.1",
+    "version": "4.1.2",
     "news": {
+      "4.1.2": {
+        "en": "Added `PATCH /v1/states` to write many states with one request (bulk update)\nFixed `413 Payload Too Large` for request bodies larger than 100kB when authentication is enabled\nAdded option `Reverse proxy path` to make Swagger UI work behind a reverse proxy",
+        "de": "`PATCH /v1/states `hinzugefügt, um mehrere Status zu senden (Bulk-Update)\n`413 Payload Too Large` für Anfragetexte über 100 kB bei aktivierter Authentifizierung behoben\nOption `Reverse-Proxy-Pfad` hinzugefügt, damit Swagger UI läuft",
+        "ru": "Добавлен `PATCH /v1/states `для записи нескольких состояний одним запросом (массовое обновление)\nИсправлена ошибка «413 Payload Too Large» для тел запроса размером более 100 КБ при включенной аутентификации\nДобавлена опция «Обратный путь к прокси-серверу», позволяющая пользовательскому интерфейсу Swagger работать за обратным прокси-сервером",
+        "pt": "Adicionado `PATCH /v1/states' para gravar vários estados com um pedido\nCorrigido o `413 Payload Too Large` para pedidos maiores que 100kB quando a autenticação é ativada\nAdicionada a opção `Reverse proxy path` para fazer o Swagger UI funcionar",
+        "nl": "`PATCH/v1/states `toegevoegd om met één verzoek veel staten te schrijven (bulkupdate)\n„Payload „\" 413 te groot \"” opgelost voor verzoekinstanties groter dan 100 kB wanneer authenticatie is ingeschakeld”\nOptie `Reverse proxy path` toegevoegd om Swagger UI achter een reverse proxy te laten werken",
+        "fr": "Ajout de « PATCH /v1/states » pour écrire plusieurs états en une seule demande\nCorrection de « 413 Payload Too Large » pour les requêtes de plus de 100 Ko lorsque l'authentification est activée\nAjout de l'option « Reverse Proxy Path » pour que Swagger UI fonctionne",
+        "it": "Aggiunto «PATCH /v1/states» per scrivere più stati con una sola richiesta\nRisolto `413 Payload troppo large` per richieste superiori a 100 kB con autenticazione abilitata\nAggiunta l'opzione «Reverse proxy path» per far funzionare Swagger UI",
+        "es": "Se añadió PATCH /v1/states para escribir varios estados con una solicitud (actualización masiva)\nSe corrigió «413 Payload Too Large» para solicitudes de más de 100 KB con la autenticación habilitada\nSe ha añadido la opción «Ruta de proxy inversa» para que la interfaz de Swagger funcione",
+        "pl": "Dodano `PATCH /v1/states `, aby napisać wiele stanów za pomocą jednego żądania (aktualizacja zbiorcza)\nNaprawiono „413 Payload Too Large” dla obiektów żądań większych niż 100 kB, gdy uwierzytelnianie jest włączone\nDodano opcję „Odwróć ścieżkę proxy”, aby interfejs użytkownika Swagger działał za odwrotnym serwerem proxy",
+        "uk": "Додано `PATCH/v1/states `для запису багатьох станів з одним запитом (масове оновлення)\nВиправлено `413 корисне навантаження занадто велики` для тіл запитів розміром більше 100kB, коли аутентифікація увімкнена\nДодана опція `Зворотний шлях проксі`, щоб змусити інтерфейс Swagger працювати за зворотним проксі",
+        "zh-cn": "添加了 “PATCH /v1/states” 以通过一个请求写入多个状态（批量更新）\n修复了启用身份验证时大于 100kB 的请求正文的 “413 Payload Too Large” 问题\n添加了 “反向代理路径” 选项，让 Swagger UI 在反向代理后面运行"
+      },
       "4.0.4": {
         "en": "Updated packages\nAdded option to use HTTP/2 on a secure connection (enabled by default, falls back to HTTP/1.1)\nReport the used port to js-controller",
         "de": "Neue Pakete\nOption für sichere HTTP/2 hinzugefügt (standardmäßig aktiviert, greift auf HTTP/1.1 zurück)\nVerwendeten Port an JS-Controller melden",
