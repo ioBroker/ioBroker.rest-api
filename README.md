@@ -184,7 +184,7 @@ You cannot send a POST request to commands via GUI.
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.0.4 (2026-10-13)
 - (@GermanBluefox) Updated packages
 - (@GermanBluefox) Added option to use HTTP/2 on a secure connection (enabled by default, falls back to HTTP/1.1)
 - (@GermanBluefox) Report the used port to js-controller
@@ -204,9 +204,6 @@ You cannot send a POST request to commands via GUI.
 ### 4.0.0 (2026-02-17)
 * (@GermanBluefox) Packages were updated
 * (@GermanBluefox) Drop Node.js 18 support
-
-### 3.1.3 (2026-01-19)
-* (@GermanBluefox) Caught a seldom race condition on the connection close
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

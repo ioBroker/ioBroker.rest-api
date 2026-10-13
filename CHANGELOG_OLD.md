@@ -1,4 +1,7 @@
 # Older changes
+## 3.1.3 (2026-01-19)
+* (@GermanBluefox) Caught a seldom race condition on the connection close
+
 ## 3.1.1 (2025-10-09)
 * (@GermanBluefox) corrected a web extension path
 

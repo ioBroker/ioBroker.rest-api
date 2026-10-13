@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "rest-api",
-    "version": "4.0.3",
+    "version": "4.0.4",
     "news": {
+      "4.0.4": {
+        "en": "Updated packages\nAdded option to use HTTP/2 on a secure connection (enabled by default, falls back to HTTP/1.1)\nReport the used port to js-controller",
+        "de": "Neue Pakete\nOption für sichere HTTP/2 hinzugefügt (standardmäßig aktiviert, greift auf HTTP/1.1 zurück)\nVerwendeten Port an JS-Controller melden",
+        "ru": "Обновленные пакеты\nДобавлена возможность использовать HTTP/2 в защищенном соединении (включена по умолчанию, возвращается к HTTP/1.1)\nСообщите об используемом порте js-controller",
+        "pt": "Pacotes novos\nOpção adicionada para usar HTTP/2 em uma conexão segura (padrão, volta para HTTP/1.1)\nRelate a porta usada ao js-controller",
+        "nl": "Bijgewerkte pakketten\nOptie toegevoegd om HTTP/2 te gebruiken op een beveiligde verbinding (standaard ingeschakeld, valt terug op HTTP/1.1)\nMeld de gebruikte poort aan de js-controller",
+        "fr": "Packages mis à jour\nAjout de l'option HTTP/2 sur une connexion sécurisée (activé par défaut, retour à HTTP/1.1)\nSignaler le port utilisé à JS-Controller",
+        "it": "Pacchi nuovi\nAggiunta l'opzione HTTP/2 su una connessione sicura (di default, torna a HTTP/1.1)\nSegnala la porta usata a js-controller",
+        "es": "Paquetes nuevos\nSe añadió la opción de usar HTTP/2 en una conexión segura (activada por defecto, vuelve a HTTP/1.1)\nDenunciar el puerto usado a js-controller",
+        "pl": "Zaktualizowane pakiety\nDodano opcję używania HTTP/2 na bezpiecznym połączeniu (domyślnie włączona, wraca do HTTP/1.1)\nZgłoś używany port do js-controller",
+        "uk": "Оновлені пакети\nДодана можливість використовувати HTTP/2 на захищеному з'єднанні (увімкнено за замовчуванням, повертається до HTTP/1.1)\nПовідомити про використаний порт на js-контролер",
+        "zh-cn": "更新的软件包\n增加了在安全连接上使用 HTTP/2 的选项（默认启用，回退到 HTTP/1.1）\n向 js-controller 报告使用的端口"
+      },
       "4.0.3": {
         "en": "Adapter requires node.js >= 22 now.\nReplaced `process.exit()` with `terminate()` for compact mode and added tests on Windows and macOS",
         "de": "Adapter benötigt jetzt node.js >= 22.\n`process.exit () `durch `terminate ()` für Kompaktmodus ersetzt und Tests auf Windows und macOS",
@@ -80,19 +93,6 @@
         "pl": "poprawiona ścieżka rozszerzenia sieci web",
         "uk": "виправлено шлях розширення веб",
         "zh-cn": "更正的网络扩展路径"
-      },
-      "3.1.0": {
-        "en": "Fix running as web extension, own implementation of unmaintained swagger-node-runner-fork, \nremove 18 and add node 24 to tests\nmultiple null error fixes and wrong swagger schema #151\nupdated packages",
-        "de": "Reparieren Sie als Web-Erweiterung, eigene Implementierung von nicht gespeicherten Swagger-Node-runner-fork,\n18 entfernen und knoten 24 zu tests hinzufügen\nmultiple null fehlerbehebungen und falsches swagger-schema #151\naktualisierte pakete",
-        "ru": "Исправить работу в качестве веб-расширения, собственной реализации неподдерживаемого swagger-node-runner-fork,\nудалить 18 и добавить узел 24 в тесты\nнесколько исправлений нулевых ошибок и неправильная схема #151\nобновленные пакеты",
-        "pt": "Corrigir a execução como extensão da Web, implementação própria de swagger-node-runner-fork sem manutenção,\nremover 18 e adicionar o nó 24 aos testes\nmúltiplas correções de erro nulo e esquema de arrogância errado #151\npacotes atualizados",
-        "nl": "Repareren als web extensie, eigen implementatie van onbeheerde swagger-node-runner-vork,\nverwijderen 18 en toevoegen node 24 aan tests\nmeerdere null fout fixes en verkeerde swagger schema #151\nbijgewerkte pakketten",
-        "fr": "Correction en cours d'exécution comme extension web, propre implémentation de swagger-node-runner-fork non maintenu,\nsupprimer 18 et ajouter le noeud 24 aux essais\nplusieurs corrections d'erreur null et mauvais schéma swagger #151\npaquets mis à jour",
-        "it": "Correre in esecuzione come estensione web, propria implementazione di swagger-node-runner-fork non mantenuto,\nrimuovere 18 e aggiungere nodo 24 ai test\nmolteplici correzioni di errore nulle e schema di swagger sbagliato #151\npacchetti aggiornati",
-        "es": "Arreglar el funcionamiento como extensión web, propia implementación de swagger-node-runner-fork,\nquitar 18 y añadir nodo 24 a las pruebas\nmúltiples correcciones de error null y el esquema de swagger equivocado #151\npaquetes actualizados",
-        "pl": "Fix działa jako rozszerzenie sieci web, własne implementacja niezachowane swagger- node- runner- widelec,\nusunąć 18 i dodać węzeł 24 do testów\nwielokrotne poprawki błędów null i błędne schematy swagger # 151\nzaktualizowane pakiety",
-        "uk": "Виправлення запуску як веб-навігація, власна реалізація незбережених лебідок-нод-навантажувача,\nвидалити 18 і додати вузол 24 для тестування\nкілька null fixes і невірно swagger schema #151\nоновлені пакети",
-        "zh-cn": "修复作为网络扩展运行, 自身执行未维护的swagger-node-runner-fork,\n删除 18 个,并在测试中添加节点 24\n多个无效错误修正和错错的 swagger 方案 # 151\n更新软件包"
       }
     },
     "titleLang": {
