@@ -32,5 +32,7 @@
   "Read about Let's Encrypt certificates": "Lees meer over Let's Encrypt-certificaten",
   "Main settings": "Hoofdinstellingen",
   "Do not allow admin commands execution": "Uitvoeren van admin-opdrachten niet toestaan",
-  "Do not allow commands execution": "Uitvoeren van opdrachten niet toestaan"
+  "Do not allow commands execution": "Uitvoeren van opdrachten niet toestaan",
+  "http2": "HTTP/2 gebruiken",
+  "http2_hint": "Alle verzoeken van een client, inclusief long polling, delen één verbinding. Clients zonder HTTP/2 vallen automatisch terug op HTTP/1.1"
 }

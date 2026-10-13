@@ -14,6 +14,8 @@ export interface RestApiAdapterConfig {
     port: number | string;
     auth?: boolean;
     secure: boolean;
+    /** Speak HTTP/2 with HTTP/1.1 fallback if `secure` is set. Enabled by default */
+    http2?: boolean;
     bind: string;
     certPublic: string;
     certPrivate: string;

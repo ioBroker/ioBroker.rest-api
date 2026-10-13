@@ -44,6 +44,15 @@
                     "md": 6,
                     "lg": 2
                 },
+                "http2": {
+                    "hidden": "!data.secure || !!data.webInstance",
+                    "type": "checkbox",
+                    "label": "http2",
+                    "help": "http2_hint",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 2
+                },
                 "certPublic": {
                     "type": "certificate",
                     "hidden": "!data.secure || !!data.webInstance",

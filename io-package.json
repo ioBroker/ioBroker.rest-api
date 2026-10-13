@@ -178,6 +178,7 @@
     "port": 8093,
     "auth": false,
     "secure": false,
+    "http2": true,
     "bind": "0.0.0.0",
     "certPublic": "",
     "certPrivate": "",

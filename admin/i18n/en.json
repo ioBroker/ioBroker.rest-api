@@ -32,5 +32,7 @@
   "Read about Let's Encrypt certificates": "Read about Let's Encrypt certificates",
   "Main settings": "Main settings",
   "Do not allow admin commands execution": "Do not allow admin commands execution",
-  "Do not allow commands execution": "Do not allow commands execution"
+  "Do not allow commands execution": "Do not allow commands execution",
+  "http2": "Use HTTP/2",
+  "http2_hint": "All requests of a client, including long polling, share a single connection. Clients without HTTP/2 automatically fall back to HTTP/1.1"
 }

@@ -32,5 +32,7 @@
   "Read about Let's Encrypt certificates": "Докладніше про сертифікати Let's Encrypt",
   "Main settings": "Основні налаштування",
   "Do not allow admin commands execution": "Заборонити виконання команд адміністратора",
-  "Do not allow commands execution": "Заборонити виконання команд"
+  "Do not allow commands execution": "Заборонити виконання команд",
+  "http2": "Використовувати HTTP/2",
+  "http2_hint": "Усі запити клієнта, включно з long polling, використовують одне з’єднання. Клієнти без підтримки HTTP/2 автоматично використовують HTTP/1.1"
 }

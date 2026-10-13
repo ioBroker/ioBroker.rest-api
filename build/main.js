@@ -73,6 +73,7 @@ class RestApiAdapter extends adapter_core_1.Adapter {
                     app: this.webServer.app,
                     adapter: this,
                     secure: this.config.secure,
+                    http2: this.config.http2,
                 });
                 this.webServer.server = await webserver.init();
                 if (this.config.auth) {

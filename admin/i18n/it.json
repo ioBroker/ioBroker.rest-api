@@ -32,5 +32,7 @@
   "Read about Let's Encrypt certificates": "Ulteriori informazioni sui certificati Let's Encrypt",
   "Main settings": "Impostazioni principali",
   "Do not allow admin commands execution": "Non consentire l'esecuzione dei comandi di amministrazione",
-  "Do not allow commands execution": "Non consentire l'esecuzione dei comandi"
+  "Do not allow commands execution": "Non consentire l'esecuzione dei comandi",
+  "http2": "Usa HTTP/2",
+  "http2_hint": "Tutte le richieste di un client, incluso il long polling, condividono un’unica connessione. I client senza HTTP/2 passano automaticamente a HTTP/1.1"
 }

@@ -1,5 +1,6 @@
 import type { Server as HttpServer } from 'node:http';
 import type { Server as HttpsServer } from 'node:https';
+import type { Http2SecureServer } from 'node:http2';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -254,7 +255,7 @@ export default class SwaggerUI {
     private adminAcl: ioBroker.PermissionSet | undefined;
 
     constructor(
-        server: HttpServer | HttpsServer,
+        server: HttpServer | HttpsServer | Http2SecureServer,
         webSettings: {
             secure: boolean;
             port: number | string;

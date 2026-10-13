@@ -32,5 +32,7 @@
   "Read about Let's Encrypt certificates": "了解 Let's Encrypt 证书",
   "Main settings": "主要设置",
   "Do not allow admin commands execution": "不允许执行管理命令",
-  "Do not allow commands execution": "不允许执行命令"
+  "Do not allow commands execution": "不允许执行命令",
+  "http2": "使用 HTTP/2",
+  "http2_hint": "客户端的所有请求（包括长轮询）共用一个连接。不支持 HTTP/2 的客户端会自动回退到 HTTP/1.1"
 }

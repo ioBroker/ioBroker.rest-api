@@ -5,10 +5,11 @@ import cookieParser from 'cookie-parser';
 import express, { type Express, type Response } from 'express';
 import type { Server as HttpServer } from 'node:http';
 import type { Server as HttpsServer } from 'node:https';
+import type { Http2SecureServer } from 'node:http2';
 import RestAPI from './lib/rest-api';
 import type { RestApiAdapterConfig } from './lib/types';
 
-type Server = HttpServer | HttpsServer;
+type Server = HttpServer | HttpsServer | Http2SecureServer;
 
 class RestApiAdapter extends Adapter {
     declare config: RestApiAdapterConfig;
@@ -87,6 +88,7 @@ class RestApiAdapter extends Adapter {
                     app: this.webServer.app,
                     adapter: this,
                     secure: this.config.secure,
+                    http2: this.config.http2,
                 });
 
                 this.webServer.server = await webserver.init();

@@ -184,6 +184,10 @@ You cannot send a POST request to commands via GUI.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Updated packages
+- (@GermanBluefox) Added option to use HTTP/2 on a secure connection (enabled by default, falls back to HTTP/1.1)
+
 ### 4.0.3 (2026-10-13)
 - (iobroker-bot) Adapter requires node.js >= 22 now.
 - (@GermanBluefox) Replaced `process.exit()` with `terminate()` for compact mode and added tests on Windows and macOS
