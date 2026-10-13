@@ -520,7 +520,10 @@ tests.integration(path.join(__dirname, '..'), {
                 const ids = ['javascript.0.test-string1', 'javascript.0.test-number', 'javascript.0.test-boolean'];
 
                 const events = [];
-                const onStateChange = (id, state) => ids.includes(id) && events.push(`${id}=${state?.val}`);
+                // Only events written by the adapter. The events of createVariables may arrive later
+                const from = `system.adapter.${harness.adapterName}.0`;
+                const onStateChange = (id, state) =>
+                    ids.includes(id) && state?.from === from && events.push(`${id}=${state.val}`);
                 // the harness is subscribed to all states
                 harness.on('stateChange', onStateChange);
 
