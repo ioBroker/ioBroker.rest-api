@@ -362,6 +362,74 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(states[`system.adapter.${harness.adapterName}.0`]).to.be.not.ok;
                 expect(states[`system.adapter.${harness.adapterName}.0.uptime`].val).to.be.least(0);
             }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: bulk - must set many states as array', async () => {
+                await createVariables(harness, false, 'a', 1);
+
+                const response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, [
+                    { id: 'javascript.0.test-string1', val: 'bulk' },
+                    { id: 'javascript.0.test-number', val: '42', ack: true },
+                    { id: 'javascript.0.test-boolean', val: 'true' },
+                ]);
+                expect(response.data).to.deep.equal([
+                    { id: 'javascript.0.test-string1', val: 'bulk', ack: false },
+                    { id: 'javascript.0.test-number', val: 42, ack: true },
+                    { id: 'javascript.0.test-boolean', val: true, ack: false },
+                ]);
+
+                let state = await harness.states.getStateAsync('javascript.0.test-string1');
+                expect(state.val).equal('bulk');
+                state = await harness.states.getStateAsync('javascript.0.test-number');
+                expect(state.val).equal(42);
+                expect(state.ack).to.be.true;
+                state = await harness.states.getStateAsync('javascript.0.test-boolean');
+                expect(state.val).to.be.true;
+                expect(state.ack).to.be.false;
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: bulk - must set many states as object', async () => {
+                await createVariables(harness, true, 'a', 1);
+
+                const response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, {
+                    'javascript.0.test-string1': 'obj',
+                    'javascript.0.test-number': { val: 7, ack: true },
+                });
+                expect(response.data).to.deep.equal([
+                    { id: 'javascript.0.test-string1', val: 'obj', ack: false },
+                    { id: 'javascript.0.test-number', val: 7, ack: true },
+                ]);
+                const state = await harness.states.getStateAsync('javascript.0.test-number');
+                expect(state.val).equal(7);
+            }).timeout(TESTS_TIMEOUT);
+
+            it('Test REST API: bulk - must report errors per entry', async () => {
+                await createVariables(harness, true, 'a', 1);
+
+                let response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, [
+                    { val: 1 },
+                    { id: 'javascript.0.test-number' },
+                    { id: 'javascript.0.test-string1', val: 'after-error' },
+                ]);
+                expect(response.data.length).equal(3);
+                expect(response.data[0]).to.deep.equal({ index: 0, error: 'id missing' });
+                expect(response.data[1]).to.deep.equal({ id: 'javascript.0.test-number', index: 1, error: 'val missing' });
+                expect(response.data[2]).to.deep.equal({ id: 'javascript.0.test-string1', val: 'after-error', ack: false });
+
+                response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states?stopOnError=true`, [
+                    { id: 'javascript.0.test-string1', val: 'first' },
+                    { id: 'javascript.0.test-number' },
+                    { id: 'javascript.0.test-string1', val: 'never' },
+                ]);
+                expect(response.data.length).equal(2);
+                expect(response.data[1].error).equal('val missing');
+                const state = await harness.states.getStateAsync('javascript.0.test-string1');
+                expect(state.val).equal('first');
+
+                response = await axios.patch(`http://127.0.0.1:${PORT}/v1/states`, [], {
+                    validateStatus: () => true,
+                });
+                expect(response.status).equal(422);
+            }).timeout(TESTS_TIMEOUT);
         });
     },
 });

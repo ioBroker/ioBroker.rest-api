@@ -10,6 +10,42 @@ function getIDs(oids: string): string[] {
         .filter(t => t);
 }
 
+/** Maximal number of states, that can be written with one bulk request */
+const MAX_BULK_STATES = 1000;
+
+/** Convert "true"/"false" and numeric strings into boolean/number if the object has such type */
+async function _convertValue<T extends ioBroker.StateValue | ioBroker.State>(
+    req: RequestExt,
+    id: string,
+    val: T,
+): Promise<T> {
+    if (val && typeof val !== 'object') {
+        if (val === 'true' || val === 'false') {
+            const obj = await req._adapter.getForeignObjectAsync(id, {
+                user: req._user,
+                limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+            });
+            if (obj?.common?.type === 'boolean') {
+                return (val === 'true') as T;
+            }
+        } else if (typeof val === 'string' && isFinite(val as unknown as number)) {
+            try {
+                const obj = await req._adapter.getForeignObjectAsync(id, {
+                    user: req._user,
+                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                });
+                if (obj?.common?.type === 'number') {
+                    return parseFloat(val) as T;
+                }
+            } catch (error) {
+                req._adapter.log.warn(`Cannot read object ${id}: ${error.toString()}`);
+                return parseFloat(val) as T;
+            }
+        }
+    }
+    return val;
+}
+
 async function _updateState(
     req: RequestExt,
     res: Response,
@@ -18,31 +54,7 @@ async function _updateState(
     val: ioBroker.StateValue | ioBroker.State,
     ack?: boolean,
 ): Promise<void> {
-    if (val && typeof val !== 'object') {
-        if (val === 'true' || val === 'false') {
-            const obj = await req._adapter.getForeignObjectAsync(id, {
-                user: req._user,
-                limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
-            });
-            if (obj?.common?.type === 'boolean') {
-                val = val === 'true';
-            }
-            // @ts-expect-error fix later
-        } else if (typeof val === 'string' && isFinite(val)) {
-            try {
-                const obj = await req._adapter.getForeignObjectAsync(id, {
-                    user: req._user,
-                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
-                });
-                if (obj?.common?.type === 'number') {
-                    val = parseFloat(val);
-                }
-            } catch (error) {
-                req._adapter.log.warn(`Cannot read object ${id}: ${error.toString()}`);
-                val = parseFloat(val as string);
-            }
-        }
-    }
+    val = await _convertValue(req, id, val);
 
     try {
         if (!timeout) {
@@ -254,6 +266,108 @@ export function updateState(req: RequestExt, res: Response): void {
                 }
             });
         }
+    });
+}
+
+type BulkStateItem = Partial<ioBroker.SettableState> & { id: string };
+type BulkStateResult =
+    | { id: string; val: ioBroker.StateValue; ack: boolean }
+    | { id?: string; index: number; error: string };
+
+/** Accepts `[{ id, val, ack, ... }]` or `{ "<id>": value | { val, ack, ... } }` and returns a list in the given order */
+function _normalizeBulkBody(body: any): BulkStateItem[] | null {
+    if (Array.isArray(body)) {
+        return body;
+    }
+    if (body && typeof body === 'object') {
+        return Object.keys(body).map(id => {
+            const value = body[id];
+            if (value && typeof value === 'object' && !Array.isArray(value)) {
+                return { ...value, id };
+            }
+            return { id, val: value };
+        });
+    }
+    return null;
+}
+
+function _findStateAsync(req: RequestExt, idOrName: string): Promise<string | undefined> {
+    return new Promise((resolve, reject) =>
+        findState(req._adapter, idOrName, req._user, (error, id) => {
+            if (error?.message?.includes('permissionError')) {
+                // assume it is ID. setForeignState will check the permissions
+                resolve(idOrName);
+            } else if (error) {
+                reject(error);
+            } else {
+                resolve(id);
+            }
+        }),
+    );
+}
+
+/**
+ * Write many states with one request. States are written sequentially in the given order.
+ * It is not a transaction: every state fires its own change event, and states written before an error remain written.
+ */
+export function updateStates(req: RequestExt, res: Response): void {
+    checkPermissions(req._adapter, req._user, [{ type: 'state', operation: 'write' }], async error => {
+        if (error) {
+            errorResponse(req, res, error);
+            return;
+        }
+        const items = _normalizeBulkBody(req.body);
+        if (!items?.length) {
+            res.status(422).json({
+                error: 'Body must be a non-empty array of states or an object with IDs as keys',
+                expectedBody: [{ id: '0_userdata.0.example', val: 1, ack: false }],
+            });
+            return;
+        }
+        if (items.length > MAX_BULK_STATES) {
+            res.status(422).json({ error: `Too many states. Maximum is ${MAX_BULK_STATES}`, count: items.length });
+            return;
+        }
+        const stopOnError = req.query.stopOnError === 'true';
+
+        const results: BulkStateResult[] = [];
+        for (let index = 0; index < items.length; index++) {
+            const item = items[index];
+            if (!item || typeof item !== 'object' || !item.id || typeof item.id !== 'string') {
+                results.push({ index, error: 'id missing' });
+            } else if (!('val' in item)) {
+                results.push({ id: item.id, index, error: 'val missing' });
+            } else {
+                try {
+                    const id = await _findStateAsync(req, item.id);
+                    if (!id) {
+                        results.push({ id: item.id, index, error: 'ID not found' });
+                    } else {
+                        const { id: _id, ...state } = item;
+                        state.val = await _convertValue(req, id, state.val!);
+                        state.ack = !!state.ack;
+                        await req._adapter.setForeignStateAsync(id, state as ioBroker.SettableState, {
+                            user: req._user,
+                            limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                        });
+                        results.push({ id, val: state.val, ack: state.ack });
+                    }
+                } catch (error) {
+                    let text = error.toString();
+                    if (text === 'Error: permissionError') {
+                        text = 'permissionError';
+                    }
+                    req._adapter.log.warn(`Warning by "${req.url}": cannot write "${item.id}": ${text}`);
+                    results.push({ id: item.id, index, error: text });
+                }
+            }
+
+            if (stopOnError && 'error' in results[results.length - 1]) {
+                break;
+            }
+        }
+
+        res.json(results);
     });
 }
 

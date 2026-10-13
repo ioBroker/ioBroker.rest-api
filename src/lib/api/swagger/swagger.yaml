@@ -301,6 +301,43 @@ paths:
                             $ref: '#/definitions/State'
                 400:
                     description: 'Invalid filter supplied'
+        patch:
+            tags:
+                - 'state'
+            summary: 'Update many states with one request (bulk)'
+            description: >-
+                States are written sequentially in the given order. It is not a transaction:
+                every state fires its own change event, and states written before an error remain written.
+                Instead of an array, an object like `{"0_userdata.0.a": 1, "0_userdata.0.b": {"val": 2, "ack": true}}` can be sent.
+                Maximum 1000 states per request.
+            operationId: 'updateStates'
+            consumes:
+                - 'application/json'
+            produces:
+                - 'application/json'
+            parameters:
+                - in: 'query'
+                  name: 'stopOnError'
+                  description: 'Stop writing at the first failed state. Default: all states are processed'
+                  required: false
+                  type: 'boolean'
+                - in: 'body'
+                  required: true
+                  name: 'data'
+                  description: 'States to write in the given order'
+                  schema:
+                      type: 'array'
+                      items:
+                          $ref: '#/definitions/WriteStateWithId'
+            responses:
+                200:
+                    description: 'Result for every processed state in the same order. Failed states have an "error" attribute'
+                    schema:
+                        type: 'array'
+                        items:
+                            $ref: '#/definitions/WriteStateResult'
+                422:
+                    description: 'Invalid body or too many states'
     /states/subscribe:
         x-swagger-router-controller: state
         get:
@@ -2258,6 +2295,46 @@ definitions:
             expire:
                 type: 'integer'
                 description: 'Expire in seconds'
+    WriteStateWithId:
+        type: 'object'
+        required:
+            - id
+            - val
+        properties:
+            id:
+                type: 'string'
+                description: 'State ID'
+                example: '0_userdata.0.example'
+            val:
+                description: 'Value to write'
+                example: 1
+            ack:
+                type: 'boolean'
+                description: 'Is acknowledged. true = update, false = command (default)'
+            q:
+                type: 'integer'
+                format: 'int32'
+                description: 'Quality'
+            expire:
+                type: 'integer'
+                description: 'Expire in seconds'
+    WriteStateResult:
+        type: 'object'
+        properties:
+            id:
+                type: 'string'
+                description: 'State ID'
+            val:
+                description: 'Written value'
+            ack:
+                type: 'boolean'
+                description: 'Written acknowledge flag'
+            index:
+                type: 'integer'
+                description: 'Only by error: index of the entry in the request'
+            error:
+                type: 'string'
+                description: 'Only by error: error text'
     #Type:
     #  type: "string"
     #  enum: [state, channel, device, enum, instance, adapter, host, chart, script, folder]

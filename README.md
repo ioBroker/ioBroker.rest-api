@@ -88,6 +88,29 @@ location /rest-api/ {
 
 If the adapter runs as a web extension, the path is prepended to `/rest-api/` of the web adapter.
 
+## Write many states with one request
+`PATCH /v1/states` writes several states with one request (replacement for `setBulk` of `simple-api`):
+
+```http
+PATCH http://ipaddress:8093/v1/states
+Content-Type: application/json
+
+[
+    { "id": "0_userdata.0.nfc.UserID", "val": "4711" },
+    { "id": "0_userdata.0.nfc.NFCID", "val": "04A224B2C35E80" },
+    { "id": "0_userdata.0.nfc.TagContent", "val": "door", "ack": true }
+]
+```
+
+Instead of an array, an object can be sent: `{ "0_userdata.0.a": 1, "0_userdata.0.b": { "val": 2, "ack": true } }`.
+
+The answer contains one entry per state in the same order: `{ id, val, ack }` or `{ id, index, error }` if this state could not be written.
+With `?stopOnError=true` the processing stops at the first error. Maximum 1000 states per request.
+
+**Important:** the states are written one after another in the given order. It is **not** a transaction: every state fires its own change event, 
+and a script triggered by the first state may not see the new values of the following states yet. 
+If a script needs all values together, trigger it only on the **last** state of the list and read the other states there.
+
 ## Notice
 - `POST` is always for creating a resource (does not matter if it was duplicated)
 - `PUT` is for checking if resource exists then update, else create new resource
@@ -197,6 +220,9 @@ You cannot send a POST request to commands via GUI.
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Added `PATCH /v1/states` to write many states with one request (bulk update)
+
 ### 4.1.1 (2026-10-13)
 - (@GermanBluefox) Fixed `413 Payload Too Large` for request bodies larger than 100kB when authentication is enabled
 
