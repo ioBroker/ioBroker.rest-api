@@ -76,18 +76,25 @@ async function _updateState(req, res, id, timeout, val, ack) {
             }
         }
         else {
-            await req._adapter._addTimeout({ id, val: val, res, timeout });
-            if (typeof val !== 'object') {
-                await req._adapter.setForeignStateAsync(id, val, !!ack, {
-                    user: req._user,
-                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
-                });
+            const endWait = await req._swaggerObject.addTimeout({ id, val: val, res, timeout });
+            try {
+                if (typeof val !== 'object') {
+                    await req._adapter.setForeignStateAsync(id, val, !!ack, {
+                        user: req._user,
+                        limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                    });
+                }
+                else {
+                    await req._adapter.setForeignStateAsync(id, val, {
+                        user: req._user,
+                        limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                    });
+                }
             }
-            else {
-                await req._adapter.setForeignStateAsync(id, val, {
-                    user: req._user,
-                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
-                });
+            catch (error) {
+                // Nothing to wait for: the error is the answer
+                endWait();
+                throw error;
             }
         }
     }

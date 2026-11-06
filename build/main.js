@@ -12,7 +12,6 @@ const rest_api_1 = __importDefault(require("./lib/rest-api"));
 class RestApiAdapter extends adapter_core_1.Adapter {
     webServer;
     WEB_EXTENSION_PREFIX = '';
-    _addTimeout = null;
     constructor(options = {}) {
         super({
             ...options,

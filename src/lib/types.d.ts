@@ -43,7 +43,6 @@ export interface RestApiAdapterConfig {
 export declare interface RestApiAdapter extends ioBroker.Adapter {
     WEB_EXTENSION_PREFIX: string;
     config: RestApiAdapterConfig;
-    _addTimeout: ((task: { id: string; val: ioBroker.State; res: Response; timeout: number }) => Promise<void>) | null;
 }
 
 export type SubscribeMethod = 'polling' | 'POST' | 'GET' | 'PUT' | 'PATCH';
@@ -74,5 +73,7 @@ export type RequestExt = Request & {
             user?: `system.user.${string}`,
         ) => Promise<void>;
         getSubscribes: (url: string, pattern: string, type: 'state' | 'object') => string[] | null;
+        /** Waits for the acknowledgement of a written state; the returned function ends the wait without an answer */
+        addTimeout: (task: { id: string; val: ioBroker.State; res: Response; timeout: number }) => Promise<() => void>;
     };
 };

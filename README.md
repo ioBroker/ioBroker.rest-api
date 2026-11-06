@@ -223,6 +223,9 @@ You cannot send a POST request to commands via GUI.
 
 ### **WORK IN PROGRESS**
 - (copilot) Adapter requires node.js >= 22.19.0 now
+- (@GermanBluefox) Web hooks, polling connections and requests waiting for `ack` no longer take the subscription of a state or an object away from each other: when one of them gave it up, the others got no more changes of it. rest-api now unsubscribes only when none of them needs it any more
+- (@GermanBluefox) A request waiting for `ack` whose write failed was answered a second time by its timer
+- (@GermanBluefox) As a web extension, rest-api is now reloaded by web (9.4.0 or newer) on a change of its settings, without a restart of web (`supportsHotReload`). Requests that still wait for `ack` are answered with 503 when it stops, and it gives up its subscriptions
 ### 4.1.2 (2026-10-13)
 - (@GermanBluefox) Added `PATCH /v1/states` to write many states with one request (bulk update)
 - (@GermanBluefox) Fixed `413 Payload Too Large` for request bodies larger than 100kB when authentication is enabled

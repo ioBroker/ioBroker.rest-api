@@ -2,7 +2,7 @@ import { EXIT_CODES, Adapter, type AdapterOptions } from '@iobroker/adapter-core
 import { WebServer, createOAuth2Server } from '@iobroker/webserver';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import express, { type Express, type Response } from 'express';
+import express, { type Express } from 'express';
 import type { Server as HttpServer } from 'node:http';
 import type { Server as HttpsServer } from 'node:https';
 import type { Http2SecureServer } from 'node:http2';
@@ -19,9 +19,6 @@ class RestApiAdapter extends Adapter {
         app: Express | null;
     };
     public WEB_EXTENSION_PREFIX: string = '';
-    public _addTimeout:
-        | ((task: { id: string; val: ioBroker.State; res: Response; timeout: number }) => Promise<void>)
-        | null = null;
 
     public constructor(options: Partial<AdapterOptions> = {}) {
         super({

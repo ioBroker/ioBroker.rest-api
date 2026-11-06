@@ -75,18 +75,24 @@ async function _updateState(
                 res.json({ val, id });
             }
         } else {
-            await req._adapter._addTimeout!({ id, val: val as ioBroker.State, res, timeout });
+            const endWait = await req._swaggerObject.addTimeout({ id, val: val as ioBroker.State, res, timeout });
 
-            if (typeof val !== 'object') {
-                await req._adapter.setForeignStateAsync(id, val, !!ack, {
-                    user: req._user,
-                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
-                });
-            } else {
-                await req._adapter.setForeignStateAsync(id, val, {
-                    user: req._user,
-                    limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
-                });
+            try {
+                if (typeof val !== 'object') {
+                    await req._adapter.setForeignStateAsync(id, val, !!ack, {
+                        user: req._user,
+                        limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                    });
+                } else {
+                    await req._adapter.setForeignStateAsync(id, val, {
+                        user: req._user,
+                        limitToOwnerRights: req._adapter.config.onlyAllowWhenUserIsOwner,
+                    });
+                }
+            } catch (error) {
+                // Nothing to wait for: the error is the answer
+                endWait();
+                throw error;
             }
         }
     } catch (error) {

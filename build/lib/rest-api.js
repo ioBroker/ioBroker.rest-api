@@ -197,7 +197,15 @@ function removeTextFromFile(fileName, start, end) {
  * @returns object instance
  */
 class SwaggerUI {
+    /** web reloads the extension in place on a change of its settings, see `unload()` */
+    supportsHotReload = true;
     _waitFor = [];
+    /**
+     * How many holders need the subscription of a state or an object, by `state:ID` or `object:ID`: every web hook
+     * and polling connection for each of its IDs or patterns, and every request waiting for an acknowledgement.
+     * js-controller keeps one subscription per pattern, so it is unsubscribed only when the last holder lets go.
+     */
+    subscriptionHolders = new Map();
     app;
     readyPromise;
     adapter;
@@ -247,7 +255,6 @@ class SwaggerUI {
         if (!instanceSettings) {
             this.app.use((0, cors_1.default)());
         }
-        this.adapter._addTimeout = this._addTimeout;
         const aclPromise = this.adapter
             .calculatePermissionsAsync('system.user.admin', socketCommands_1.COMMANDS_PERMISSIONS)
             .then((_acl) => (this.adminAcl = _acl));
@@ -881,6 +888,71 @@ class SwaggerUI {
             callback();
         }
     }
+    /**
+     * Holds the subscription of a state or an object for one more holder. The state is subscribed only for the
+     * first holder (js-controller counts every subscription of a state for the adapters with autoSubscribe), an
+     * object for every holder, so that js-controller checks the rights of the user every time.
+     *
+     * @param type state or object
+     * @param id ID or pattern
+     * @param options user and owner rights to check
+     * @param options.user user whose rights js-controller checks
+     * @param options.limitToOwnerRights only if the user owns the object
+     */
+    async holdSubscription(type, id, options) {
+        const key = `${type}:${id}`;
+        const holders = this.subscriptionHolders.get(key) || 0;
+        // Count first, so that a holder that lets go meanwhile does not unsubscribe it
+        this.subscriptionHolders.set(key, holders + 1);
+        try {
+            if (type === 'object') {
+                await this.adapter.subscribeForeignObjectsAsync(id, options);
+            }
+            else if (!holders) {
+                await this.adapter.subscribeForeignStatesAsync(id, options);
+            }
+        }
+        catch (error) {
+            // Not subscribed for this holder
+            const count = (this.subscriptionHolders.get(key) || 1) - 1;
+            if (count) {
+                this.subscriptionHolders.set(key, count);
+            }
+            else {
+                this.subscriptionHolders.delete(key);
+            }
+            throw error;
+        }
+    }
+    /**
+     * Gives up the subscription of a state or an object for one holder and unsubscribes it when it was the last one
+     *
+     * @param type state or object
+     * @param id ID or pattern
+     * @param options user and owner rights
+     * @param options.user user whose rights js-controller checks
+     * @param options.limitToOwnerRights only if the user owns the object
+     */
+    async releaseSubscription(type, id, options) {
+        const key = `${type}:${id}`;
+        const holders = this.subscriptionHolders.get(key);
+        if (!holders) {
+            return;
+        }
+        if (holders > 1) {
+            this.subscriptionHolders.set(key, holders - 1);
+            return;
+        }
+        this.subscriptionHolders.delete(key);
+        if (type === 'object') {
+            this.adapter.log.debug(`Unsubscribe from object "${id}"`);
+            await this.adapter.unsubscribeForeignObjectsAsync(id, options);
+        }
+        else {
+            this.adapter.log.debug(`Unsubscribe from state "${id}"`);
+            await this.adapter.unsubscribeForeignStatesAsync(id, options);
+        }
+    }
     async _validateUrlHook(item) {
         try {
             await axios_1.default.post(item.urlHook, { test: true }, {
@@ -977,20 +1049,17 @@ class SwaggerUI {
                         this.subscribes[urlHash].promise.resolve();
                     }
                     // unsubscribe
-                    if (this.subscribes[urlHash].state) {
-                        for (let i = 0; i < this.subscribes[urlHash].state.length; i++) {
-                            this.adapter.log.debug(`[${this.subscribes[urlHash].urlHook}] unsubscribe from state: ${this.subscribes[urlHash].state[i].id}`);
-                            await this.adapter.unsubscribeForeignStatesAsync(this.subscribes[urlHash].state[i].id);
-                        }
-                    }
-                    if (this.subscribes[urlHash].object) {
-                        for (let i = 0; i < this.subscribes[urlHash].object.length; i++) {
-                            this.adapter.log.debug(`[${this.subscribes[urlHash].urlHook}] unsubscribe from object: ${this.subscribes[urlHash].object[i].id}`);
-                            await this.adapter.unsubscribeForeignObjectsAsync(this.subscribes[urlHash].object[i].id);
-                        }
-                    }
-                    this.adapter.log.debug(`[${this.subscribes[urlHash].urlHook}] Destroy connection due inactivity`);
+                    const store = this.subscribes[urlHash];
                     delete this.subscribes[urlHash];
+                    for (const item of store.state || []) {
+                        this.adapter.log.debug(`[${store.urlHook}] unsubscribe from state: ${item.id}`);
+                        await this.releaseSubscription('state', item.id);
+                    }
+                    for (const item of store.object || []) {
+                        this.adapter.log.debug(`[${store.urlHook}] unsubscribe from object: ${item.id}`);
+                        await this.releaseSubscription('object', item.id);
+                    }
+                    this.adapter.log.debug(`[${store.urlHook}] Destroy connection due inactivity`);
                 }
             }
         }
@@ -1037,16 +1106,30 @@ class SwaggerUI {
         }
         if (!this.subscribes[urlHash][type].find(item => item.id === id)) {
             const item = { id, delta: options.delta, onchange: options.onchange };
-            this.subscribes[urlHash][type].push(item);
+            const store = this.subscribes[urlHash];
+            store[type].push(item);
             if (item.id.includes('*')) {
                 item.regEx = new RegExp(pattern2RegEx(item.id));
             }
-            if (type === 'state') {
-                this.adapter.log.debug(`[${urlHook}] Subscribe on state "${id}"`);
-                await this.adapter.subscribeForeignStatesAsync(id, {
+            this.adapter.log.debug(`[${urlHook}] Subscribe on ${type} "${id}"`);
+            try {
+                await this.holdSubscription(type, id, {
                     user,
                     limitToOwnerRights: this.adapter.config.onlyAllowWhenUserIsOwner,
                 });
+            }
+            catch (error) {
+                // Not subscribed: forget the task again
+                const pos = store[type].indexOf(item);
+                if (pos !== -1) {
+                    store[type].splice(pos, 1);
+                }
+                if (this.subscribes[urlHash] === store && !store.state.length && !store.object.length) {
+                    delete this.subscribes[urlHash];
+                }
+                throw error;
+            }
+            if (type === 'state') {
                 if (!item.regEx && (options.onchange || options.delta)) {
                     const stateValue = await this.adapter.getForeignStateAsync(id, {
                         user,
@@ -1059,13 +1142,6 @@ class SwaggerUI {
                         item.val = null;
                     }
                 }
-            }
-            else {
-                this.adapter.log.debug(`[${urlHook}] Subscribe on object "${id}"`);
-                await this.adapter.subscribeForeignObjectsAsync(id, {
-                    user,
-                    limitToOwnerRights: this.adapter.config.onlyAllowWhenUserIsOwner,
-                });
             }
         }
         if (this.config.checkInterval) {
@@ -1087,51 +1163,19 @@ class SwaggerUI {
     };
     unregisterSubscribe = async (urlHook, id, type, user) => {
         const urlHash = node_crypto_1.default.createHash('md5').update(urlHook).digest('hex');
-        if (this.subscribes[urlHash]) {
-            if (id) {
-                let pos;
-                do {
-                    pos = this.subscribes[urlHash][type].findIndex(item => item.id === id);
-                    if (pos !== -1) {
-                        this.subscribes[urlHash][type].splice(pos, 1);
-                        if (type === 'state') {
-                            this.adapter.log.debug(`Unsubscribe from state "${id}"`);
-                            await this.adapter.unsubscribeForeignStatesAsync(id, {
-                                user: user || 'system.user.admin',
-                                limitToOwnerRights: this.adapter.config.onlyAllowWhenUserIsOwner,
-                            }); // allow unsubscribing always
-                        }
-                        else {
-                            this.adapter.log.debug(`Unsubscribe from object "${id}"`);
-                            await this.adapter.unsubscribeForeignObjectsAsync(id, {
-                                user: user || 'system.user.admin',
-                                limitToOwnerRights: this.adapter.config.onlyAllowWhenUserIsOwner,
-                            }); // allow unsubscribing always
-                        }
-                    }
-                    else {
-                        break;
-                    }
-                } while (pos !== -1);
+        const store = this.subscribes[urlHash];
+        if (store) {
+            // Take the tasks out first, so that a subscription of this hook that comes in meanwhile is kept
+            const removed = id ? store[type].filter(item => item.id === id) : store[type];
+            store[type] = id ? store[type].filter(item => item.id !== id) : [];
+            for (const item of removed) {
+                // Other hooks and requests may still hold the same ID: it is unsubscribed only for the last one
+                await this.releaseSubscription(type, item.id, {
+                    user: user || 'system.user.admin',
+                    limitToOwnerRights: this.adapter.config.onlyAllowWhenUserIsOwner,
+                }); // allow unsubscribing always
             }
-            else {
-                for (let i = 0; i < this.subscribes[urlHash][type].length; i++) {
-                    if (type === 'state') {
-                        await this.adapter.unsubscribeForeignStatesAsync(this.subscribes[urlHash][type][i].id, {
-                            user: user || 'system.user.admin',
-                            limitToOwnerRights: this.adapter.config.onlyAllowWhenUserIsOwner,
-                        }); // allow unsubscribing always
-                    }
-                    else {
-                        await this.adapter.unsubscribeForeignObjectsAsync(this.subscribes[urlHash][type][i].id, {
-                            user: user || 'system.user.admin',
-                            limitToOwnerRights: this.adapter.config.onlyAllowWhenUserIsOwner,
-                        }); // allow unsubscribing always
-                    }
-                }
-                this.subscribes[urlHash][type] = [];
-            }
-            if (!this.subscribes[urlHash].state.length && !this.subscribes[urlHash].object.length) {
+            if (this.subscribes[urlHash] === store && !store.state.length && !store.object.length) {
                 delete this.subscribes[urlHash];
                 if (!Object.keys(this.subscribes).length) {
                     this.adapter.log.debug(`Stop checker`);
@@ -1145,20 +1189,14 @@ class SwaggerUI {
     };
     stateChange = async (id, state) => {
         if (state?.ack) {
-            for (let t = this._waitFor.length - 1; t >= 0; t--) {
-                if (this._waitFor[t].id === id) {
-                    const task = this._waitFor[t];
-                    this._waitFor.splice(t, 1);
-                    if (!Object.keys(this.subscribes).find(url => this.subscribes[url].state.find(task => task.id === id))) {
-                        this.adapter.unsubscribeForeignStates(id);
-                    }
-                    if (task.timer) {
-                        this.adapter.clearTimeout(task.timer);
-                        task.timer = undefined;
-                    }
-                    setImmediate((_task, _val) => {
-                        _task.res.json({ ...state, id });
-                    }, task, state);
+            // Answer every request that waits for the acknowledgement of this state
+            for (const task of this._waitFor.filter(task => task.id === id)) {
+                if (this.endWait(task)) {
+                    setImmediate(() => {
+                        if (!task.res.headersSent) {
+                            task.res.json({ ...state, id });
+                        }
+                    });
                 }
             }
         }
@@ -1205,27 +1243,67 @@ class SwaggerUI {
             }
         }
     };
-    // wait for ack=true
-    _addTimeout = async (toAdd) => {
-        const task = toAdd;
-        this._waitFor.push(task);
-        // if not already subscribed
-        if (!Object.keys(this.subscribes).find(url => this.subscribes[url].state.find(t => t.id === task.id))) {
-            await this.adapter.subscribeForeignStatesAsync(task.id);
+    /**
+     * Ends the wait of a request for the acknowledgement of its state: stops its timer and gives up its subscription
+     *
+     * @param task the waiting request
+     * @param release give up the subscription of the state for this request
+     * @returns false if the wait was already over
+     */
+    endWait(task, release = true) {
+        const pos = this._waitFor.indexOf(task);
+        if (pos === -1) {
+            return false;
         }
-        task.timer = this.adapter.setTimeout(_task => {
-            // remove this task from the list
-            const pos = this._waitFor.indexOf(_task);
+        this._waitFor.splice(pos, 1);
+        if (task.timer) {
+            this.adapter.clearTimeout(task.timer);
+            task.timer = undefined;
+        }
+        if (release) {
+            this.releaseSubscription('state', task.id).catch(error => this.adapter.log.warn(`Cannot unsubscribe from state "${task.id}": ${error}`));
+        }
+        return true;
+    }
+    /**
+     * Waits for the acknowledgement (ack=true) of a state, that the request writes after this call, and answers it
+     * with the acknowledged state, or with 501 when the time is up
+     *
+     * @param task the request
+     * @returns a function that ends the wait without an answer, e.g. when the write failed
+     */
+    addTimeout = async (task) => {
+        this._waitFor.push(task);
+        try {
+            await this.holdSubscription('state', task.id);
+        }
+        catch (error) {
+            const pos = this._waitFor.indexOf(task);
             if (pos !== -1) {
                 this._waitFor.splice(pos, 1);
             }
-            if (!Object.keys(this.subscribes).find(url => this.subscribes[url].state.find(t => t.id === task.id))) {
-                this.adapter.unsubscribeForeignStates(task.id);
-            }
-            _task.res.status(501).json({ error: 'timeout', id: _task.id, val: _task.val });
-        }, task.timeout, task);
+            throw error;
+        }
+        // Not when unload() ended the wait meanwhile
+        if (this._waitFor.includes(task)) {
+            task.timer = this.adapter.setTimeout(() => {
+                task.timer = undefined;
+                if (this.endWait(task) && !task.res.headersSent) {
+                    task.res.status(501).json({ error: 'timeout', id: task.id, val: task.val });
+                }
+            }, task.timeout);
+        }
+        return () => {
+            this.endWait(task);
+        };
     };
     async unload() {
+        // No state changes come any more: answer the requests that still wait for an acknowledgement
+        for (const task of [...this._waitFor]) {
+            if (this.endWait(task, false) && !task.res.headersSent) {
+                task.res.status(503).json({ error: 'REST-API was stopped', id: task.id, val: task.val });
+            }
+        }
         if (this.config.webInstance) {
             await this.adapter.setForeignStateAsync(`${this.namespace}.info.extension`, false, true);
         }
@@ -1237,12 +1315,27 @@ class SwaggerUI {
             clearInterval(this.gcInterval);
             this.gcInterval = null;
         }
-        // send to all hooks, disconnect event
-        const hooks = Object.keys(this.subscribes);
-        for (let h = 0; h < hooks.length; h++) {
-            await this.reportChange(this.subscribes[hooks[h]], { disconnect: true });
-        }
+        // send to all hooks, disconnect event (all at once: web gives unload() 5 seconds)
+        const stores = Object.values(this.subscribes);
         this.subscribes = {};
+        await Promise.all(stores.map(store => this.reportChange(store, { disconnect: true })));
+        // Give up all subscriptions, also with a web that does not do it for its extensions
+        const keys = [...this.subscriptionHolders.keys()];
+        this.subscriptionHolders.clear();
+        for (const key of keys) {
+            const id = key.substring(key.indexOf(':') + 1);
+            try {
+                if (key.startsWith('object:')) {
+                    await this.adapter.unsubscribeForeignObjectsAsync(id);
+                }
+                else {
+                    await this.adapter.unsubscribeForeignStatesAsync(id);
+                }
+            }
+            catch (error) {
+                this.adapter.log.warn(`Cannot unsubscribe from "${id}": ${error}`);
+            }
+        }
     }
     // deliver to web the link to Web interface
     welcomePage() {
