@@ -32,7 +32,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "express": "^5.3.0",
-    "multer": "^2.4.0",
+    "multer": "^2.5.0",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
