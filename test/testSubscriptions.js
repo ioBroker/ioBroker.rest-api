@@ -1,9 +1,30 @@
 // Unit tests for the subscriptions of web hooks, polling connections and requests waiting for an acknowledgement,
 // with a mocked adapter. No JS-Controller is required. The tests run against the build output, so call
 // "npm run build" before.
+const Module = require('node:module');
 const { expect } = require('chai');
 const express = require('express');
-const SwaggerUI = require('../build/lib/rest-api').default;
+
+// @iobroker/adapter-core ends the process when it finds no js-controller, as in the unit tests of CI.
+// rest-api and socket-classes take only commonTools from it.
+const adapterCore = {
+    commonTools: {
+        pattern2RegEx: pattern => `^${pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*')}$`,
+        zipFiles: () => {
+            throw new Error('not available in the unit tests');
+        },
+    },
+};
+const originalLoad = Module._load;
+Module._load = function (request, ...args) {
+    return request === '@iobroker/adapter-core' ? adapterCore : originalLoad.call(this, request, ...args);
+};
+let SwaggerUI;
+try {
+    SwaggerUI = require('../build/lib/rest-api').default;
+} finally {
+    Module._load = originalLoad;
+}
 
 const ID = 'hm-rpc.0.dev.LEVEL';
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
